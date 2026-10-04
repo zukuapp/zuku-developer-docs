@@ -6,6 +6,8 @@ section: Get started
 
 # Your next game starts here.
 
+**ZUKU - 내가 불러 일으키는 새로운 창작.**
+
 Go from an idea to a playable game. Install the ZUKU CLI, pick a starter, and start building.
 
 ## Install the ZUKU CLI
