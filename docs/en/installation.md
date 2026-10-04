@@ -6,11 +6,51 @@ section: Guide
 
 # Installation
 
-The ZukuJS CLI 0.3.0 installs with a single command. The installer downloads a fixed-version CLI archive over HTTPS, checks its SHA-256 against the pinned release value, and sets up a managed Node.js 22 runtime in your user directory. It never replaces your system Node.js and does not need administrator rights.
+The managed installer currently provides the pinned CLI 0.3.0 release. The installer downloads a fixed-version CLI archive over HTTPS, checks its SHA-256 against the pinned release value, and sets up a managed Node.js 22 runtime in your user directory. It never replaces your system Node.js and does not need administrator rights.
 
 Supported platforms: macOS and Linux (x64, arm64) and Windows (x64, arm64).
 
-> The CLI is **not** published on npm. `npm install -g @zukujs/cli` will not work. Use the installer below.
+> Use the exact npm package names in the public release table below. The managed installer continues to provide its existing pinned release.
+
+<!-- BEGIN ZUKU NPM DISTRIBUTIONS -->
+## npm packages for game development
+
+These exact names and versions were verified in the public npm registry on 2026-10-04. Install the packages your project needs.
+
+| Package | Version | Purpose |
+| --- | --- | --- |
+| [@zuku/zwf](https://www.npmjs.com/package/@zuku/zwf/v/0.1.1) | `0.1.1` | ZWF2 HTML5 ZIP game package reading and writing |
+| [@zuku/sdk](https://www.npmjs.com/package/@zuku/sdk/v/0.2.0) | `0.2.0` | ZUKU API and game bridge |
+| [zuku-engine-next2d](https://www.npmjs.com/package/zuku-engine-next2d/v/0.1.1) | `0.1.1` | Jump engine integration and game package validation |
+| [@zuku/zwf-runtime](https://www.npmjs.com/package/@zuku/zwf-runtime/v/0.1.2) | `0.1.2` | ZWF1 animation WebAssembly runtime and host loader |
+| [@zuku/lang](https://www.npmjs.com/package/@zuku/lang/v/0.1.0) | `0.1.0` | Validated JSON resources for 20 locales |
+| [@zuku/core](https://www.npmjs.com/package/@zuku/core/v/27.0.1) | `27.0.1` | Command parsing, diagnostics and redaction |
+| [@zuku/player](https://www.npmjs.com/package/@zuku/player/v/0.1.1) | `0.1.1` | Browser player from the maintained Next2D fork |
+| [@zuku/editor](https://www.npmjs.com/package/@zuku/editor/v/0.1.1) | `0.1.1` | Browser editor and embedding helper |
+| [@zuku/cli](https://www.npmjs.com/package/@zuku/cli/v/0.3.1) | `0.3.1` | Shared zuku and zukujs commands |
+
+```sh
+npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.1 @zuku/zwf-runtime@0.1.2 @zuku/lang@0.1.0 @zuku/core@27.0.1 @zuku/player@0.1.1 @zuku/editor@0.1.1
+```
+
+Resource exports include JSON such as `@zuku/lang/locales/ko.json` and WebAssembly at `@zuku/zwf-runtime/wasm`. For browser projects, use an ESM bundler and follow each package's host instructions.
+
+ZWF2 packages HTML5 ZIP games; ZWF1 stores animations. Use the package and loader for the appropriate format.
+
+Each package retains its original license notice. The existing `UNLICENSED` declaration for `@zuku/core` is preserved. The Next.js server framework and operational servers are excluded from this game-library release.
+
+### Install the CLI from npm
+
+Use Node.js 22 or later with npm, then run:
+
+```sh
+npm install -g @zuku/cli@0.3.1
+zuku --version
+zukujs --version
+```
+
+`zuku` and `zukujs` share the same CLI, login, configuration and Agent Core state. The npm CLI 0.3.1 and the managed installer's pinned 0.3.0 release below have separate distribution paths.
+<!-- END ZUKU NPM DISTRIBUTIONS -->
 
 ## macOS and Linux
 
@@ -99,7 +139,7 @@ Add `%LOCALAPPDATA%\ZukuJS\bin` to **User environment variables > Path**, then o
 
 **Node.js version conflicts**
 
-You don't need to install or upgrade Node.js yourself. The CLI uses its own managed Node.js 22 runtime, independent of any system or version-manager Node.js. On Linux, your system must be able to run the official Node.js binaries.
+The managed installer supplies its own Node.js 22 runtime without changing your system Node.js. On Linux, the system must be able to run the official Node.js binaries. Installing the CLI from npm uses Node.js 22 or later from your own environment.
 
 **Install stops because `zuku` already exists**
 
