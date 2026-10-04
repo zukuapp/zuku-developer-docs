@@ -179,7 +179,7 @@ def main():
         ET.SubElement(entry, f"{{{namespace}}}loc").text = "https://docs.zuzunza.com/" + route
     ET.ElementTree(sitemap).write(OUTPUT / "sitemap.xml", encoding="utf-8", xml_declaration=True)
     (OUTPUT / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: https://docs.zuzunza.com/sitemap.xml\n")
-    (OUTPUT / "404.html").write_text('<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>문서를 찾을 수 없어요 · Page not found — ZUKU Docs</title><link rel="stylesheet" href="/assets/docs.css"><main class="content prose"><h1>문서를 찾을 수 없어요.</h1><p lang="en">This documentation page could not be found.</p><p><a href="/">한국어 문서</a> · <a href="/en/" lang="en">English documentation</a></p></main></html>')
+    (OUTPUT / "404.html").write_text('<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>문서를 찾을 수 없어요 · Page not found — ZUKU Docs | ZUKU - 내가 불러 일으키는 새로운 창작.</title><link rel="stylesheet" href="/assets/docs.css"><main class="content prose"><h1>문서를 찾을 수 없어요.</h1><p lang="en">This documentation page could not be found.</p><p><a href="/">한국어 문서</a> · <a href="/en/" lang="en">English documentation</a></p></main></html>')
     for path in list(OUTPUT.rglob("*")):
         if path.is_file() and path.suffix in {".html", ".css", ".js", ".json", ".xml"}:
             data = path.read_bytes()
