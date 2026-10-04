@@ -1,0 +1,78 @@
+{% macro navigation(items, mobile=false) -%}
+{% for item in items %}
+{% if item.children %}<section class="nav-group"><h2>{{ item.title }}</h2>{{ navigation(item.children, mobile) }}</section>
+{% else %}<a class="nav-link{% if item.active %} active{% endif %}" href="{{ item.url | url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.title }}</a>{% endif %}
+{% endfor %}
+{%- endmacro %}
+{% macro toc(items) -%}
+{% for item in items %}<li><a href="{{ item.url }}">{{ item.title }}</a>{% if item.children %}<ul>{{ toc(item.children) }}</ul>{% endif %}</li>{% endfor %}
+{%- endmacro %}
+<!doctype html>
+<html lang="{{ config.extra.locale }}" data-locale="{{ config.extra.locale }}">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="{{ page.meta.description or config.site_description }}">
+  <title>{{ page.title }} — ZUKU Docs</title>
+  <link rel="icon" type="image/png" href="/assets/zuku-favicon.png">
+  <link rel="canonical" href="{{ page.canonical_url }}">
+  <link rel="alternate" hreflang="ko" href="https://docs.zuzunza.com/{{ page.url }}">
+  <link rel="alternate" hreflang="en" href="https://docs.zuzunza.com/en/{{ page.url }}">
+  <link rel="alternate" hreflang="x-default" href="https://docs.zuzunza.com/{{ page.url }}">
+  <meta property="og:title" content="{{ page.title }} — ZUKU Docs">
+  <meta property="og:description" content="{{ page.meta.description or config.site_description }}">
+  <meta property="og:type" content="article"><meta property="og:url" content="{{ page.canonical_url }}">
+  <script src="/assets/theme-init.js"></script>
+  <link rel="stylesheet" href="/assets/docs.css">
+  <script src="/assets/docs.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">{{ config.extra.labels.skip }}</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="{{ config.extra.locale_home }}" aria-label="ZUKU Docs">
+        <img class="logo-light" src="/assets/zuku-logo-light.png" width="119" height="28" alt="ZUKU">
+        <img class="logo-dark" src="/assets/zuku-logo-dark.png" width="119" height="28" alt="ZUKU">
+        <span class="brand-separator" aria-hidden="true"></span><span class="brand-docs">Docs</span>
+      </a>
+      <nav class="topnav" aria-label="{{ config.extra.labels.primary }}">
+        <a href="{{ config.extra.locale_home }}getting-started/">{{ config.extra.labels.get_started }}</a>
+        <a href="{{ config.extra.locale_home }}starters/">Starters</a>
+        <a href="{{ config.extra.locale_home }}contents/">API</a>
+      </nav>
+      <div class="header-tools">
+        <button class="search-trigger" type="button" data-open-search><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span>{{ config.extra.labels.search }}</span><kbd>Ctrl K</kbd></button>
+        <a class="language-switch" href="{{ config.extra.other_home }}{{ page.url }}" lang="{{ config.extra.other_locale }}" hreflang="{{ config.extra.other_locale }}" aria-label="{{ config.extra.labels.language }}">{{ config.extra.labels.other_language }}</a>
+        <button class="icon-button theme-toggle" type="button" aria-label="{{ config.extra.labels.theme }}" title="{{ config.extra.labels.theme }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"></path></svg></button>
+        <a class="github-link" href="https://github.com/zukuapp/zukujs-cli" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 1-4-2-6-2m12 5v-3.5a3 3 0 0 0-.9-2.4c3-.3 6.1-1.5 6.1-6.7A5.2 5.2 0 0 0 18.8 5 4.9 4.9 0 0 0 18.7 1S17.5.7 15 2.4a13.4 13.4 0 0 0-7 0C5.5.7 4.3 1 4.3 1A4.9 4.9 0 0 0 4.2 5 5.2 5.2 0 0 0 2.8 8.4c0 5.2 3.1 6.4 6.1 6.7A3 3 0 0 0 8 17.5V22"></path></svg></a>
+        <button class="icon-button menu-toggle" type="button" data-open-menu aria-label="{{ config.extra.labels.menu }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+      </div>
+    </div>
+  </header>
+  <div class="docs-layout">
+    <aside class="sidebar"><div class="sidebar-scroll"><div class="sidebar-label">{{ config.extra.labels.documentation }} <span>0.3</span></div><nav aria-label="{{ config.extra.labels.navigation }}">{{ navigation(nav) }}</nav><a class="sidebar-footer" href="https://ai.zuzunza.com/dev">{{ config.extra.labels.workspace }} <span aria-hidden="true">↗</span></a></div></aside>
+    <main id="content" class="content{% if page.is_homepage %} content-home{% endif %}" tabindex="-1">
+      <div class="breadcrumb"><a href="{{ config.extra.locale_home }}">{{ config.extra.labels.documentation }}</a><span aria-hidden="true">/</span><span>{{ page.meta.section or config.extra.labels.guide }}</span></div>
+      <article class="prose">{{ page.content }}</article>
+      {% if page.is_homepage %}
+      <section class="starter-section" aria-labelledby="starter-title"><div class="section-heading"><h2 id="starter-title">{{ config.extra.labels.choose_starter }}</h2><a href="{{ config.extra.locale_home }}starters/">{{ config.extra.labels.all_starters }} <span aria-hidden="true">→</span></a></div>
+      <div class="starter-grid">
+        {% for starter in config.extra.starters %}
+        <a class="starter-card" href="{{ config.extra.locale_home }}{{ starter.url }}"><div class="starter-art art-{{ starter.art }}" aria-hidden="true"><div class="game-ground"></div><span class="game-player"></span><span class="game-block block-one"></span><span class="game-block block-two"></span><span class="game-coin coin-one"></span><span class="game-coin coin-two"></span></div><div class="starter-body"><div class="starter-tags"><span>{{ starter.tag }}</span><span>{{ starter.meta }}</span></div><h3>{{ starter.title }} <span aria-hidden="true">↗</span></h3><p>{{ starter.description }}</p></div></a>
+        {% endfor %}
+      </div></section>
+      {% endif %}
+      <div class="page-actions"><span>{{ config.extra.labels.version }} 0.3.0</span><a href="https://github.com/zukuapp/zukujs-cli/issues">{{ config.extra.labels.feedback }} <span aria-hidden="true">↗</span></a></div>
+      <nav class="page-pagination" aria-label="{{ config.extra.labels.page_navigation }}">
+        {% if page.previous_page %}<a href="{{ page.previous_page.url | url }}"><span>← {{ config.extra.labels.previous }}</span><strong>{{ page.previous_page.title }}</strong></a>{% else %}<span></span>{% endif %}
+        {% if page.next_page %}<a href="{{ page.next_page.url | url }}"><span>{{ config.extra.labels.next }} →</span><strong>{{ page.next_page.title }}</strong></a>{% endif %}
+      </nav>
+      <footer class="content-footer"><span>ZUKU</span><span>{{ config.extra.labels.footer }}</span><a href="https://www.zuzunza.com/">zuzunza.com ↗</a></footer>
+    </main>
+    <aside class="toc"><span>{{ config.extra.labels.on_page }}</span><nav aria-label="{{ config.extra.labels.on_page }}"><ul>{{ toc(page.toc) }}</ul></nav><a class="toc-cta" href="{{ config.extra.locale_home }}getting-started/"><span>{{ config.extra.labels.ready }}</span><strong>{{ config.extra.labels.first_game }} →</strong></a></aside>
+  </div>
+  <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="search-dialog-head"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><label id="search-title" for="search-input" class="visually-hidden">{{ config.extra.labels.search }}</label><input id="search-input" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" placeholder="{{ config.extra.labels.search_placeholder }}" aria-controls="search-results"><button class="dialog-close" type="button" data-close-dialog aria-label="{{ config.extra.labels.close }}">Esc</button></div><p id="search-status" class="search-status" role="status">{{ config.extra.labels.search_hint }}</p><div id="search-results" class="search-results"></div><div class="search-dialog-footer"><span>↑ ↓ {{ config.extra.labels.navigate }} · Enter {{ config.extra.labels.open }}</span><span>ZUKU Docs</span></div></dialog>
+  <dialog id="navigation-dialog" class="navigation-dialog" aria-labelledby="navigation-title"><div class="mobile-nav-head"><h2 id="navigation-title">{{ config.extra.labels.documentation }}</h2><button class="icon-button" type="button" data-close-dialog aria-label="{{ config.extra.labels.close }}">×</button></div><nav aria-label="{{ config.extra.labels.navigation }}">{{ navigation(nav, true) }}</nav></dialog>
+  <div id="copy-announcement" class="visually-hidden" role="status"></div>
+</body>
+</html>

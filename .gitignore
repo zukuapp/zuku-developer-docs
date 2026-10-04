@@ -1,0 +1,9 @@
+.venv/
+.codex/
+__pycache__/
+*.py[cod]
+/artifact/
+/build/
+/site/
+mkdocs-*.yml
+.DS_Store
