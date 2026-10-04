@@ -6,6 +6,10 @@ ZUKU 개발 문서의 공개 소스입니다. 한국어 27페이지와 영어 27
 
 This is the public source for ZUKU's developer documentation: 27 Korean pages, 27 English pages, a shared theme, search and navigation, local fonts, and playable game starters. `zuku` and `zukujs` are two command names for [the same CLI](docs/en/cli/index.md).
 
+원스토어 정식 출시 준비부터 등록, 심사, 출시와 업데이트까지는 [한국어 원스토어 배포 가이드](guides/ONEstore.ko.md)를 참고하세요. 현재 공개 APK의 프리뷰 상태와 정식 서명 준비사항도 설명합니다.
+
+See the [English ONEstore release guide](guides/ONEstore.en.md) for production preparation, registration, review, release and updates. It also explains the current public APK's preview status and production signing requirements.
+
 ## 로컬 빌드 / Local build
 
 Python 3.12와 Git을 준비하세요. MkDocs와 관련 의존성은 `requirements-docs.txt`에 버전이 고정되어 있습니다. 별도 작업 폴더에서 소스, 가상 환경과 결과물을 나란히 두면 저장소에 의존성이나 생성 파일이 들어가지 않습니다.
@@ -56,6 +60,7 @@ Generated MkDocs configuration and local verification records in `source/.codex/
 | Path | 내용 / Contents |
 | --- | --- |
 | `docs/ko/`, `docs/en/` | 한국어·영어 문서 / Korean and English guides |
+| `guides/` | 한국어·영어 원스토어 출시 안내 / Korean and English ONEstore release guides |
 | `theme/` | 공통 HTML 테마 / Shared HTML theme |
 | `assets/` | 스타일, 화면 동작, 글꼴, 로고, 스타터 / Styles, UI behavior, fonts, logos and starters |
 | `scripts/build.py`, `scripts/hooks.py` | 빌드·링크 검사·기존 앵커 호환 / Build, link checks and legacy anchor compatibility |
@@ -69,4 +74,3 @@ The documentation and original code in this repository use the [MIT license](LIC
 
 - **Wanted Sans**: SIL Open Font License 1.1, [license notice](assets/licenses/Wanted-Sans-OFL.txt).
 - **Phaser 3.90.0**: MIT; `assets/starters/zuku-phaser-starter.zip` retains `src/vendor/PHASER-LICENSE.txt` inside the starter.
-
