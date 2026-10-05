@@ -15,7 +15,7 @@ Supported platforms: macOS and Linux (x64, arm64) and Windows (x64, arm64).
 <!-- BEGIN ZUKU NPM DISTRIBUTIONS -->
 ## npm packages for game development
 
-These exact names and versions were verified in the public npm registry on 2026-10-04. Install the packages your project needs.
+The table lists exact installation versions. `@zuku/player` is updated here to `0.1.2`; the other eight packages retain the releases verified in the public npm registry on 2026-10-04. Install the packages your project needs.
 
 | Package | Version | Purpose |
 | --- | --- | --- |
@@ -25,13 +25,15 @@ These exact names and versions were verified in the public npm registry on 2026-
 | [@zuku/zwf-runtime](https://www.npmjs.com/package/@zuku/zwf-runtime/v/0.1.2) | `0.1.2` | ZWF1 animation WebAssembly runtime and host loader |
 | [@zuku/lang](https://www.npmjs.com/package/@zuku/lang/v/0.1.0) | `0.1.0` | Validated JSON resources for 20 locales |
 | [@zuku/core](https://www.npmjs.com/package/@zuku/core/v/27.0.1) | `27.0.1` | Command parsing, diagnostics and redaction |
-| [@zuku/player](https://www.npmjs.com/package/@zuku/player/v/0.1.1) | `0.1.1` | Browser player from the maintained Next2D fork |
+| [@zuku/player](https://www.npmjs.com/package/@zuku/player/v/0.1.2) | `0.1.2` | Browser player from the maintained Next2D fork |
 | [@zuku/editor](https://www.npmjs.com/package/@zuku/editor/v/0.1.1) | `0.1.1` | Browser editor and embedding helper |
 | [@zuku/cli](https://www.npmjs.com/package/@zuku/cli/v/0.3.1) | `0.3.1` | Shared zuku and zukujs commands |
 
 ```sh
-npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.1 @zuku/zwf-runtime@0.1.2 @zuku/lang@0.1.0 @zuku/core@27.0.1 @zuku/player@0.1.1 @zuku/editor@0.1.1
+npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.1 @zuku/zwf-runtime@0.1.2 @zuku/lang@0.1.0 @zuku/core@27.0.1 @zuku/player@0.1.2 @zuku/editor@0.1.1
 ```
+
+`@zuku/player` 0.1.2 limits WebGPU adapter and device acquisition waits to two seconds. Renderer initialization failure or device loss can recover through WebGL on a fresh canvas. Recovery is limited to two attempts and reports an error if rendering cannot initialize.
 
 Resource exports include JSON such as `@zuku/lang/locales/ko.json` and WebAssembly at `@zuku/zwf-runtime/wasm`. For browser projects, use an ESM bundler and follow each package's host instructions.
 

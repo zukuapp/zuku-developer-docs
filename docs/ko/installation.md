@@ -13,7 +13,7 @@ section: Starter
 <!-- BEGIN ZUKU NPM DISTRIBUTIONS -->
 ## 게임 개발용 npm 패키지
 
-2026-10-04 공개 npm 레지스트리에서 아래 이름과 정확한 버전을 확인했습니다. 프로젝트에 필요한 패키지만 선택해 설치하세요.
+아래 표는 정확한 설치 버전을 안내합니다. `@zuku/player`는 `0.1.2`로 갱신했으며, 나머지 8개 패키지는 2026-10-04 공개 npm 레지스트리에서 확인한 버전을 유지합니다. 프로젝트에 필요한 패키지만 선택해 설치하세요.
 
 | 패키지 | 버전 | 용도 |
 | --- | --- | --- |
@@ -23,13 +23,15 @@ section: Starter
 | [@zuku/zwf-runtime](https://www.npmjs.com/package/@zuku/zwf-runtime/v/0.1.2) | `0.1.2` | ZWF1 애니메이션 WebAssembly 런타임·호스트 로더 |
 | [@zuku/lang](https://www.npmjs.com/package/@zuku/lang/v/0.1.0) | `0.1.0` | 20개 언어의 검증된 JSON 리소스 |
 | [@zuku/core](https://www.npmjs.com/package/@zuku/core/v/27.0.1) | `27.0.1` | 명령 파싱·진단·민감정보 가림 |
-| [@zuku/player](https://www.npmjs.com/package/@zuku/player/v/0.1.1) | `0.1.1` | 유지보수 중인 Next2D 기반 브라우저 플레이어 |
+| [@zuku/player](https://www.npmjs.com/package/@zuku/player/v/0.1.2) | `0.1.2` | 유지보수 중인 Next2D 기반 브라우저 플레이어 |
 | [@zuku/editor](https://www.npmjs.com/package/@zuku/editor/v/0.1.1) | `0.1.1` | 브라우저 에디터·임베딩 도우미 |
 | [@zuku/cli](https://www.npmjs.com/package/@zuku/cli/v/0.3.1) | `0.3.1` | 동일한 zuku·zukujs 명령 |
 
 ```sh
-npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.1 @zuku/zwf-runtime@0.1.2 @zuku/lang@0.1.0 @zuku/core@27.0.1 @zuku/player@0.1.1 @zuku/editor@0.1.1
+npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.1 @zuku/zwf-runtime@0.1.2 @zuku/lang@0.1.0 @zuku/core@27.0.1 @zuku/player@0.1.2 @zuku/editor@0.1.1
 ```
+
+`@zuku/player` 0.1.2는 WebGPU 어댑터와 장치 획득 대기를 각각 2초로 제한합니다. 렌더러 초기화 실패나 장치 손실 시 새 캔버스에서 WebGL로 복구할 수 있습니다. 복구는 최대 2회 시도하며, 렌더링을 초기화하지 못하면 오류를 알립니다.
 
 `@zuku/lang/locales/ko.json` 같은 JSON 내보내기와 `@zuku/zwf-runtime/wasm` 같은 리소스 내보내기를 사용할 수 있습니다. 브라우저 프로젝트에서는 ESM 번들러와 각 패키지의 호스트 안내를 따르세요.
 
