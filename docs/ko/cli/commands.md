@@ -6,9 +6,9 @@ section: Reference
 
 # 명령 참조
 
-`zuku`와 `zukujs`는 같은 CLI입니다(`@zukujs/cli` 0.3.0). 두 이름은 같은 런타임, 설정, 인증, 상태(`~/.config/zukujs/`(Windows: `%LOCALAPPDATA%\ZukuJS\`))를 공유하므로 아래 예시의 `zuku`를 `zukujs`로 바꿔 써도 결과가 같습니다.
+`zuku`와 `zukujs`는 같은 CLI입니다(`@zukujs/cli` 0.3.0). 두 이름은 같은 런타임, 설정, 인증, 상태(`~/.config/zukujs/`(Windows: `%LOCALAPPDATA%\ZukuJS\`))를 공유합니다. 아래 예시의 `zuku`를 `zukujs`로 바꿔도 결과가 같습니다.
 
-대부분의 명령은 `--json`을 붙이면 `zuku-command/1` 형식으로 출력합니다. [출력 형식](#출력-형식-zuku-command1)을 참고하세요.
+대부분의 명령은 `--json`을 붙이면 `zuku-command/1` 형식으로 출력합니다. 형식은 [출력 형식](#출력-형식-zuku-command1)에 있습니다.
 
 ## 명령 요약
 
@@ -34,7 +34,7 @@ zuku --help
 zuku -h
 ```
 
-사용할 수 있는 명령을 안내합니다.
+사용 가능한 명령 목록을 출력합니다.
 
 ## version
 
@@ -60,7 +60,7 @@ zuku create <name>
 
 `create`는 `<name>` 외의 옵션을 받지 않습니다. 템플릿을 고르는 플래그는 없습니다.
 
-만들어지는 결과물은 바로 플레이할 수 있는 **Canvas JUMP 장애물 러너** 게임입니다. 스페이스 키나 화면 탭으로 점프해 장애물을 피합니다.
+만들어지는 결과물은 플레이 가능한 Canvas JUMP 장애물 러너 게임입니다. 스페이스 키나 화면 탭으로 점프해 장애물을 피합니다.
 
 | 파일 | 내용 |
 | --- | --- |
@@ -106,8 +106,8 @@ zuku run --once --json
 zuku validate <dir | file.zwf | file.zip>
 ```
 
-- **디렉터리**: `zukujs.json`을 정규화하고 소스 파일을 패키지 규칙으로 검사합니다.
-- **`.zwf`/`.zip`**: 공개 ZWF 검증 규칙으로 패키지를 검사합니다.
+- 디렉터리: `zukujs.json`을 정규화하고 소스 파일을 패키지 규칙으로 검사합니다.
+- `.zwf`/`.zip`: 공개 ZWF 검증 규칙으로 패키지를 검사합니다.
 - 프로젝트 코드를 실행하지 않습니다.
 
 ```sh
@@ -154,9 +154,9 @@ zuku upload <dir | file.zwf | file.zip> [옵션]
 | `--verify` | 생성 후 소유자 권한으로 초안을 다시 조회해 확인 |
 
 - 디렉터리를 주면 `package`와 같은 코어로 패키지를 만든 뒤 업로드합니다. 메타데이터는 정규화된 `zukujs.json`에서 가져오며, 플래그가 있으면 플래그가 우선합니다.
-- `upload`는 **초안만** 만들고 공개하지 않습니다. 초안은 공개 목록에 나타나지 않지만 업로드된 `/uploads/...` 파일 URL은 공개 주소이므로, 공개되어도 괜찮은 파일만 올리세요.
-- 업로드에는 ZUKU 계정 로그인이 필요합니다. [인증](authentication.md)을 참고하세요.
-- 변경 요청은 자동으로 재시도하지 않습니다. 결과가 불확실하면 영수증에 기록되므로, 다시 실행하기 전에 초안이 이미 만들어졌는지 확인하세요.
+- `upload`는 초안만 만들고 공개하지 않습니다. 초안은 공개 목록에 나타나지 않습니다. 업로드된 `/uploads/...` 파일 URL은 공개 주소이므로 공개 가능한 파일만 올립니다.
+- 업로드에는 ZUKU 계정 로그인이 필요합니다. 로그인 절차는 [인증](authentication.md)에 있습니다.
+- 변경 요청은 자동으로 재시도하지 않습니다. 결과가 불명확하면 영수증에 기록됩니다. 다시 실행하기 전에 초안이 이미 만들어졌는지 확인합니다.
 
 ```sh
 zuku upload .
@@ -191,7 +191,7 @@ zuku agent "<요청>" [--name <name>] [--model <id>] [--experimental] [--draft |
 zuku agent --resume <run_id> [--yolo | --draft]
 ```
 
-`--browser`는 현재 Agent Core에 전달할 수 없어 `CORE_PROTOCOL_GAP`로 실패합니다. Codex나 사용자 지정 제공자를 사용하는 세션에는 `--experimental`을 명시하세요.
+`--browser`는 현재 Agent Core에 전달되지 않아 `CORE_PROTOCOL_GAP`로 실패합니다. Codex나 사용자 지정 제공자를 사용하는 세션에는 `--experimental`을 명시합니다.
 
 기본 실행은 패키지까지 만들고 게시하지 않습니다. `--draft`는 초안만 업로드하고, `--yolo`는 명시적으로 한 번 프로덕션 게시까지 진행합니다. `--draft`와 `--yolo`는 함께 쓸 수 없습니다. [에이전트](agent.md)
 
@@ -205,7 +205,7 @@ zuku account logout
 zuku deploy <dir> --yolo
 ```
 
-`zuku login codex --experimental`은 CLI의 Codex 로그인 연동으로, **실험적(Experimental)이며 비공식** 연동입니다. 이 표시는 CLI 연동에 대한 것이며 Codex 서비스 자체를 말하는 것이 아닙니다. 게시는 ZUKU 계정당 최근 6시간 동안 성공한 프로덕션 게시 3회로 제한됩니다. [인증](authentication.md), [게시](publishing.md)
+`zuku login codex --experimental`은 CLI의 Codex 로그인 연동이며 실험적(Experimental)·비공식 연동입니다. 이 표시는 CLI 연동에 대한 것이며 Codex 서비스 자체를 말하는 것이 아닙니다. 게시는 ZUKU 계정당 최근 6시간 동안 성공한 프로덕션 게시 3회로 제한됩니다. [인증](authentication.md), [게시](publishing.md)
 
 ### 모델 제공자 인증
 
@@ -282,4 +282,4 @@ zuku start
 | `2` | 인수 오류(`INVALID_INPUT`), 알 수 없는 명령(`UNKNOWN_COMMAND`) |
 | `130` | 사용자 취소(`COMMAND_CANCELLED`, Ctrl+C) |
 
-서버 오류는 HTTP 상태와 API 오류 코드(예: `UNAUTHORIZED`, `INVALID_PACKAGE`, `PAYLOAD_TOO_LARGE`, `VALIDATION_ERROR`)로 보고하며, 원격 응답 전문이나 헤더는 출력하지 않습니다. 오류 코드별 해결 방법은 [오류](../errors.md)를 보세요.
+서버 오류는 HTTP 상태와 API 오류 코드(예: `UNAUTHORIZED`, `INVALID_PACKAGE`, `PAYLOAD_TOO_LARGE`, `VALIDATION_ERROR`)로 보고하며, 원격 응답 전문이나 헤더는 출력하지 않습니다. 오류 코드별 해결 방법은 [오류](../errors.md)에 있습니다.

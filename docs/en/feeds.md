@@ -33,18 +33,18 @@ This page covers the media feeds (Hype / Swipe / Jump) and the community short-p
 
 | Area | Path prefix | Description |
 |------|-------------|-------------|
-| **Media feeds** | `/feeds`, `/feeds/{category}` | Lists of works (content). `page` / `per_page` |
-| **Community timeline** | `/feed` | Short-post timeline. Cursor `before` |
-| **Community posts** | `/posts…` | Single post, thread, replies, likes, deletion |
+| Media feeds | `/feeds`, `/feeds/{category}` | Lists of works (content). `page` / `per_page` |
+| Community timeline | `/feed` | Short-post timeline. Cursor `before` |
+| Community posts | `/posts…` | Single post, thread, replies, likes, deletion |
 
 Authentication:
 
-- **Reads** (feeds, feed, single post/thread): Bearer is optional. When logged in, viewer state such as `is_liked` may be filled in.
-- **Writes** (create, reply, like, delete): **Bearer required**. X-API-Key is not used on these routes.
+- **Reads** (feeds, feed, single post/thread): Bearer is optional. When logged in, viewer state fields such as `is_liked` are filled in.
+- **Writes** (create, reply, like, delete): Bearer required. X-API-Key is not used on these routes.
 
-Responses follow the common envelope `{ success, data, meta }` / `{ success, error, meta }`. Successful deletes return **204 No Content**.
+Responses follow the common envelope `{ success, data, meta }` / `{ success, error, meta }`. Successful deletes return 204 No Content.
 
-> **Note:** there is **no** `GET /api/v1/posts` (list) route. For lists, use `GET /feed` or `GET /users/me/posts`.
+> Note: there is no `GET /api/v1/posts` (list) route. For lists, use `GET /feed` or `GET /users/me/posts`.
 
 ---
 
@@ -72,15 +72,15 @@ Example `data.pagination`:
 }
 ```
 
-The media `/feeds` routes **do not use `sort` / `order` queries.** The server uses a fixed sort order.
+The media `/feeds` routes do not use `sort` / `order` queries. The server uses a fixed sort order.
 
 ### cursor (community)
 
 | Query | Default | Use |
 |-------|---------|-----|
 | `limit` | Per endpoint (below) | Page size (`> 0`) |
-| `before` | None | Timeline and my posts: go **before** (older than) this id |
-| `after` | None | Thread: go **after** (newer than / continuing from) this id |
+| `before` | None | Timeline and my posts: go before (older than) this id |
+| `after` | None | Thread: go after (newer than / continuing from) this id |
 
 | Endpoint | Default `limit` | Cursor field |
 |----------|-----------------|--------------|
@@ -88,7 +88,7 @@ The media `/feeds` routes **do not use `sort` / `order` queries.** The server us
 | `GET /posts/{id}/thread` | 50 | `after` → response `next_cursor` |
 | `POST` routes | — | — |
 
-`next_cursor` is the **id of the last item** on this page. For an empty page it is `null`, at which point the client can turn off "load more".
+`next_cursor` is the id of the last item on this page. For an empty page it is `null`, at which point the client can turn off "load more".
 
 ---
 
@@ -121,7 +121,7 @@ Query:
 
 | Parameter | Description |
 |-----------|-------------|
-| `category` | `hype` \| `swipe` \| `jump` (an invalid value may be treated the same as all categories) |
+| `category` | `hype` \| `swipe` \| `jump` |
 | `page`, `per_page` | See the table above |
 
 Response `data`:
@@ -166,7 +166,7 @@ Response `data`:
 
 `Post` fields: `id`, `author`, `body`, `image_urls`, `parent_id`, `root_id`, `like_count`, `reply_count`, `is_liked`, `is_deleted`, `created_at`, `updated_at`
 
-Maximum body length: **280 characters**.
+Maximum body length: 280 characters.
 
 ---
 
@@ -181,13 +181,13 @@ Maximum body length: **280 characters**.
 - **201**: `data.post`
 - Body up to 280 characters, up to 4 photos. Photo-only posts are allowed.
 - Photos must be JPEG, PNG, WEBP, GIF, or AVIF files of 10MB or less that you uploaded yourself.
-- Validation failure: **422** (body length, photo count, ownership, size, and so on)
-- Not authenticated: **401**
+- Validation failure: 422 (body length, photo count, ownership, size, and so on)
+- Not authenticated: 401
 
 ### `GET /posts/{id}`
 
 - Success: `data.post`
-- Not found: **404** `POST_NOT_FOUND`
+- Not found: 404 `POST_NOT_FOUND`
 
 ### `GET /posts/{id}/thread`
 
@@ -208,7 +208,7 @@ Response:
 ### `POST /posts/{id}/replies`
 
 Replies to a parent post (or any post in the thread). The body is `{ "body": "…", "image_urls": [] }` and uses the same photo rules as root posts.
-Parent not found → **404** `POST_NOT_FOUND`.
+Parent not found → 404 `POST_NOT_FOUND`.
 
 ### Like
 
@@ -226,8 +226,8 @@ Response:
 ### `DELETE /posts/{id}`
 
 Soft delete (the reply's position in the thread is kept). Only the owner can delete.
-Someone else's post and a missing post both return **404** `POST_NOT_FOUND` (to avoid revealing whether it exists).
-Success: **204**.
+Someone else's post and a missing post both return 404 `POST_NOT_FOUND` (to avoid revealing whether it exists).
+Success: 204.
 
 ---
 

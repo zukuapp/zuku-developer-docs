@@ -21,8 +21,8 @@ curl -sS "$API/feeds/hype?page=1&per_page=20"
 export API="https://zuzunza.com/api/v1"
 ```
 
-- 응답은 `{ success, data, meta }` 또는 `{ success, error, meta }` 형식입니다. `success`가 `false`이면 `error.code`로 분기하세요.
-- 문의 추적을 위해 `-H "X-Request-Id: $(uuidgen)"`를, 한국어 메시지를 받으려면 `-H "Accept-Language: ko-KR"`를 추가할 수 있습니다.
+- 응답은 `{ success, data, meta }` 또는 `{ success, error, meta }` 형식입니다. `success`가 `false`이면 `error.code`로 분기합니다.
+- 선택 헤더: 문의 추적용 `-H "X-Request-Id: $(uuidgen)"`, 한국어 메시지용 `-H "Accept-Language: ko-KR"`.
 
 ## 1. 로그인하고 내 정보 확인
 
@@ -100,7 +100,7 @@ curl -sS -X POST "$API/contents" \
   -d '{"category":"hype","type":"horizontal_media","title":"첫 작품","media_url":"'"$URL"'"}'
 ```
 
-서버 간 호출에서는 `Authorization` 대신 `-H "X-API-Key: $ZUKU_API_KEY"`로 콘텐츠를 생성할 수 있습니다.
+서버 간 호출에서는 `Authorization` 대신 `-H "X-API-Key: $ZUKU_API_KEY"`로 콘텐츠를 생성합니다.
 
 ### JUMP 게임 초안 → 게시
 
@@ -130,7 +130,7 @@ curl -sS -X POST "$API/contents/$CONTENT_ID/publish" \
   -H "Authorization: Bearer $ACCESS"
 ```
 
-`jump` 메타의 전체 필드는 [콘텐츠](contents.md)를, 업로드 한도는 [미디어](media.md)를 참고하세요.
+`jump` 메타의 전체 필드는 [콘텐츠](contents.md)에, 업로드 한도는 [미디어](media.md)에 있습니다.
 
 ## 5. 좋아요, 북마크, 팔로우
 
@@ -194,7 +194,7 @@ curl -sS -X POST "$API/cloud/saves/save" \
   -d '{"projectId":"'"$PROJECT"'","slot":"default","data":{"level":3,"inventory":["sword"]}}'
 ```
 
-게임 샌드박스에 계정 토큰을 넘기지 말고, 세션을 관리하는 신뢰할 수 있는 앱에서 호출하세요. 상세: [Game Cloud](game-cloud.md)
+게임 샌드박스에 계정 토큰을 넘기지 않습니다. 이 API는 세션을 관리하는 신뢰된 앱에서 호출합니다. 상세: [Game Cloud](game-cloud.md)
 
 ## 8. 오류 처리
 

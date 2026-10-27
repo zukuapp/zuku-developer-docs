@@ -6,7 +6,7 @@ section: API
 
 # 개발자 콘솔
 
-ZUKU 개발자 콘솔 API는 앱 등록, 앱별 API 키, 웹훅을 관리합니다. 같은 기능은 Studio의 개발자 콘솔 화면(`/studio/developer`)에서도 사용할 수 있습니다.
+ZUKU 개발자 콘솔 API는 앱 등록, 앱별 API 키, 웹훅을 관리합니다. Studio의 개발자 콘솔 화면(`/studio/developer`)도 같은 기능을 제공합니다.
 
 **Base URL**: `https://zuzunza.com/api/v1/devconsole`
 
@@ -69,7 +69,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/devconsole/apps" \
 
 ## API 키
 
-앱별로 키를 발급합니다. 키 원문은 **발급 응답에서 한 번만** 반환되므로 바로 안전하게 보관하세요.
+앱별로 키를 발급합니다. 키 원문은 발급 응답에서 한 번만 반환됩니다. 응답을 받은 즉시 안전한 곳에 보관합니다.
 
 ### POST /devconsole/apps/{app_id}/keys
 
@@ -107,7 +107,7 @@ curl -sS -X DELETE "https://zuzunza.com/api/v1/devconsole/keys/$KEY_ID" \
 | `endpoint_url` | 이벤트를 받을 URL |
 | `events` | 구독 이벤트 배열(예: `content.published`, `jump.play`) |
 
-등록 응답에 `secret`이 발급됩니다. 수신 서버는 요청의 `X-Shizuku-Secret` 헤더 값을 이 `secret`과 비교해 검증하세요.
+등록 응답에 `secret`이 발급됩니다. 수신 서버는 요청의 `X-Shizuku-Secret` 헤더 값을 이 `secret`과 비교해 검증합니다.
 
 ```bash
 curl -sS -X POST "https://zuzunza.com/api/v1/devconsole/apps/$APP_ID/webhooks" \
@@ -136,11 +136,11 @@ curl -sS -X POST "https://zuzunza.com/api/v1/devconsole/apps/$APP_ID/webhooks" \
 | 용도 | 간단한 서버 간 호출(콘텐츠 생성) | 앱별 키·웹훅 관리 |
 | 권한 범위 | 없음 | `scopes` 배열 |
 
-두 방식은 **함께** 운영됩니다.
+두 방식은 함께 운영됩니다.
 
 ## 오류
 
-응답은 공통 형식을 따릅니다. 코드 목록은 [오류](errors.md), 호출 한도는 [요청 한도](rate-limits.md)를 참고하세요.
+응답은 공통 형식을 따릅니다. 코드 목록은 [오류](errors.md)에, 호출 한도는 [요청 한도](rate-limits.md)에 있습니다.
 
 ## 관련 문서
 

@@ -6,13 +6,13 @@ section: API
 
 # Game Cloud
 
-ZUKU Game Cloud는 게임 **프로젝트** 단위로 격리된 지갑, 클라우드 변수, 세이브를 제공하고, 개발 중인 결제·서버 함수 인터페이스를 함께 제공합니다.
+ZUKU Game Cloud는 게임 프로젝트 단위로 격리된 지갑, 클라우드 변수, 세이브를 제공하고, 개발 중인 결제·서버 함수 인터페이스를 함께 제공합니다.
 
-> **현재 지원 범위**: Pay confirm은 외부 결제사나 영수증을 검증하지 않습니다. 실제 결제 완료 증빙으로 사용하지 마세요.
+> 현재 지원 범위: Pay confirm은 외부 결제사나 영수증을 검증하지 않습니다. 실제 결제 완료 증빙으로 사용하지 않습니다.
 
 **Base URL**: `https://zuzunza.com/api/v1/cloud`
 
-**인증**: 모든 엔드포인트에 `Authorization: Bearer <session_token>`이 필요합니다. ZUKU 세션을 관리하는 신뢰할 수 있는 앱에서 호출하고, 게임 샌드박스에 계정 토큰을 넘기지 마세요. 별도 SDK 설치 없이 HTTP로 호출합니다.
+**인증**: 모든 엔드포인트에 `Authorization: Bearer <session_token>`이 필요합니다. ZUKU 세션을 관리하는 신뢰된 앱에서 호출합니다. 게임 샌드박스에는 계정 토큰을 넘기지 않습니다. 별도 SDK 설치 없이 HTTP로 호출합니다.
 
 ## 빠른 예제
 
@@ -118,7 +118,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/cloud/vars/mutate" \
 
 ## Saves (클라우드 세이브)
 
-인라인 JSON 세이브이며 슬롯당 **256KB**까지 저장할 수 있습니다.
+인라인 JSON 세이브입니다. 슬롯당 최대 크기는 256KB입니다.
 
 | Method | Path | 본문 / 쿼리 |
 |---|---|---|
@@ -141,7 +141,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/cloud/saves/load" \
 | `POST` | `/cloud/pay/session` | `{ projectId, productId }` | 구매 세션 생성. TTL 10분, `status: pending` |
 | `POST` | `/cloud/pay/confirm` | `{ sessionId }` | 세션을 `paid`로 확인 |
 
-confirm은 외부 결제사나 영수증을 검증하지 않으므로 실제 결제 증빙으로 쓰지 마세요.
+confirm은 외부 결제사나 영수증을 검증하지 않으므로 실제 결제 증빙으로 쓰지 않습니다.
 
 ## Functions (서버 함수)
 
@@ -187,7 +187,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/cloud/billing/limit" \
 
 ## 게임 전용 VM
 
-Cloud Scale과 Game Dedicated 요금제는 고정 사양의 격리 KVM 서버를 요청할 수 있습니다. 요청은 먼저 dry-run 검토 대기열에 들어갑니다.
+Cloud Scale과 Game Dedicated 요금제는 고정 사양의 격리 KVM 서버 요청을 지원합니다. 요청은 먼저 dry-run 검토 대기열에 들어갑니다.
 
 | Method | Path | 본문 / 쿼리 |
 |---|---|---|
@@ -197,7 +197,7 @@ Cloud Scale과 Game Dedicated 요금제는 고정 사양의 격리 KVM 서버를
 | `POST` | `/cloud/vm/stop` | `{ projectId, idempotencyKey }` |
 | `POST` | `/cloud/vm/delete` | `{ projectId, idempotencyKey }` |
 
-요청마다 고유한 `idempotencyKey`를 사용하세요. VM 요금제가 만료되면 새 VM을 만들거나 중지된 VM을 다시 시작할 수 없습니다.
+요청마다 고유한 `idempotencyKey`를 사용합니다. VM 요금제가 만료되면 새 VM 생성과 중지된 VM 재시작이 거부됩니다.
 
 ```bash
 curl -sS -X POST "https://zuzunza.com/api/v1/cloud/vm" \
@@ -210,11 +210,11 @@ curl -sS -X POST "https://zuzunza.com/api/v1/cloud/vm" \
 
 ### GET /cloud/dashboard/summary?projectId={uuid}&days=30
 
-프로젝트 소유자만 조회할 수 있으며, 이벤트별 사용량 내역을 반환합니다.
+프로젝트 소유자만 조회하며, 이벤트별 사용량 내역을 반환합니다.
 
 ## 오류
 
-응답은 공통 형식 `{ success, data | error, meta }`를 따릅니다. 오류 코드 목록은 [오류](errors.md), 호출 한도는 [요청 한도](rate-limits.md)를 참고하세요.
+응답은 공통 형식 `{ success, data | error, meta }`를 따릅니다. 오류 코드 목록은 [오류](errors.md)에, 호출 한도는 [요청 한도](rate-limits.md)에 있습니다.
 
 ## 관련 문서
 

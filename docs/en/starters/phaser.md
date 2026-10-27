@@ -6,7 +6,7 @@ section: Starter
 
 # Phaser 2D starter
 
-[Phaser](https://phaser.io) is a popular open-source framework for 2D browser games, with scenes, sprites, arcade physics, and an asset loader. The ZUKU Phaser starter gives you a working Phaser project that you can preview, validate, and package with the same CLI commands as every other ZUKU game.
+[Phaser](https://phaser.io) is an open-source framework for 2D browser games, with scenes, sprites, arcade physics, and an asset loader. The ZUKU Phaser starter is a working Phaser project. It uses the same CLI commands as every other ZUKU game to preview, validate, and package.
 
 `zuku create` always scaffolds the [Canvas runner](html5.md), and it has no template option. The Phaser starter is a separate download.
 
@@ -19,7 +19,7 @@ unzip zuku-phaser-starter.zip
 cd zuku-phaser-starter   # use the folder name the archive extracts to
 ```
 
-On Windows, you can right-click the file and choose **Extract All** instead.
+On Windows, right-click the file and choose **Extract All**.
 
 ## What's in the archive
 
@@ -29,9 +29,9 @@ The archive contains:
 - a bundled Phaser vendor file that ships with the game,
 - your game code, which `index.html` loads with relative paths.
 
-Phaser is **vendored**: the library file sits inside the project and is loaded from there. The starter doesn't load anything from a CDN, and there's no `npm install` step. You can open the folder and get to work straight away.
+Phaser is vendored: the library file sits inside the project and is loaded from there. The starter doesn't load anything from a CDN, and there's no `npm install` step.
 
-Before you run anything, check the project root for a `zukujs.json` manifest. The CLI needs it, along with the `source` folder it points to (`src` by default), where `index.html` must be. If the manifest is missing, `zuku validate` reports `MANIFEST_MISSING`. See [Bring an existing game](existing-game.md) to create one.
+Before you run anything, check the project root for a `zukujs.json` manifest. The CLI needs it, along with the `source` folder it points to (`src` by default), where `index.html` must be. If the manifest is missing, `zuku validate` reports `MANIFEST_MISSING`. [Bring an existing game](existing-game.md) explains how to create one.
 
 ## Run it
 
@@ -45,11 +45,11 @@ This serves a read-only preview on `127.0.0.1` and prints the URL. Press Ctrl+C 
 
 ## Edit
 
-Work in the game code files, not the vendor file. A few tips specific to Phaser:
+Edit the game code files, not the vendor file. Phaser-specific rules:
 
-- **Load assets with relative paths.** Put images, audio, and atlases inside the source folder and load them with paths such as `assets/hero.png`. Don't use absolute URLs or paths that start with `/`.
-- **Keep Phaser local.** If you upgrade Phaser, replace the vendored file with the new build rather than switching to a CDN link. A ZUKU package declares package-only network access, so everything the game needs should travel inside the package.
-- **Support touch if you claim mobile.** Set `jump.platform.mobile` or `tablet` to `true` in `zukujs.json` only if every action also works with pointer or touch input.
+- Load assets with relative paths. Put images, audio, and atlases inside the source folder and load them with paths such as `assets/hero.png`. Don't use absolute URLs or paths that start with `/`.
+- Keep Phaser local. To upgrade Phaser, replace the vendored file with the new build instead of switching to a CDN link. A ZUKU package declares package-only network access, so everything the game needs must be inside the package.
+- Support touch if you declare mobile. Set `jump.platform.mobile` or `tablet` to `true` in `zukujs.json` only if every action also works with pointer or touch input.
 
 ## Validate and package
 
@@ -58,17 +58,19 @@ zuku validate .
 zuku package . --format zwf
 ```
 
-`validate` checks the manifest and every file in the source folder: allowed file types, no symlinks, no native executables, and the entry point in place. `package` writes `dist/<name>-<version>.zwf` and refuses to overwrite an existing file unless you pass `--force`. You can also check the finished package:
+`validate` checks the manifest and every file in the source folder: allowed file types, no symlinks, no native executables, and the entry point in place. `package` writes `dist/<name>-<version>.zwf` and refuses to overwrite an existing file unless you pass `--force`. `validate` also checks the finished package:
 
 ```sh
 zuku validate dist/<name>-<version>.zwf
 ```
 
-All three commands run offline. When you're ready to upload a draft, see [Publishing](../cli/publishing.md).
+All three commands run offline. Draft uploads are covered in [Publishing](../cli/publishing.md).
 
-## Prefer to generate a Phaser game?
+<span id="prefer-to-generate-a-phaser-game"></span>
 
-CLI 0.3.0 does not include Phaser. The agent can select Phaser only if the `phaser` package is separately available alongside the CLI; it then copies the build and license into the project's `src/vendor/` folder without relying on a CDN. The downloadable starter on this page already includes Phaser and needs no additional installation. Agent generation needs credentials for the selected provider or a local model. A ZUKU account is needed for ZUKU AI or uploading and publishing. See [Game agent](../cli/agent.md) and [Authentication](../cli/authentication.md).
+## Generate a Phaser game
+
+CLI 0.3.0 does not include Phaser. The agent selects Phaser only if the `phaser` package is installed separately alongside the CLI. It then copies the build and license into the project's `src/vendor/` folder without relying on a CDN. The downloadable starter on this page already includes Phaser and needs no additional installation. Agent generation requires credentials for the selected provider or a local model. ZUKU AI, uploading, and publishing require a ZUKU account. See [Game agent](../cli/agent.md) and [Authentication](../cli/authentication.md).
 
 ## Next steps
 

@@ -6,7 +6,7 @@ section: API
 
 # Contents
 
-> **Base URL**: `/api/v1`
+> Base URL: `/api/v1`
 > Use only the paths and fields documented here. For newer fields, check the API response and the page for that feature.
 
 All media categories (`hype` / `swipe` / `jump` / `vive` / `vine`) share a single content contract. Get upload URLs from [Media](media.md) first, then reference them in this page's `thumbnail_url` / `media_url` / package metadata fields.
@@ -86,7 +86,7 @@ const { content } = envelope.data;
 
 ## GET `/api/v1/contents/{id}/conversion`
 
-Returns only the **conversion status** derived from legacy SWF/FLV and similar sources. This is a separate contract from the original `media_url`.
+Returns only the conversion status derived from legacy SWF/FLV and similar sources. This is a separate contract from the original `media_url`.
 
 **Response `data`**: `{ "conversion": ConversionInfo }`
 
@@ -127,7 +127,7 @@ Requires author authentication. Read progress from `data.thumbnail_job` in the s
 | `updated_at` | Time of the last status change |
 | `thumbnail_revision` | String indicating the order of image changes |
 
-While `pending` or `running`, you can poll every 5 seconds. `preserved` means the existing image was kept. If the source is missing or the game cannot run, the status becomes `failed`; a failure screen is never treated as a successful thumbnail.
+While `pending` or `running`, poll every 5 seconds. `preserved` means the existing image was kept. If the source is missing or the game cannot run, the status becomes `failed`; a failure screen is never treated as a successful thumbnail.
 
 ### POST `/api/v1/contents/{id}/thumbnail-job`
 
@@ -145,7 +145,7 @@ Related recommendations.
 
 | Query | Default | Range | Description |
 |---|---|---|---|
-| `limit` | `8` | **1–50** (clamped) | Number of items per request |
+| `limit` | `8` | 1–50 (clamped) | Number of items per request |
 | `offset` | `0` | ≥ 0 | Number of items to skip |
 
 **Response `data`**
@@ -185,7 +185,7 @@ const { data } = await res.json();
 
 ## POST `/api/v1/contents`
 
-Creates content. **Authentication required**: `Authorization: Bearer <access_token>` **or** `X-API-Key: <developer_key>`.
+Creates content. Authentication required: `Authorization: Bearer <access_token>` or `X-API-Key: <developer_key>`.
 
 Success → `201 Created` · `data.content`.
 
@@ -308,7 +308,7 @@ async function createContent(token: string, body: unknown) {
 
 ## PATCH `/api/v1/contents/{id}`
 
-Partial update. **Bearer only** (`X-API-Key` is not accepted). Only the author can update their own content.
+Partial update. Bearer only (`X-API-Key` is not accepted). Only the author can update their own content.
 
 `UpdateContentRequest`: only the fields you send are updated.
 
@@ -350,7 +350,7 @@ if (!envelope.success) throw new Error(envelope.error.code);
 
 ## DELETE `/api/v1/contents/{id}`
 
-Soft **archive**. **Bearer only**, owner only. The content is hidden from public feeds, search, recommendations, and linked Thread posts.
+Soft archive. Bearer only, owner only. The content is hidden from public feeds, search, recommendations, and linked Thread posts.
 
 Success → `200` · the archived `data.content`.
 

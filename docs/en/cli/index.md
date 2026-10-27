@@ -6,13 +6,13 @@ section: Guide
 
 # ZUKU CLI
 
-The ZUKU CLI is a local tool for making HTML5 games for ZUKU. It creates projects, previews them on your machine, checks them against the same rules the service uses, packages them into reproducible `.zwf` or `.zip` files, and uploads or publishes them to your ZUKU account. It also includes a local game-development agent that can build and verify a game for you.
+The ZUKU CLI is a local tool for making HTML5 games for ZUKU. It creates projects, previews them on your machine, checks them against the same rules the service uses, packages them into reproducible `.zwf` or `.zip` files, and uploads or publishes them to your ZUKU account. It also includes a local game-development agent that builds and verifies a game.
 
-The current version is **0.3.0**.
+The current version is 0.3.0.
 
 ## One tool, two names
 
-The CLI installs two commands: `zuku` and `zukujs`. They are the same program. Both run the same runtime and share the same configuration, sign-in state, providers and session history under `~/.config/zukujs/` (Windows: `%LOCALAPPDATA%\ZukuJS\`). You can use either name; this documentation uses `zuku`.
+The CLI installs two commands: `zuku` and `zukujs`. They are the same program. Both run the same runtime and share the same configuration, sign-in state, providers and session history under `~/.config/zukujs/` (Windows: `%LOCALAPPDATA%\ZukuJS\`). Either name works. This documentation uses `zuku`.
 
 ```sh
 zuku --version
@@ -33,7 +33,7 @@ Every game is a plain folder on your computer. The CLI moves that folder through
 2. **Run**: `zuku run`, inside the folder, serves a local preview on `127.0.0.1`.
 3. **Validate**: `zuku validate <path>` checks the project or package without running its code.
 4. **Package**: `zuku package <path>` builds a deterministic `.zwf` (default) or `.zip`.
-5. **Publish**: `zuku upload` creates a **draft** on ZUKU, and `zuku deploy --yolo` publishes to production in one explicit step.
+5. **Publish**: `zuku upload` creates a draft on ZUKU, and `zuku deploy --yolo` publishes to production in one explicit step.
 
 The first four steps work offline. Only the last step talks to the ZUKU service and needs a ZUKU account. See [Publishing](publishing.md) for details.
 

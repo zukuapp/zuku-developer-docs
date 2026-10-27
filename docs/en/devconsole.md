@@ -53,7 +53,7 @@ GET /api/v1/devconsole/apps/{app_id}
 
 ## API keys
 
-Keys are issued per app. The raw key is returned **only once, in the creation response**.
+Keys are issued per app. The raw key is returned only once, in the creation response.
 
 ### List keys
 
@@ -132,4 +132,4 @@ GET /api/v1/devconsole/webhooks/{webhook_id}/deliveries
 | Use | Simple server-to-server (content creation) | Per-app keys and webhook management |
 | Scopes | None | JSON `scopes` array |
 
-The two systems run **side by side**. For user-level keys, see [Authentication](authentication.md#11-developer-api-keys). See also [Errors](errors.md) and [Rate limits](rate-limits.md).
+The two systems run side by side. For user-level keys, see [Authentication](authentication.md#11-developer-api-keys). See also [Errors](errors.md) and [Rate limits](rate-limits.md).

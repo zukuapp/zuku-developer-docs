@@ -8,8 +8,8 @@ section: Reference
 
 이 문서는 두 부분으로 나뉩니다.
 
-- **ZUKU API**: `/api/v1` 응답 봉투, HTTP 상태, 서버 오류 코드
-- **ZukuJS CLI**: `zuku`/`zukujs` 명령의 출력 형식, 종료 코드, CLI 오류 코드
+- ZUKU API: `/api/v1` 응답 봉투, HTTP 상태, 서버 오류 코드
+- ZukuJS CLI: `zuku`/`zukujs` 명령의 출력 형식, 종료 코드, CLI 오류 코드
 
 ## API 응답 봉투
 
@@ -52,7 +52,7 @@ section: Reference
 }
 ```
 
-- `details`는 **필드 단위 검증** 오류가 있을 때만 포함됩니다.
+- `details`는 필드 단위 검증 오류가 있을 때만 포함됩니다.
 - 단순 실패는 `code`와 `message`만 담습니다.
 
 ### 예외
@@ -60,7 +60,7 @@ section: Reference
 | 상황 | 본문 |
 |---|---|
 | `204 No Content` | 빈 본문(댓글 삭제, 일부 폐기 API 등) |
-| JUMP `stream` / `swf` 성공 | JSON이 아닌 **바이너리**일 수 있음 |
+| JUMP `stream` / `swf` 성공 | JSON이 아닌 바이너리 본문 |
 | CORS preflight | `204` |
 
 ## HTTP 상태 코드
@@ -86,7 +86,7 @@ section: Reference
 
 ## API 오류 코드
 
-서버가 실제로 반환하는 코드입니다. 위임된 moderation·analytics 모듈도 같은 코드를 쓸 수 있습니다.
+서버가 실제로 반환하는 코드입니다.
 
 ### 인증·권한
 
@@ -146,7 +146,7 @@ section: Reference
 
 ### 게임 패키지 업로드
 
-`zuku upload`가 `POST /api/v1/uploads`·`POST /api/v1/contents`에서 받아 그대로 보고하는 코드입니다. 모든 422가 같은 원인이라고 가정하지 마세요.
+`zuku upload`가 `POST /api/v1/uploads`·`POST /api/v1/contents`에서 받아 그대로 보고하는 코드입니다. 422 응답의 원인은 `code`로 구분합니다.
 
 | code | 전형적 HTTP | 의미 |
 |---|---|---|
@@ -175,7 +175,7 @@ section: Reference
 | `INTERNAL_ERROR` | 500 | 내부 처리 실패 |
 | `NOT_IMPLEMENTED` | 501 | 미구현(예: OAuth provider) |
 
-> 웹 클라이언트의 `ApiFailure`는 봉투 해석 실패 시 `INVALID_RESPONSE`, 빈 본문 오류 시 `HTTP_ERROR`를 **클라이언트 쪽에서** 만들 수 있습니다. 서버가 보내는 코드가 아닙니다.
+> 웹 클라이언트의 `ApiFailure`는 봉투 해석 실패 시 `INVALID_RESPONSE`, 빈 본문 오류 시 `HTTP_ERROR`를 클라이언트 쪽에서 만듭니다. 서버가 보내는 코드가 아닙니다.
 
 ## `details[]` 필드 오류
 
@@ -206,7 +206,7 @@ section: Reference
 
 `429 RATE_LIMITED`의 `error.details`에는 `plan`, `scope`, `limit`, `remaining`, `window_seconds`, `retry_after_seconds`, `reset_at`, `upgrade_available`이 들어갑니다. `reset_at`은 Unix epoch 초입니다. 카운터를 확인할 수 없으면 `503 RATE_LIMIT_UNAVAILABLE`을 반환합니다. 기존 MFA·채팅·제공자 제한은 각자의 오류 코드와 재시도 안내를 유지합니다.
 
-한도 수치와 운영 적용 조건은 [요청 한도](rate-limits.md)를 보세요. 이전 릴리스의 더미 헤더와 새 정책을 구분하려면 실제 응답과 `GET /api/v1/rate-limits/policy`를 확인합니다. CORS·API 버전 헤더는 기존 계약을 유지하며, 개인 한도 정보나 429 응답은 공유 캐시에 저장하지 않습니다.
+한도 수치와 운영 적용 조건은 [요청 한도](rate-limits.md)에 있습니다. 이전 릴리스의 더미 헤더와 새 정책을 구분하려면 실제 응답과 `GET /api/v1/rate-limits/policy`를 확인합니다. CORS·API 버전 헤더는 기존 계약을 유지하며, 개인 한도 정보나 429 응답은 공유 캐시에 저장하지 않습니다.
 
 ## 클라이언트 처리 예시
 
@@ -280,7 +280,7 @@ try {
 }
 ```
 
-POST·업로드·결제·AI 생성 같은 변경 요청은 자동으로 반복하지 말고, 작업 상태를 먼저 확인하세요.
+POST·업로드·결제·AI 생성 같은 변경 요청은 자동으로 반복하지 않습니다. 작업 상태를 먼저 확인합니다.
 
 ## CLI 오류
 
@@ -345,7 +345,7 @@ POST·업로드·결제·AI 생성 같은 변경 요청은 자동으로 반복�
 | `AGENT_RECOVERY_REQUIRED` | 게시 상태를 서버에서 조회할 수 없어 멈춤 |
 | `DEPLOY_QUOTA_EXCEEDED` | 계정당 6시간 3회 게시 한도 초과(`retry_after` 포함) |
 
-에이전트 오류 메시지에는 모델·제공자·API·브라우저 원문이나 토큰이 들어가지 않습니다. 대처 방법은 [게임 개발 에이전트](cli/agent.md)와 [패키징과 게시](cli/publishing.md)를 보세요.
+에이전트 오류 메시지에는 모델·제공자·API·브라우저 원문이나 토큰이 들어가지 않습니다. 대처 방법은 [게임 개발 에이전트](cli/agent.md)와 [패키징과 게시](cli/publishing.md)에 있습니다.
 
 ## 관련 문서
 

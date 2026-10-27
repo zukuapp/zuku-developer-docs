@@ -122,7 +122,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CID/comments" \
 
 ### PATCH /comments/{id}
 
-본문 `{ "body": "수정한 댓글" }`. 작성자만 수정할 수 있으며, 다른 사람의 댓글이나 없는 댓글은 `404 COMMENT_NOT_FOUND`입니다(존재 여부 비공개).
+본문 `{ "body": "수정한 댓글" }`. 작성자만 수정합니다. 다른 사람의 댓글이나 없는 댓글은 `404 COMMENT_NOT_FOUND`입니다(존재 여부 비공개).
 
 ### DELETE /comments/{id}
 
@@ -142,7 +142,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CID/comments" \
 
 ### GET /notifications/unread-count
 
-배지 갱신용으로 `data.unread_count`만 반환합니다. WebSocket/SSE는 없으므로 HTTP로 주기적으로 조회하세요.
+배지 갱신용으로 `data.unread_count`만 반환합니다. WebSocket/SSE는 없으므로 HTTP로 주기적으로 조회합니다.
 
 ```bash
 curl -sS "https://zuzunza.com/api/v1/notifications/unread-count" \
@@ -189,7 +189,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/dm/conversations" \
 
 ### GET /dm/conversations/{id}/messages
 
-`limit`(기본 50), `before`. `next_cursor`는 현재 페이지 **첫 메시지의 id**입니다.
+`limit`(기본 50), `before`. `next_cursor`는 현재 페이지 첫 메시지의 id입니다.
 
 ### POST /dm/conversations/{id}/messages
 

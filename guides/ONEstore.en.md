@@ -20,15 +20,15 @@ The preview APK currently offered on the [ZUKU APK page](https://apk.zuzunza.com
 
 This preview does not have production release signing. The inspected preview and default Gradle release configuration use `signingConfigs.debug`. The official build script also supports a separate production signing configuration, described in step 5. A successful `assembleRelease` build or `debuggable=false` does not establish that a protected production key was used; verify the actual artifact.
 
-ZUKU AI in the app is currently **Coming soon**. The listing, screenshots, and review instructions must reflect that state. Do not advertise unverified AI access, subscriptions, or purchases as available features.
+ZUKU AI in the app is currently "Coming soon". The listing, screenshots, and review instructions must reflect that state. Do not advertise unverified AI access, subscriptions, or purchases as available features.
 
 ## 2. Choose the format and signing arrangement
 
-ONE store supports both APK and AAB for Android. For this app's first production release, a **production-signed APK with a developer-managed key** makes it straightforward to align the APK website and store signing certificates. If choosing AAB, also verify the certificate on the final APK generated for users. [Supported formats](https://onestore-dev.gitbook.io/dev/eng/docs/apps)
+ONE store supports both APK and AAB for Android. This app's first production release uses a production-signed APK with a developer-managed key. This keeps the APK website and store signing certificates on the same key. If choosing AAB, also verify the certificate on the final APK generated for users. [Supported formats](https://onestore-dev.gitbook.io/dev/eng/docs/apps)
 
 An app converted from APK to AAB cannot return to APK. Design certificate continuity before distributing the same app through multiple channels. An upload key is distinct from the app signing key used on devices. [Android App Bundle FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps/one-store-android-app-bundle)
 
-For a developer-managed APK, the console's **Disable app signatures** option still requires a signed APK. It means the developer retains signing-key management. If selecting ONE store key management, follow its official key registration process and verify the final signed APK downloaded from the console. [Binary and signing options](https://onestore-dev.gitbook.io/dev/eng/docs/apps/product/android/binary)
+For a developer-managed APK, the console's "Disable app signatures" option still requires a signed APK. It means the developer retains signing-key management. If selecting ONE store key management, follow its official key registration process and verify the final signed APK downloaded from the console. [Binary and signing options](https://onestore-dev.gitbook.io/dev/eng/docs/apps/product/android/binary)
 
 ## 3. Prepare the developer account
 
@@ -39,7 +39,7 @@ For a developer-managed APK, the console's **Disable app signatures** option sti
 
 ## 4. Prepare production signing and the upgrade path
 
-Use a production keystore controlled by the app owner and configure the release build to use it. If this app already has a production key, start from that key and its distribution history. Android Studio provides **Build → Generate Signed App Bundle or APK → APK**. [Android app signing](https://developer.android.com/studio/publish/app-signing)
+Use a production keystore controlled by the app owner and configure the release build to use it. If this app already has a production key, start from that key and its distribution history. In Android Studio, use **Build → Generate Signed App Bundle or APK → APK**. [Android app signing](https://developer.android.com/studio/publish/app-signing)
 
 Keep the keystore and passwords out of Git, documentation, chat, and build logs. Store them with restricted access and maintain a separate encrypted backup whose recovery has been checked. Record the public certificate's SHA-256 fingerprint in the handoff, rather than private key material.
 
@@ -49,7 +49,7 @@ The current preview certificate has this public fingerprint. Finding it on the p
 fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c
 ```
 
-The existing Debug-signed preview cannot be updated normally with an app bearing a different production certificate, even when the package name matches. Explain data preservation and migration to preview users first. Transition test devices only after preserving necessary data; do not automate app removal. Future production website and store builds should retain the same package and approved signing arrangement.
+The existing Debug-signed preview cannot be updated normally with an app bearing a different production certificate, even when the package name matches. Explain data preservation and migration to preview users first. Transition test devices only after preserving necessary data; do not automate app removal. Future production website and store builds retain the same package and approved signing arrangement.
 
 ## 5. Build the production release
 
@@ -61,7 +61,7 @@ The project's official build script generates production signing configuration w
 
 Run the official `build:apk` script on Linux or macOS. On Windows, use Linux Node, JDK, and Android SDK inside WSL2; running this script with native Windows Node is unsupported.
 
-Run these commands at the app project root **after securely providing all four production signing settings**. An APK build with missing settings can use the preview signer, so the certificate verification in the next step is essential.
+Run these commands at the app project root after providing all four production signing settings. If any setting is missing, the APK build uses the preview (Debug) signer, so the certificate verification in the next step is required.
 
 ```bash
 npm ci
@@ -97,7 +97,7 @@ apksigner verify --verbose --print-certs "$ZUKU_ANDROID_APK"
 sha256sum "$ZUKU_ANDROID_APK"
 ```
 
-On macOS, the final command can be `shasum -a 256 "$ZUKU_ANDROID_APK"`. These tools inspect the manifest, included ABIs, signature, and file hash. [APK Analyzer](https://developer.android.com/tools/apkanalyzer), [AAPT2](https://developer.android.com/tools/aapt2), [apksigner](https://developer.android.com/tools/apksigner)
+On macOS, replace the final command with `shasum -a 256 "$ZUKU_ANDROID_APK"`. These tools inspect the manifest, included ABIs, signature, and file hash. [APK Analyzer](https://developer.android.com/tools/apkanalyzer), [AAPT2](https://developer.android.com/tools/aapt2), [apksigner](https://developer.android.com/tools/apksigner)
 
 Check the package, increased versionCode, `debuggable=false`, supported ABIs, and expected production certificate fingerprint. Cryptographic signature verification does not establish production key ownership or store approval. Freeze the exact verified file as the submission artifact.
 
@@ -105,13 +105,13 @@ Check the package, increased versionCode, `debuggable=false`, supported ABIs, an
 
 Test a fresh installation and an update from the previous production version. On Android devices that will be supported, exercise startup, login and logout, navigation, game playback, back navigation, the keyboard, denied permissions, and network loss and recovery. Only describe screens and features that actually exist in the release.
 
-Also check narrow screens, larger text, dark mode, and app restart. The AI screen must retain **Coming soon** and must not present a closed backend as available. Confirm that the privacy policy and support links work.
+Also check narrow screens, larger text, dark mode, and app restart. The AI screen must retain "Coming soon" and must not present a closed backend as available. Confirm that the privacy policy and support links work.
 
 ## 8. Register the Android product
 
-In ONEconsole, open **Apps → Applications → Register app**, then select **Official release / Android**. Enter `com.zuzunza.zuku`, matching the verified APK. The package cannot be changed after registration. If the owner already has the same product registered, use its update flow. [Register an app](https://onestore-dev.gitbook.io/dev/docs/apps/register-app)
+In ONEconsole, open Apps → Applications → Register app, then select "Official release / Android". Enter `com.zuzunza.zuku`, matching the verified APK. The package cannot be changed after registration. If the owner already has the same product registered, use its update flow. [Register an app](https://onestore-dev.gitbook.io/dev/docs/apps/register-app)
 
-Calling the current download a preview is different from selecting ONE store's **Beta** product type. A Beta product requires a new product with a different package for official release, so this procedure selects Official release. Resolve ownership if another account is reported as owning the package.
+Calling the current download a preview is different from selecting ONE store's "Beta" product type. A Beta product requires a new product with a different package for official release, so this procedure selects Official release. Resolve ownership if another account is reported as owning the package.
 
 The registration guide recommends separate packages for other Android markets. Treat this as a recommendation, not a mandatory requirement or permission to rename this app's existing package. Plan package separation, existing-user upgrades, and signing continuity before adding another market.
 
@@ -119,7 +119,7 @@ The registration guide recommends separate packages for other Android markets. T
 
 Enter the title, default language, description, appropriate category, support contacts, and launch countries. Use the new ZUKU logo and screenshots from the actual production app. Do not present desktop website captures as mobile app screenshots.
 
-Prepare **2–8 screenshots**, as specified by the official FAQ. Show available features and identify AI as Coming soon. [Product FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps)
+Prepare 2–8 screenshots, as specified by the official FAQ. Show available features and identify AI as Coming soon. [Product FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps)
 
 Complete rating information based on actual content and use. Publish an accessible HTTPS privacy policy and link to it inside the app. Describe actual collection, purposes, retention and deletion, third-party processing, and contacts. Align disclosures with the built manifest's permissions and remove unnecessary permissions. [Review guideline](https://onestore-dev.gitbook.io/dev/docs/review/one-store-review-guideline)
 
@@ -127,19 +127,19 @@ For features requiring authentication, provide reproducible review steps and any
 
 ## 10. Upload the binary and set device support
 
-Select the agreed **APK format and signing option**, then upload the verified file. Compare the package, version, SDK, and signing details read by the console with the release record. Base device support on the included ABIs, minSdk, and tested devices. Do not claim unsupported 32-bit ABIs. With store-managed signing, download and verify the final signed APK. [Android binary management](https://onestore-dev.gitbook.io/dev/eng/docs/apps/product/android/binary)
+Select the agreed APK format and signing option, then upload the verified file. Compare the package, version, SDK, and signing details read by the console with the release record. Base device support on the included ABIs, minSdk, and tested devices. Do not claim unsupported 32-bit ABIs. With store-managed signing, download and verify the final signed APK. [Android binary management](https://onestore-dev.gitbook.io/dev/eng/docs/apps/product/android/binary)
 
-ONE store describes the popup about a missing `assets/adi-registration.properties` file as informational: it does not block registration, review, or launch. Follow the separate official Google verification process when applicable. Store-managed keys may require the final ONE store-signed release APK for that process. [Android developer verification FAQ](https://onestore-dev.gitbook.io/dev/help/faq/apps/developer-verification)
+ONE store describes the popup about a missing `assets/adi-registration.properties` file as informational: it does not block registration, review, or launch. Follow the separate official Google verification process when applicable. With store-managed keys, that process uses the final ONE store-signed release APK. [Android developer verification FAQ](https://onestore-dev.gitbook.io/dev/help/faq/apps/developer-verification)
 
 ## 11. Match payments to implemented functionality
 
-Decide the external-payment setting from the actual product plan before registration; the official FAQ says it cannot be changed afterward. The release owner should settle this choice before launch. A Coming soon AI feature does not establish that ONE store billing has been integrated. [Payment configuration FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps)
+Decide the external-payment setting from the actual product plan before registration; the official FAQ says it cannot be changed afterward. The release owner settles this choice before launch. A Coming soon AI feature does not establish that ONE store billing has been integrated. [Payment configuration FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps)
 
 Prepare a separate billing release before introducing paid AI, credits, or subscriptions. Use the current official SDK guidance and configure products. Keep server billing authentication material in server-side secret storage. [IAP preparation](https://onestore-dev.gitbook.io/dev/tools/billing/v21/pre)
 
 Grant entitlements from server-verified purchase state. Test duplicate processing, cancellations, refunds, and entitlement removal. Handle subscription renewal, cancellation, grace, hold, and expiry, including access to subscription management. [Server API](https://onestore-dev.gitbook.io/dev/tools/billing/v21/serverapi), [Subscriptions](https://onestore-dev.gitbook.io/dev/tools/billing/v21/subs)
 
-For IAP products, register test IDs in the console and complete Android Sandbox payment testing. Verify success, failure, and cancellation, and restart the app when changing test environments. Production tests can charge real money; use Sandbox for initial validation. [Payment testing](https://onestore-dev.gitbook.io/dev/tools/billing/v21/test)
+For IAP products, register test IDs in the console and complete Android Sandbox payment testing. Verify success, failure, and cancellation, and restart the app when changing test environments. Production tests charge real money. Use Sandbox for initial validation. [Payment testing](https://onestore-dev.gitbook.io/dev/tools/billing/v21/test)
 
 ## 12. Request review, resolve rejections, and publish
 
@@ -155,7 +155,7 @@ After publication, install through the normal customer store flow. Check the ver
 
 Upload a new binary to the existing product. Retain the package and approved signing arrangement and increase `versionCode`. If key management must change, review the supported Android and ONE store procedures first; do not replace the key as if it were an ordinary update.
 
-To restore previous behavior, rebuild the corrected source as a **new release with a higher versionCode**, sign it, verify it, and submit it. Do not attempt recovery by uploading an older APK with a lower versionCode. Adjust the sale state in the console when necessary and explain the impact and replacement version to users. [Android update version rules](https://developer.android.com/studio/publish/versioning)
+To restore previous behavior, rebuild the corrected source as a new release with a higher versionCode, sign it, verify it, and submit it. Do not attempt recovery by uploading an older APK with a lower versionCode. Adjust the sale state in the console when necessary and explain the impact and replacement version to users. [Android update version rules](https://developer.android.com/studio/publish/versioning)
 
 ## 14. Hand off the release record
 

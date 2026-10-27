@@ -39,10 +39,13 @@ Studio's native shell is compiled for six targets:
 | macOS | `darwin-x64`, `darwin-arm64` | Swift app bundle (`ZUKU Studio.app`) |
 | Windows | `win-x64`, `win-arm64` | .NET WPF, self-contained, with WebView2 |
 
-Native builds and self-tests passing doesn't mean the GUI has been checked on every system:
+GUI verification status by platform:
 
-- **Linux**: the real window has been run as a normal desktop user, including folder picking, sessions, events and game preview, with the browser sandbox enabled.
-- **macOS and Windows**: full GUI verification hasn't been completed. The macOS build has only an ad-hoc development signature. It isn't Developer ID signed or notarized. The Windows build still needs real-world GUI checks, including systems without .NET and the different WebView2 availability cases.
+| Platform | Status |
+| --- | --- |
+| Linux | GUI verified as a normal desktop user with the browser sandbox enabled: folder picking, sessions, events and game preview |
+| macOS | Ad-hoc development signature only. Not Developer ID signed or notarized. Full GUI verification not completed |
+| Windows | Full GUI verification not completed, including systems without .NET and each WebView2 availability case |
 
 Linux requires a graphical desktop session and the GTK 3 and WebKitGTK 4.1 system libraries. The x64 build also requires glibc 2.34 or later. The installer doesn't install system packages or ask for administrator rights.
 
@@ -69,7 +72,7 @@ zuku studio
 zuku studio --port 43200
 ```
 
-Pairing, session resume and sign-in requests must be approved in the terminal. Press Ctrl+C to stop the adapter. Running sessions are not cancelled. Hosted web AI access is currently closed. For everyday work, the CLI commands in the [command reference](commands.md) remain the primary, fully supported path.
+Pairing, session resume and sign-in requests must be approved in the terminal. Press Ctrl+C to stop the adapter. Running sessions are not cancelled. Hosted web AI access is currently closed. The CLI commands in the [command reference](commands.md) are the primary supported path.
 
 ## Related
 

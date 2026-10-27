@@ -8,14 +8,19 @@ section: Guide
 
 The managed installer currently provides the pinned CLI 0.3.0 release. The installer downloads a fixed-version CLI archive over HTTPS, checks its SHA-256 against the pinned release value, and sets up a managed Node.js 22 runtime in your user directory. It never replaces your system Node.js and does not need administrator rights.
 
-Supported platforms: macOS and Linux (x64, arm64) and Windows (x64, arm64).
-
 > Use the exact npm package names in the public release table below. The managed installer continues to provide its existing pinned release.
+
+## Requirements
+
+| Install method | Requirements |
+| --- | --- |
+| Managed installer | macOS and Linux (x64, arm64): Bash and curl or wget. Windows (x64, arm64): PowerShell. The installer supplies Node.js. |
+| npm | Node.js 22 or later, npm |
 
 <!-- BEGIN ZUKU NPM DISTRIBUTIONS -->
 ## npm packages for game development
 
-The table lists exact installation versions. `@zuku/player` is updated here to `0.1.2`; the other eight packages retain the releases verified in the public npm registry on 2026-10-04. Install the packages your project needs.
+The table lists exact installation versions. `@zuku/player` is `0.1.2`. The other eight packages are the releases in the public npm registry as of 2026-10-04. Install the packages your project needs.
 
 | Package | Version | Purpose |
 | --- | --- | --- |
@@ -33,17 +38,17 @@ The table lists exact installation versions. `@zuku/player` is updated here to `
 npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.1 @zuku/zwf-runtime@0.1.2 @zuku/lang@0.1.0 @zuku/core@27.0.1 @zuku/player@0.1.2 @zuku/editor@0.1.1
 ```
 
-`@zuku/player` 0.1.2 limits WebGPU adapter and device acquisition waits to two seconds. Renderer initialization failure or device loss can recover through WebGL on a fresh canvas. Recovery is limited to two attempts and reports an error if rendering cannot initialize.
+`@zuku/player` 0.1.2 limits WebGPU adapter and device acquisition waits to two seconds. On renderer initialization failure or device loss, the player recovers through WebGL on a fresh canvas. Recovery is limited to two attempts. If rendering cannot initialize, the player reports an error.
 
 Resource exports include JSON such as `@zuku/lang/locales/ko.json` and WebAssembly at `@zuku/zwf-runtime/wasm`. For browser projects, use an ESM bundler and follow each package's host instructions.
 
-ZWF2 packages HTML5 ZIP games; ZWF1 stores animations. Use the package and loader for the appropriate format.
+ZWF2 is the HTML5 ZIP game package format. ZWF1 is the animation format. Use the package and loader for each format.
 
 Each package retains its original license notice. The existing `UNLICENSED` declaration for `@zuku/core` is preserved. The Next.js server framework and operational servers are excluded from this game-library release.
 
 ### Install the CLI from npm
 
-Use Node.js 22 or later with npm, then run:
+Requires Node.js 22 or later and npm.
 
 ```sh
 npm install -g @zuku/cli@0.3.1
@@ -86,7 +91,7 @@ By default the CLI is installed to `%LOCALAPPDATA%\ZukuJS`, with `bin\zuku.cmd` 
 zuku --version
 ```
 
-Then try the full local flow:
+Run the local flow:
 
 ```sh
 zuku create my-game
@@ -114,7 +119,7 @@ bash install-zuku-cli.sh --prefix "$HOME/Tools/ZukuJS CLI" --dry-run
 & ([scriptblock]::Create((irm 'https://zuzunza.com/install.ps1'))) -Prefix "$env:LOCALAPPDATA\Tools\ZukuJS CLI" -DryRun
 ```
 
-Releases that include Studio always use the bundled Node.js 22 runtime; passing `--no-node` or `-NoNode` with them stops with an error before anything is installed.
+Releases that include Studio always use the bundled Node.js 22 runtime. Passing `--no-node` or `-NoNode` with them stops with an error before anything is installed.
 
 For manual inspection, the fixed release archive is available at `https://zuzunza.com/downloads/zukujs/cli/0.3.0/zukujs-cli-0.3.0.tgz`. The installer is the supported way to set it up.
 
@@ -137,7 +142,7 @@ To make it permanent, add the same `export` line to your shell's startup file (f
 
 **`zuku` not found in a new Windows terminal**
 
-Add `%LOCALAPPDATA%\ZukuJS\bin` to **User environment variables > Path**, then open a new terminal.
+Add `%LOCALAPPDATA%\ZukuJS\bin` to User environment variables > Path, then open a new terminal.
 
 **Node.js version conflicts**
 

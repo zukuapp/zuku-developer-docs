@@ -1,6 +1,6 @@
 ---
 title: ZUKU Studio
-description: CLI와 같은 런타임과 Agent Core를 사용하는 데스크톱 Studio의 실행 방법과 현재 지원 상태입니다.
+description: CLI와 같은 런타임과 Agent Core를 사용하는 데스크톱 Studio의 실행 방법과 지원 상태입니다.
 section: Guide
 ---
 
@@ -16,13 +16,13 @@ ZUKU Studio는 CLI의 기능을 그래픽 화면에서 사용하는 데스크톱
 zuku studio
 ```
 
-`zukujs studio`도 같은 어댑터와 Agent Core를 사용합니다. `--port <n>`으로 기본 포트 `43127`을 바꿀 수 있습니다. 연결, 세션 재개, 로그인 요청은 실행 중인 터미널에서 승인합니다. `Ctrl+C`는 어댑터를 종료하며 진행 중인 Core 세션을 취소하지 않습니다.
+`zukujs studio`도 같은 어댑터와 Agent Core를 사용합니다. `--port <n>`은 기본 포트 `43127`을 바꿉니다. 연결, 세션 재개, 로그인 요청은 실행 중인 터미널에서 승인합니다. `Ctrl+C`는 어댑터를 종료하며 진행 중인 Core 세션을 취소하지 않습니다.
 
 네이티브 Studio는 설치된 플랫폼 앱을 실행하는 별도 화면입니다. 프로젝트 폴더는 운영체제의 선택 창에서 승인합니다. 브라우저 연결도 같은 로컬 Agent Core를 사용하며, 호스팅 웹 AI는 현재 공개되어 있지 않습니다.
 
 ## 설치 방식
 
-Studio는 공식 설치 스크립트로 설치합니다. 설치 방법은 [설치](../installation.md)를 참고하세요.
+Studio는 공식 설치 스크립트로 설치합니다. 설치 절차는 [설치](../installation.md)에 있습니다.
 
 - Studio는 CLI 패키지와, 플랫폼별로 컴파일된 작은 네이티브 셸로 구성됩니다.
 - 설치 스크립트는 네이티브 파일의 SHA-256을 고정된 릴리스 값과 비교하고, 설치된 CLI와 소스·프로토콜 버전이 맞는지 확인한 뒤 설치합니다.
@@ -43,12 +43,14 @@ Studio는 공식 설치 스크립트로 설치합니다. 설치 방법은 [설�
 
 ## 현재 상태
 
-Studio 네이티브 셸은 위 여섯 플랫폼용으로 컴파일되었습니다. 다만 검증 범위는 플랫폼마다 다릅니다.
+Studio 네이티브 셸은 위 여섯 플랫폼용으로 컴파일되어 있습니다. 플랫폼별 상태는 다음과 같습니다.
 
-- **Linux**: 실제 GTK/WebKit 화면, 공유 Agent Core, 설치 위치 확인, 미리보기 동작을 확인했습니다.
-- **macOS**: 개발용 임시(ad-hoc) 서명만 되어 있으며 Developer ID 서명과 공증(notarization)은 되어 있지 않습니다. 실제 GUI 동작 전체 검증은 아직 완료되지 않았습니다.
-- **Windows**: 실제 GUI 동작 전체 검증은 아직 완료되지 않았습니다. .NET이 미리 설치되지 않은 환경과 WebView2 유무에 따른 동작도 별도로 확인해야 합니다.
+| 플랫폼 | 상태 |
+| --- | --- |
+| Linux | GTK/WebKit 화면, 공유 Agent Core, 설치 위치 확인, 미리보기 동작 검증 완료 |
+| macOS | 개발용 임시(ad-hoc) 서명. Developer ID 서명과 공증(notarization) 없음. 전체 GUI 동작 검증 미완료 |
+| Windows | 전체 GUI 동작 검증 미완료. .NET 미설치 환경과 WebView2 유무별 동작 검증 미완료 |
 
-`zuku://ai/connect` 주소 등록, 단일 인스턴스 실행, 자동 업데이트, 제거는 운영체제별 설치 작업으로 남아 있습니다.
+`zuku://ai/connect` 주소 등록, 단일 인스턴스 실행, 자동 업데이트, 제거는 현재 제공되지 않습니다. 이 항목은 운영체제별 설치 작업으로 남아 있습니다.
 
-macOS나 Windows에서 Studio가 실행되지 않으면 같은 기능을 CLI로 사용할 수 있습니다. 기본 명령은 [CLI 개요](index.md)와 [명령 참조](commands.md)를, 게임 개발 에이전트는 [에이전트](agent.md)를 보세요.
+Studio의 기능은 CLI에서도 제공됩니다. 기본 명령은 [CLI 개요](index.md)와 [명령 참조](commands.md)에, 게임 개발 에이전트는 [에이전트](agent.md)에 있습니다.

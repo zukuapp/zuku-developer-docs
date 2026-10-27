@@ -40,15 +40,15 @@ The ZUKU API accepts two kinds of credentials.
 
 | Method | Header | Use |
 |--------|--------|-----|
-| **Bearer session** | `Authorization: Bearer <access_token>` | A login session. Required by most write APIs and by profile, session, and developer key management. |
-| **X-API-Key** | `X-API-Key: sk_live_…` | A key issued from the developer portal. The `sk_live_` prefix is required. When no Bearer token is present, some server-to-server routes (for example, content creation) use it to identify the caller. |
+| Bearer session | `Authorization: Bearer <access_token>` | A login session. Required by most write APIs and by profile, session, and developer key management. |
+| X-API-Key | `X-API-Key: sk_live_…` | A key issued from the developer portal. The `sk_live_` prefix is required. When no Bearer token is present, some server-to-server routes (for example, content creation) use it to identify the caller. |
 
 Summary of rules:
 
 - Session tokens are `tokens.access_token` and `tokens.refresh_token` from the `POST /auth/login` or `POST /auth/register` response.
 - `token_type` is always `"Bearer"`.
-- The raw developer key (`key`) is returned **only once, right after it is issued**. Afterwards, `GET /developer/keys` returns metadata only.
-- Most routes in these docs, including social, notifications, DMs, and session management, accept **Bearer sessions only**.
+- The raw developer key (`key`) is returned only once, right after it is issued. Afterwards, `GET /developer/keys` returns metadata only.
+- Most routes in these docs, including social, notifications, DMs, and session management, accept Bearer sessions only.
 
 ---
 
@@ -100,7 +100,7 @@ Some successful responses are `204 No Content` with no body (logout, session rev
 | `PATCH` | `/auth/me` | Bearer | Partially update the profile |
 | `GET` | `/auth/sessions` | Bearer | List active sessions |
 | `DELETE` | `/auth/sessions/{id}` | Bearer | Revoke one session → `204` |
-| `POST` | `/auth/oauth/{provider}` | — | **501** `NOT_IMPLEMENTED` |
+| `POST` | `/auth/oauth/{provider}` | — | 501 `NOT_IMPLEMENTED` |
 | `POST` | `/captcha/challenge` | None | Issue a proof-of-work challenge |
 | `POST` | `/captcha/verify` | None | Verify a token (server use and debugging) |
 | `POST` | `/developer/keys` | Bearer | Issue an API key → `201` |
@@ -146,8 +146,8 @@ Request:
 
 | Server configuration | Behavior |
 |----------------------|----------|
-| `CAPTCHA_HMAC_SECRET` **not set** | Gate disabled (passes). Sign-up and login are not blocked. |
-| `CAPTCHA_HMAC_SECRET` **set** | `zcaptcha_token` is required in the body. On failure, **403** `CAPTCHA_FAILED`. |
+| `CAPTCHA_HMAC_SECRET` not set | Gate disabled (passes). Sign-up and login are not blocked. |
+| `CAPTCHA_HMAC_SECRET` set | `zcaptcha_token` is required in the body. On failure, 403 `CAPTCHA_FAILED`. |
 | `CAPTCHA_DEV_BYPASS=1` + allowed token/host | Development bypass is possible |
 
 ---
@@ -161,7 +161,7 @@ Request:
 | Field | Required | Rule |
 |-------|----------|------|
 | `email` | Yes | Must contain `@` |
-| `password` | Yes | **At least 8 characters** |
+| `password` | Yes | At least 8 characters |
 | `password_confirm` | Yes | Must match `password` |
 | `handle` | Yes | Must not be empty |
 | `display_name` | Optional | Defaults to the handle |
@@ -177,7 +177,7 @@ Request:
 |------|------|-----------|
 | 409 | `ALREADY_AUTHENTICATED` | Sign-up attempted while already logged in with a valid Bearer token |
 | 409 | `EMAIL_EXISTS` | Email already in use |
-| 409 | `LEGACY_ACCOUNT_EXISTS` | An existing ZUKU account already has this email/handle → **direct the user to log in** |
+| 409 | `LEGACY_ACCOUNT_EXISTS` | An existing ZUKU account already has this email/handle → direct the user to log in |
 | 409 | `HANDLE_EXISTS` | Handle already in use (or a database duplicate) |
 | 422 | `VALIDATION_ERROR` | Password, email, or handle validation failed |
 | 403 | `CAPTCHA_FAILED` | Captcha gate failed |
@@ -218,8 +218,8 @@ The server first tries a current ZUKU account, then falls back to linking a lega
 ### `POST /auth/logout`
 
 - Header: `Authorization: Bearer <access_token>`
-- Success: **204** (no body)
-- Missing or malformed header: **401** `UNAUTHORIZED`
+- Success: 204 (no body)
+- Missing or malformed header: 401 `UNAUTHORIZED`
 
 ### `POST /auth/refresh`
 
@@ -228,7 +228,7 @@ The server first tries a current ZUKU account, then falls back to linking a lega
 ```
 
 - Success: `data.tokens` (a new `access_token`; the existing `refresh_token` is kept; `expires_in` ≈ 7 days)
-- Failure: **401** `INVALID_REFRESH_TOKEN`
+- Failure: 401 `INVALID_REFRESH_TOKEN`
 
 ---
 
@@ -259,8 +259,8 @@ Instead of forcing a full logout when the same account signs in elsewhere, users
 ### `DELETE /auth/sessions/{id}`
 
 - `{id}` is the numeric session id
-- You can only revoke your own sessions. Missing or belonging to someone else → **404**
-- Success: **204**
+- Only your own sessions can be revoked. Missing or belonging to someone else → 404
+- Success: 204
 
 ---
 
@@ -268,14 +268,14 @@ Instead of forcing a full logout when the same account signs in elsewhere, users
 
 `POST /auth/oauth/{provider}`
 
-Always returns **501 Not Implemented** with code `NOT_IMPLEMENTED`.
+Always returns 501 Not Implemented with code `NOT_IMPLEMENTED`.
 OAuth providers are currently out of scope.
 
 ---
 
 ## 11. Developer API keys
 
-All routes require **Bearer**.
+All routes require Bearer.
 
 ### `POST /developer/keys`
 
@@ -284,7 +284,7 @@ All routes require **Bearer**.
 ```
 
 - `name`: 1–50 characters
-- **201**: `data.api_key` (metadata) + `data.key` (plaintext, **returned only once**)
+- **201**: `data.api_key` (metadata) + `data.key` (plaintext, returned only once)
 
 ### `GET /developer/keys`
 
@@ -292,7 +292,7 @@ All routes require **Bearer**.
 
 ### `DELETE /developer/keys/{id}`
 
-Success: **204**. Missing or belonging to someone else → **404** `API_KEY_NOT_FOUND`
+Success: 204. Missing or belonging to someone else → 404 `API_KEY_NOT_FOUND`
 
 Issued keys can be used as `X-API-Key: sk_live_…` in place of Bearer on some APIs.
 
@@ -458,7 +458,7 @@ A successful `GET /auth/me` extends the same browser session's expiry to 7 days.
 
 ### POST `/api/v1/auth/session`
 
-Use this when the user **explicitly selects** a different saved account. The selected account's `Authorization: Bearer <access_token>` is required, and no body is needed. Success is `200` with `data.user`, and the shared browser cookie switches to the selected account. Sending only the cookie returns `401`.
+Use this when the user explicitly selects a different saved account. The selected account's `Authorization: Bearer <access_token>` is required, and no body is needed. Success is `200` with `data.user`, and the shared browser cookie switches to the selected account. Sending only the cookie returns `401`.
 
 ```ts
 await fetch('https://zuzunza.com/api/v1/auth/session', {

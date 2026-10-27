@@ -50,7 +50,7 @@ curl -sS "https://zuzunza.com/api/v1/contents/$CONTENT_ID" \
 공개 콘텐츠 상세를 조회합니다.
 
 - `Authorization: Bearer …`를 보내면 `is_liked`, `is_bookmarked`, `is_following_creator` 등 뷰어 필드가 채워집니다.
-- JUMP 초안은 작성자만 Bearer로 미리 볼 수 있으며, 다른 사용자와 게스트에게는 `404`입니다.
+- JUMP 초안은 작성자만 Bearer로 미리 봅니다. 다른 사용자와 게스트에게는 `404`입니다.
 - 아카이브된 콘텐츠는 공개 조회, 피드, 검색, Thread에서 제외됩니다.
 - 변환 정보가 있으면 `content.conversion`에 포함됩니다.
 
@@ -89,7 +89,7 @@ curl -sS "https://zuzunza.com/api/v1/contents/$CONTENT_ID" \
 
 ## GET /contents/{id}/conversion
 
-레거시 SWF/FLV 등에서 파생된 **변환 상태**만 조회합니다. 원본 `media_url`과는 별개입니다.
+레거시 SWF/FLV 등에서 파생된 변환 상태만 조회합니다. 원본 `media_url`과는 별개입니다.
 
 응답 `data`: `{ "conversion": ConversionInfo }`
 
@@ -104,7 +104,7 @@ curl -sS "https://zuzunza.com/api/v1/contents/$CONTENT_ID" \
 | `source_kind` | `animation` \| `game` |
 | `error_code` / `message` | 실패 시 |
 
-변환 레코드가 없으면 `404 CONTENT_NOT_FOUND`입니다. JUMP 재생과 IR 스트림은 [미디어](media.md)를 참고하세요.
+변환 레코드가 없으면 `404 CONTENT_NOT_FOUND`입니다. JUMP 재생과 IR 스트림은 [미디어](media.md)에 있습니다.
 
 ```bash
 curl -sS "https://zuzunza.com/api/v1/contents/$CONTENT_ID/conversion"
@@ -128,7 +128,7 @@ curl -sS "https://zuzunza.com/api/v1/contents/$CONTENT_ID/conversion"
 
 - 기준 콘텐츠가 없으면 `404 CONTENT_NOT_FOUND`입니다.
 - `has_more`는 한 개를 더 조회해 계산하며, 더 있을 때 `total`은 하한값(`offset + limit + 1`)입니다.
-- JUMP 상세는 `GET /jump/games/{id}?include=related,popular`로 같은 추천 목록을 함께 받을 수 있습니다.
+- JUMP 상세는 `GET /jump/games/{id}?include=related,popular`로 같은 추천 목록을 함께 반환합니다.
 
 ```bash
 curl -sS "https://zuzunza.com/api/v1/contents/$CONTENT_ID/recommendations?limit=8&offset=0"
@@ -136,7 +136,7 @@ curl -sS "https://zuzunza.com/api/v1/contents/$CONTENT_ID/recommendations?limit=
 
 ## POST /contents
 
-콘텐츠를 생성합니다. `Authorization: Bearer <access_token>` **또는** `X-API-Key: <developer_key>`가 필요합니다. 파일 바이트는 받지 않으므로 [미디어](media.md)에서 URL을 먼저 받으세요.
+콘텐츠를 생성합니다. `Authorization: Bearer <access_token>` 또는 `X-API-Key: <developer_key>`가 필요합니다. 이 API는 파일 바이트를 받지 않습니다. 파일 URL은 [미디어](media.md) API로 먼저 받습니다.
 
 ### 요청 본문
 
@@ -224,7 +224,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/contents" \
 
 ## PATCH /contents/{id}
 
-전달한 필드만 수정합니다. **Bearer만** 허용하며(`X-API-Key` 불가) 작성자 본인 콘텐츠만 수정할 수 있습니다.
+전달한 필드만 수정합니다. Bearer만 허용하며(`X-API-Key` 불가) 작성자 본인 콘텐츠만 수정합니다.
 
 | 필드 | 검증 |
 |---|---|
@@ -245,7 +245,7 @@ curl -sS -X PATCH "https://zuzunza.com/api/v1/contents/$CONTENT_ID" \
 
 ## DELETE /contents/{id}
 
-콘텐츠를 소프트 **아카이브**합니다. **Bearer만**, 작성자만 가능합니다. 공개 피드, 검색, 추천, 연결된 Thread 게시물에서 숨겨집니다. 성공은 `200` · 아카이브된 `data.content`입니다.
+콘텐츠를 소프트 아카이브합니다. Bearer만 허용하며 작성자만 호출합니다. 공개 피드, 검색, 추천, 연결된 Thread 게시물에서 숨겨집니다. 성공은 `200` · 아카이브된 `data.content`입니다.
 
 ```bash
 curl -sS -X DELETE "https://zuzunza.com/api/v1/contents/$CONTENT_ID" \
@@ -279,7 +279,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CONTENT_ID/publish" \
 | `422` | 실행 패키지가 없거나 유효하지 않음 |
 | `503` | 저장 실패. 초안과 Thread가 일부만 게시되지 않도록 원자적으로 처리됩니다. |
 
-초안은 작성자 미리보기를 제외한 콘텐츠·게임 조회, 공개 피드, 검색, 다른 사용자 프로필, Thread에서 숨겨집니다. 다만 업로드 URL 자체는 공개 파일 주소이므로 비밀 파일 보관에 쓰지 마세요.
+초안은 작성자 미리보기를 제외한 콘텐츠·게임 조회, 공개 피드, 검색, 다른 사용자 프로필, Thread에서 숨겨집니다. 업로드 URL 자체는 공개 파일 주소이므로 비밀 파일 보관에 쓰지 않습니다.
 
 ## 게임 썸네일 자동 생성
 
@@ -301,7 +301,7 @@ JUMP 게임은 등록 후 실제 게임 화면을 캡처해 썸네일을 만듭�
 | `updated_at` | 마지막 상태 변경 시각 |
 | `thumbnail_revision` | 이미지 변경 순서를 나타내는 문자열 |
 
-`pending` 또는 `running`일 때는 5초 간격으로 조회할 수 있습니다. `preserved`는 기존 이미지가 유지된 상태입니다. 원본이 없거나 게임을 실행할 수 없으면 `failed`가 되며, 실패 화면을 썸네일로 쓰지 않습니다.
+`pending` 또는 `running`일 때는 5초 간격으로 조회합니다. `preserved`는 기존 이미지가 유지된 상태입니다. 원본이 없거나 게임을 실행할 수 없으면 `failed`가 되며, 실패 화면을 썸네일로 쓰지 않습니다.
 
 ### POST /contents/{id}/thumbnail-job
 
@@ -328,7 +328,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CONTENT_ID/thumbnail-job"
 | `POST` | `/contents/{id}/like` | Bearer | `{ is_liked, like_count }` |
 | `POST` | `/contents/{id}/bookmark` | Bearer | `{ is_bookmarked, bookmark_count }` |
 
-둘 다 토글입니다. 미인증은 `401 UNAUTHORIZED`, 없는 콘텐츠는 `404 CONTENT_NOT_FOUND`입니다. 자세한 내용은 [소셜](social.md)을 참고하세요.
+둘 다 토글입니다. 미인증은 `401 UNAUTHORIZED`, 없는 콘텐츠는 `404 CONTENT_NOT_FOUND`입니다. 상세 내용은 [소셜](social.md)에 있습니다.
 
 ## 오류
 

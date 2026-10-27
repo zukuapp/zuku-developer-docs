@@ -6,9 +6,9 @@ section: API
 
 # 인증
 
-ZUKU API는 로그인 세션의 **Bearer 토큰**과 개발자 포털에서 발급하는 **API 키**(`X-API-Key`)로 요청을 인증합니다. 이 페이지에서는 가입, 로그인, 토큰 갱신, 프로필, 세션 관리, 브라우저 공통 로그인, 개발자 API 키를 다룹니다.
+ZUKU API는 로그인 세션의 Bearer 토큰과 개발자 포털에서 발급하는 API 키(`X-API-Key`)로 요청을 인증합니다. 이 페이지는 가입, 로그인, 토큰 갱신, 프로필, 세션 관리, 브라우저 공통 로그인, 개발자 API 키를 다룹니다.
 
-> **API 인증과 CLI 로그인은 다릅니다.** 이 페이지는 HTTP API를 직접 호출할 때 쓰는 토큰과 키를 설명합니다. `zuku` CLI의 로그인 방법과 저장 위치는 [CLI 인증](cli/authentication.md)을 참고하세요.
+> API 인증과 CLI 로그인은 다릅니다. 이 페이지는 HTTP API를 직접 호출할 때 쓰는 토큰과 키를 설명합니다. `zuku` CLI의 로그인 방법과 저장 위치는 [CLI 인증](cli/authentication.md)에 있습니다.
 
 **Base URL**: `https://zuzunza.com/api/v1`
 
@@ -31,12 +31,12 @@ curl -sS "https://zuzunza.com/api/v1/auth/me" \
 |---|---|---|
 | Bearer 세션 | `Authorization: Bearer <access_token>` | 로그인 세션입니다. 대부분의 쓰기 API, 프로필, 세션, 개발자 키 관리에 필요합니다. |
 | API 키 | `X-API-Key: sk_live_…` | 개발자 포털에서 발급한 키로, `sk_live_` 접두사가 필수입니다. Bearer가 없을 때 일부 서버 간 경로(예: 콘텐츠 생성)에서 발급자를 식별합니다. |
-| 브라우저 공통 쿠키 | (HttpOnly 쿠키) | ZUKU 공식 도메인 사이의 공통 로그인입니다. [브라우저 공통 로그인](#브라우저-공통-로그인)을 참고하세요. |
+| 브라우저 공통 쿠키 | (HttpOnly 쿠키) | ZUKU 공식 도메인 사이의 공통 로그인입니다. 상세 내용은 [브라우저 공통 로그인](#브라우저-공통-로그인)에 있습니다. |
 
 - 세션 토큰은 `POST /auth/login` 또는 `POST /auth/register` 응답의 `tokens.access_token`과 `tokens.refresh_token`입니다.
 - `token_type`은 항상 `"Bearer"`입니다.
-- 개발자 키 원문(`key`)은 **발급 직후 한 번만** 반환됩니다. 이후 `GET /developer/keys`에서는 메타데이터만 볼 수 있습니다.
-- 소셜, 알림, DM, 세션 관리 등 대부분의 경로는 **Bearer 세션만** 허용합니다.
+- 개발자 키 원문(`key`)은 발급 직후 한 번만 반환됩니다. 이후 `GET /developer/keys`는 메타데이터만 반환합니다.
+- 소셜, 알림, DM, 세션 관리 등 대부분의 경로는 Bearer 세션만 허용합니다.
 
 ## 응답 형식
 
@@ -137,7 +137,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/auth/register" \
 |---|---|---|
 | 409 | `ALREADY_AUTHENTICATED` | 유효한 Bearer로 이미 로그인한 상태에서 가입 시도 |
 | 409 | `EMAIL_EXISTS` | 이메일 중복 |
-| 409 | `LEGACY_ACCOUNT_EXISTS` | 기존 ZUKU 계정에 같은 이메일·handle이 있음 → 로그인으로 안내하세요 |
+| 409 | `LEGACY_ACCOUNT_EXISTS` | 기존 ZUKU 계정에 같은 이메일·handle이 있음 → 로그인으로 안내합니다 |
 | 409 | `HANDLE_EXISTS` | handle 중복 |
 | 422 | `VALIDATION_ERROR` | 비밀번호·이메일·handle 검증 실패 |
 | 403 | `CAPTCHA_FAILED` | 캡차 게이트 실패 |
@@ -155,7 +155,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/auth/register" \
 | `device_id` | 아니요 | 세션 메타데이터 |
 | `zcaptcha_token` | 조건부 | 캡차가 활성화된 서버에서 필수 |
 
-기존(레거시) ZUKU 계정으로도 로그인할 수 있으며, 처음 성공하면 현재 계정 체계로 연결됩니다.
+기존(레거시) ZUKU 계정도 로그인을 지원합니다. 처음 성공하면 현재 계정 체계로 연결됩니다.
 
 ```bash
 curl -sS -X POST "https://zuzunza.com/api/v1/auth/login" \
@@ -238,7 +238,7 @@ curl -sS -X PATCH "https://zuzunza.com/api/v1/auth/me" \
 
 ## 세션 관리
 
-전체 로그아웃 대신 낯선 세션만 골라 끊을 수 있습니다.
+세션 관리 API는 전체 로그아웃 없이 특정 세션만 끊습니다.
 
 ### GET /auth/sessions
 
@@ -247,7 +247,7 @@ curl -sS -X PATCH "https://zuzunza.com/api/v1/auth/me" \
 ### DELETE /auth/sessions/{id}
 
 - `{id}`는 숫자 세션 id입니다.
-- 본인 세션만 폐기할 수 있으며, 없거나 다른 사용자의 세션이면 `404 NOT_FOUND`입니다.
+- 본인 세션만 폐기합니다. 없거나 다른 사용자의 세션이면 `404 NOT_FOUND`입니다.
 - 성공: `204`
 
 ```bash
@@ -259,15 +259,15 @@ curl -sS -X DELETE "https://zuzunza.com/api/v1/auth/sessions/42" \
 
 ZUKU 공식 도메인 사이에서는 공통 HttpOnly 세션 쿠키를 사용합니다.
 
-- 브라우저에서 API를 호출할 때는 `credentials: 'include'`를 지정하세요.
+- 브라우저에서 API를 호출할 때는 `credentials: 'include'`를 지정합니다.
 - 유효한 공통 쿠키가 있으면 오래 저장된 Bearer 토큰보다 쿠키의 계정이 우선합니다.
 - 쿠키가 없는 서버 클라이언트는 기존 Bearer 방식을 그대로 사용합니다.
 - `GET /auth/me`가 성공하면 같은 브라우저 세션의 만료가 7일로 연장됩니다. 기존 쿠키는 정상 세션 확인 과정에서 새 브라우저 세션으로 전환됩니다.
-- 쿠키는 HttpOnly이므로 문서 페이지나 게임 코드에서 읽을 수 없으며, 브라우저 세션용 자격 증명은 응답 JSON에 포함되지 않습니다.
+- 쿠키는 HttpOnly이므로 문서 페이지나 게임 코드에서 읽지 못합니다. 브라우저 세션용 자격 증명은 응답 JSON에 포함되지 않습니다.
 
 ### POST /auth/session
 
-저장된 다른 계정을 **명시적으로 선택**할 때 사용합니다. 선택한 계정의 `Authorization: Bearer <access_token>`이 필수이며 본문은 없습니다.
+저장된 다른 계정을 명시적으로 선택할 때 사용합니다. 선택한 계정의 `Authorization: Bearer <access_token>`이 필수이며 본문은 없습니다.
 
 - 성공: `200` · `data.user`. 브라우저 공통 쿠키가 선택한 계정으로 바뀝니다.
 - 쿠키만 보내면 `401`입니다.
@@ -279,11 +279,11 @@ curl -sS -X POST "https://zuzunza.com/api/v1/auth/session" \
 
 ## POST /auth/oauth/{provider}
 
-항상 `501 Not Implemented`, code `NOT_IMPLEMENTED`를 반환합니다. OAuth 로그인은 아직 제공되지 않습니다.
+항상 `501 Not Implemented`, code `NOT_IMPLEMENTED`를 반환합니다. OAuth 로그인은 제공되지 않습니다.
 
 ## 개발자 API 키
 
-모든 경로에 Bearer가 필요합니다. 발급한 키는 `X-API-Key: sk_live_…` 형태로 일부 API에서 Bearer 대신 사용할 수 있습니다. 앱 단위 키와 웹훅은 [개발자 콘솔](devconsole.md)을 참고하세요.
+모든 경로에 Bearer가 필요합니다. 발급한 키는 일부 API에서 `X-API-Key: sk_live_…` 형태로 Bearer를 대신합니다. 앱 단위 키와 웹훅은 [개발자 콘솔](devconsole.md)에 있습니다.
 
 ### POST /developer/keys
 
@@ -291,7 +291,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/auth/session" \
 |---|---|---|
 | `name` | 예 | 1~50자 |
 
-`201 Created` — `data.api_key`(메타데이터)와 `data.key`(평문 키, **이 응답에서만** 제공). 평문 키는 바로 안전하게 보관하세요.
+`201 Created` — `data.api_key`(메타데이터)와 `data.key`(평문 키, 이 응답에서만 제공). 평문 키는 응답을 받은 즉시 안전한 곳에 보관합니다.
 
 ```bash
 curl -sS -X POST "https://zuzunza.com/api/v1/developer/keys" \
@@ -327,7 +327,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/developer/keys" \
 | `API_KEY_NOT_FOUND` | 404 | 삭제할 키 없음 |
 | `NOT_FOUND` | 404 | 세션 등 대상 없음 |
 
-전체 목록은 [오류](errors.md)를 참고하세요.
+전체 목록은 [오류](errors.md)에 있습니다.
 
 ## 관련 문서
 

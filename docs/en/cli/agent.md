@@ -35,7 +35,7 @@ zuku agent --resume <run_id> --yolo     # resume a recorded run
 | --- | --- |
 | `--name <name>` | New project directory name (`[a-z0-9][a-z0-9_-]{0,63}`). An existing path is refused before any model call. |
 | `--model <id>` | Model address. Defaults to your selected model, then `zuku/auto`. |
-| `--draft` | After packaging, upload and create a **draft** only. Cannot be combined with `--yolo`. |
+| `--draft` | After packaging, upload and create a draft only. Cannot be combined with `--yolo`. |
 | `--yolo` | Your explicit, one-time approval to publish to production. |
 | `--resume <run_id>` | Continue a recorded run. Cannot be combined with a request, `--name` or `--model`. |
 | `--experimental` | Explicit opt-in for an Agent Core session using Codex or a custom provider. |
@@ -62,11 +62,11 @@ The CLI checks every stage with code gates. Unsafe output (path escapes, command
 - **`--draft`**: creates a draft through the regular upload flow. The draft is not published.
 - **`--yolo`**: publishes exactly once, and only if the packaged bytes match the bytes that passed the playtest. There are no extra confirmation prompts.
 
-The server allows **3 successful production publishes per ZUKU account in a rolling 6 hours**. Failed or rejected publishes do not count. A fourth attempt gets `DEPLOY_QUOTA_EXCEEDED` with a retry time, and `--yolo` checks the quota before spending model tokens. Check it with `zuku account --quota`. See [Publishing](publishing.md).
+The server allows 3 successful production publishes per ZUKU account in a rolling 6 hours. Failed or rejected publishes do not count. A fourth attempt gets `DEPLOY_QUOTA_EXCEEDED` with a retry time, and `--yolo` checks the quota before spending model tokens. Check it with `zuku account --quota`. See [Publishing](publishing.md).
 
 ## Unknown outcomes and recovery
 
-Publishing involves paid model usage and a quota-limited server action, so the agent never retries blindly. If a publish times out or the response can't be read, the run is recorded as `AGENT_PUBLISH_OUTCOME_UNKNOWN` and is **not** retried automatically. Resume it instead:
+Publishing involves paid model usage and a quota-limited server action, so the agent never retries blindly. If a publish times out or the response can't be read, the run is recorded as `AGENT_PUBLISH_OUTCOME_UNKNOWN` and is not retried automatically. Resume it instead:
 
 ```sh
 zuku agent --resume <run_id> --yolo

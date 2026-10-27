@@ -33,20 +33,20 @@ This page covers content social features (likes, bookmarks, comments), notificat
 
 | Area | Auth |
 |------|------|
-| Content likes and bookmarks | **Bearer required** |
+| Content likes and bookmarks | Bearer required |
 | Comment list `GET` | None (public). 404 if the content doesn't exist |
-| Create, edit, delete comments | **Bearer required** |
-| Notification list / unread-count | Bearer **optional** (without it, behaves as empty / close to 0) |
-| Notification read-all / `{id}/read` | **Bearer required** |
-| All DM routes | **Bearer required** + conversation participants only |
-| `GET /users/me/{kind}` | **Bearer required** |
-| Admin users | **Bearer + `role=admin`** (non-admins get **403** `FORBIDDEN`) |
+| Create, edit, delete comments | Bearer required |
+| Notification list / unread-count | Bearer optional (without it, behaves as empty / close to 0) |
+| Notification read-all / `{id}/read` | Bearer required |
+| All DM routes | Bearer required + conversation participants only |
+| `GET /users/me/{kind}` | Bearer required |
+| Admin users | Bearer + `role=admin` (non-admins get 403 `FORBIDDEN`) |
 
 Session format: `Authorization: Bearer <access_token>`.
-The social, DM, and notification write routes on this page **do not accept X-API-Key** (unlike other routes such as content *creation*).
+The social, DM, and notification write routes on this page do not accept X-API-Key (unlike other routes such as content *creation*).
 
 Common envelope: `{ success, data, meta }` / `{ success, error, meta }`.
-Unlike marking a single notification as read, comment deletion and some other deletes may return **204**.
+Unlike marking a single notification as read, comment deletion and some other deletes return 204.
 
 ---
 
@@ -87,7 +87,7 @@ Toggle. Response:
 { "is_liked": true, "like_count": 42 }
 ```
 
-Content not found → **404** `CONTENT_NOT_FOUND`.
+Content not found → 404 `CONTENT_NOT_FOUND`.
 
 ### `POST /contents/{id}/bookmark`
 
@@ -97,11 +97,11 @@ Toggle. Response:
 { "is_bookmarked": true, "bookmark_count": 7 }
 ```
 
-Not authenticated → **401**. Content not found → **404** `CONTENT_NOT_FOUND`.
+Not authenticated → 401. Content not found → 404 `CONTENT_NOT_FOUND`.
 
 ### `POST /creators/{handle}/follow`
 
-Toggles following or unfollowing a creator. **Bearer required**.
+Toggles following or unfollowing a creator. Bearer required.
 
 Success `200` `data`:
 
@@ -137,7 +137,7 @@ Response: `data.comments`, `data.pagination`.
 { "body": "Great work!", "parent_id": null }
 ```
 
-- `body` up to **1000 characters**
+- `body` up to 1000 characters
 - `parent_id` optional (nested reply)
 - **201**: `data.comment`
 
@@ -147,11 +147,11 @@ Response: `data.comments`, `data.pagination`.
 { "body": "Edited comment" }
 ```
 
-Author only. Someone else's comment or a missing one → **404** `COMMENT_NOT_FOUND` (to avoid revealing whether it exists).
+Author only. Someone else's comment or a missing one → 404 `COMMENT_NOT_FOUND` (to avoid revealing whether it exists).
 
 ### `DELETE /comments/{id}`
 
-Soft delete (the reply's position is kept). Success **204**.
+Soft delete (the reply's position is kept). Success 204.
 
 ---
 
@@ -182,14 +182,14 @@ For badge polling. Returns only `data.unread_count`. (No WebSocket/SSE; single H
 ### `POST /notifications/{id}/read`
 
 Your own notifications only. Success: `{ "id": "…", "is_read": true }`.
-Not found → **404** `NOTIFICATION_NOT_FOUND`.
+Not found → 404 `NOTIFICATION_NOT_FOUND`.
 
 ---
 
 ## 6. DM
 
 One-to-one only. Group chats, end-to-end encryption, and real-time read sync are out of scope.
-If you are not a participant, even the **existence** of the conversation is hidden → the same **404** `CONVERSATION_NOT_FOUND`.
+If you are not a participant, even the existence of the conversation is hidden → the same 404 `CONVERSATION_NOT_FOUND`.
 
 ### `GET /dm/conversations`
 
@@ -209,13 +209,13 @@ or
 ```
 
 - `user_id` takes precedence; otherwise `handle` is used
-- Yourself / user not found → **422** `VALIDATION_ERROR`
-- If a conversation already exists, its summary is returned (same shape as the list) → **201** `data.conversation`
+- Yourself / user not found → 422 `VALIDATION_ERROR`
+- If a conversation already exists, its summary is returned (same shape as the list) → 201 `data.conversation`
 
 ### `GET /dm/conversations/{id}/messages`
 
 `limit` (default 50), `before`.
-`next_cursor` is the **id of the first message** (matching the paging direction).
+`next_cursor` is the id of the first message (matching the paging direction).
 
 ### `POST /dm/conversations/{id}/messages`
 
@@ -223,7 +223,7 @@ or
 { "body": "Hello" }
 ```
 
-Body up to **2000 characters**. **201** `data.message`.
+Body up to 2000 characters. 201 `data.message`.
 
 ### `POST /dm/conversations/{id}/read`
 
@@ -233,7 +233,7 @@ Body up to **2000 characters**. **201** `data.message`.
 
 ## 7. Your lists (users/me)
 
-`GET /users/me/{kind}` always uses the **currently logged-in user** (the server applies the filter).
+`GET /users/me/{kind}` always uses the currently logged-in user (the server applies the filter).
 
 | `kind` | Meaning | Pagination |
 |--------|---------|------------|
@@ -242,13 +242,13 @@ Body up to **2000 characters**. **201** `data.message`.
 | `bookmarks` or `bookmarked` | Works you bookmarked | Same |
 | `posts` | Your community posts | `limit` (default 20) + `before` → `posts` + `next_cursor` |
 
-Any other `kind` → **404** `ROUTE_NOT_FOUND`.
+Any other `kind` → 404 `ROUTE_NOT_FOUND`.
 
 ---
 
 ## 8. Admin users
 
-All three routes require an admin user: not authenticated **401**, non-admin **403** `FORBIDDEN`.
+All three routes require an admin user: not authenticated 401, non-admin 403 `FORBIDDEN`.
 
 ### `GET /admin/users`
 
@@ -270,7 +270,7 @@ Query: `q` (search), `page`, `per_page` → `users` + `pagination`.
 
 - **At least one** of `role` / `is_suspended` is required
 - `role`: `user` \| `admin` only
-- Removing your own admin role or suspending yourself → **409** `SELF_ACTION_FORBIDDEN`
+- Removing your own admin role or suspending yourself → 409 `SELF_ACTION_FORBIDDEN`
 
 ---
 

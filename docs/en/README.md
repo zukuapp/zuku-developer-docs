@@ -1,18 +1,20 @@
 ---
-title: Your next game starts here
+title: Build your first game
 description: Install the ZUKU CLI with curl or wget, choose a playable starter, and build your first game.
 section: Get started
 ---
 
-# Your next game starts here.
+<span id="your-next-game-starts-here"></span>
+
+# Build your first game
 
 **ZUKU - 내가 불러 일으키는 새로운 창작.**
 
-Go from an idea to a playable game. Install the ZUKU CLI, pick a starter, and start building.
+Install the ZUKU CLI and choose a starter to build a playable game.
 
 ## Install the ZUKU CLI
 
-The installer includes Node.js. Copy the command for your terminal and run it.
+The installer includes Node.js. Run the command for your terminal.
 
 === "curl"
 
@@ -34,7 +36,7 @@ The installer includes Node.js. Copy the command for your terminal and run it.
     & ([scriptblock]::Create((irm 'https://zuzunza.com/install.ps1')))
     ```
 
-`zuku` and `zukujs` are the same CLI, sharing configuration and authentication. See [other installation options](installation.md).
+`zuku` and `zukujs` are the same CLI. Both share configuration and authentication. Other installation methods are in [Installation](installation.md).
 
 ## Run your first game
 
@@ -44,6 +46,6 @@ cd my-game
 zuku run
 ```
 
-Open the local URL printed in your terminal. Your game is ready: press Space or tap to jump over obstacles. Stop the preview with `Ctrl+C`.
+Open the local URL printed in your terminal. Press Space or tap to jump over obstacles. Stop the preview with `Ctrl+C`.
 
 [Step-by-step quickstart](getting-started.md) · [CLI commands](cli/commands.md) · [Package and publish](cli/publishing.md)

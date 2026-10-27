@@ -6,7 +6,7 @@ section: Starter
 
 # Bring an existing game
 
-Already have a browser game? You don't need a template. A ZUKU project is just your game files plus a small manifest. This guide shows you how to restructure an existing HTML5, Canvas, or Phaser game so that `zuku validate` passes and `zuku package` produces a `.zwf` file.
+A ZUKU project is a folder of game files plus a manifest. This guide restructures an existing HTML5, Canvas, or Phaser game so that `zuku validate` passes and `zuku package` produces a `.zwf` file.
 
 ## The target layout
 
@@ -40,13 +40,13 @@ Create `zukujs.json` in the project root. Only `schema`, `name`, `title`, and `v
 
 - `name`: lowercase letters, digits, `_`, and `-`, up to 64 characters.
 - `version`: plain `MAJOR.MINOR.PATCH`, for example `1.0.0`.
-- `source`: defaults to `src`. You can't use `dist`, because that's where packages are written.
+- `source`: defaults to `src`. `dist` is not allowed, because packages are written there.
 - `entry`: `index.html` (the default) or `index.htm`.
-- Unknown fields are rejected, so stick to the fields in the [command reference](../cli/commands.md).
+- Unknown fields are rejected. Allowed fields are listed in the [command reference](../cli/commands.md).
 
 The file must be UTF-8 JSON without a BOM.
 
-A shortcut: run `zuku create my-game`, delete the sample files in `src/`, and copy your game in. You get a valid manifest to start from.
+Alternative: run `zuku create my-game`, delete the sample files in `src/`, and copy your game in. This produces a valid manifest.
 
 ## 2. Make every path relative
 
@@ -59,7 +59,7 @@ The package is served from its own location, so absolute paths break.
 <script src="js/game.js"></script>
 ```
 
-Check your HTML, CSS `url(...)` values, and loader calls, such as Phaser's `this.load.image('hero', 'assets/hero.png')`. Match the exact letter case of each file name. Two files whose names differ only by case are rejected.
+Check HTML, CSS `url(...)` values, and loader calls, such as Phaser's `this.load.image('hero', 'assets/hero.png')`. Match the exact letter case of each file name. Two files whose names differ only by case are rejected.
 
 ## 3. Bundle what you load from the network
 
@@ -69,7 +69,7 @@ A ZUKU package declares package-only network access. Download any library you lo
 
 `package` doesn't run build commands. If your game uses a bundler, build it first and copy the **output** into `src/`, not your raw sources.
 
-While scanning, the CLI skips hidden files and `node_modules` with a warning. It reports an error for symlinks, hard links, special files, and native executables. Only web file types are allowed, such as HTML, JS, CSS, JSON, images, audio, video, fonts, and WASM. You can leave out other paths with `package.exclude`, using exact relative paths (globs aren't supported).
+While scanning, the CLI skips hidden files and `node_modules` with a warning. It reports an error for symlinks, hard links, special files, and native executables. Only web file types are allowed, such as HTML, JS, CSS, JSON, images, audio, video, fonts, and WASM. `package.exclude` leaves out other paths. It takes exact relative paths; globs aren't supported.
 
 ## 5. Validate and package
 
@@ -91,4 +91,4 @@ Package validation enforces these documented budgets: up to 8,000 entries, a ZIP
 
 - [Publishing](../cli/publishing.md) to upload your package as a draft
 - [Phaser starter](phaser.md) to compare against a known-good Phaser layout
-- Prefer to generate a fresh game? `zuku agent` can build one, but online generation needs authentication and a configured provider. See [Game agent](../cli/agent.md) and [Authentication](../cli/authentication.md).
+- [Game agent](../cli/agent.md) to generate a new game with `zuku agent`. Online generation requires [authentication](../cli/authentication.md) and a configured provider.

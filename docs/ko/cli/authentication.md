@@ -10,12 +10,12 @@ ZUKU CLI에는 성격이 다른 인증이 두 가지 있습니다.
 
 | 구분 | 무엇을 위한 것인가 | 주요 명령 |
 | --- | --- | --- |
-| **1. ZUKU 계정 로그인과 게임 OAuth 승인** | 게임 업로드·초안 생성·공개 배포, ZUKU AI(`zuku/auto`) 네이티브 생성 | `zuku login zuku`, `zuku account ...` |
-| **2. AI 제공자 자격 증명** | OpenAI·Anthropic 등 외부 AI 제공자를 에이전트 모델로 쓸 때 | `zuku auth ...` |
+| 1. ZUKU 계정 로그인과 게임 OAuth 승인 | 게임 업로드·초안 생성·공개 배포, ZUKU AI(`zuku/auto`) 네이티브 생성 | `zuku login zuku`, `zuku account ...` |
+| 2. AI 제공자 자격 증명 | OpenAI·Anthropic 등 외부 AI 제공자를 에이전트 모델로 쓸 때 | `zuku auth ...` |
 
 두 인증은 서로 대신하지 않습니다. 외부 제공자의 API 키로 게임을 배포할 수 없고, ZUKU 계정 연결이 외부 제공자의 키 역할을 하지도 않습니다.
 
-이 페이지는 CLI 사용자를 위한 안내입니다. 서버 HTTP API의 로그인·세션·개발자 API 키 계약은 [API 인증](../authentication.md)을 보세요.
+이 페이지는 CLI 사용자를 위한 안내입니다. 서버 HTTP API의 로그인·세션·개발자 API 키 계약은 [API 인증](../authentication.md)에 있습니다.
 
 ## `zuku`와 `zukujs`는 같은 인증을 공유합니다
 
@@ -26,7 +26,7 @@ ZUKU CLI에는 성격이 다른 인증이 두 가지 있습니다.
 - CLI는 비밀번호나 복사한 토큰을 요구하지 않습니다. 비밀 값을 명령 인수로 받지도 않습니다.
 - `--api-key`, `--token`, `--secret`, `--password` 같은 옵션이나 키처럼 보이는 인수는 `AUTH_SECRET_ARGUMENT`로 거부되며, 그 값은 오류 메시지에 다시 나오지 않습니다.
 - 키와 토큰은 로그, 오류 메시지, `--json` 출력, 배포 영수증에 기록되지 않습니다.
-- 키나 토큰을 명령 기록, 프로젝트 파일, 저장소, 이슈, 화면 공유에 남기지 마세요. 문서나 지원 요청에도 붙여 넣지 마세요.
+- 키나 토큰은 명령 기록, 프로젝트 파일, 저장소, 이슈, 화면 공유, 문서, 지원 요청에 남기지 않습니다.
 
 ## 1. ZUKU 계정 로그인과 게임 OAuth 승인
 
@@ -34,9 +34,9 @@ ZUKU CLI에는 성격이 다른 인증이 두 가지 있습니다.
 zuku login zuku
 ```
 
-로그인은 디바이스 승인 방식입니다. CLI가 공식 ZUKU 브라우저 페이지를 열어 주면, 브라우저에서 **로그인한 본인 계정으로** 연결을 확인하고 승인합니다. 승인이 끝나면 CLI가 연결을 저장합니다.
+로그인은 디바이스 승인 방식입니다. CLI가 공식 ZUKU 브라우저 페이지를 엽니다. 사용자는 브라우저에서 로그인한 본인 계정으로 연결을 확인하고 승인합니다. 승인이 끝나면 CLI가 연결을 저장합니다.
 
-- 브라우저가 자동으로 열리지 않는 환경에서는 `--no-browser`를 붙이세요. CLI가 표시하는 공식 페이지를 직접 열어 승인하면 됩니다.
+- 브라우저가 자동으로 열리지 않는 환경에서는 `--no-browser`를 붙입니다. CLI가 표시하는 공식 페이지를 직접 열어 승인합니다.
 
   ```sh
   zuku login zuku --no-browser
@@ -52,15 +52,15 @@ zuku login zuku
 | `games:create` | 초안 콘텐츠 생성 |
 | `games:publish` | 공개 배포 |
 
-ZUKU AI로 게임을 생성하려면 생성 권한을 **명시적으로** 추가 요청해야 합니다.
+ZUKU AI로 게임을 생성하려면 생성 권한을 명시적으로 추가 요청해야 합니다.
 
 ```sh
 zuku login zuku --generate
 ```
 
-`--generate`는 위 세 권한에 더해 `games:generate`를 요청합니다. 이 권한은 서버 쪽 네이티브 게임 API와 승인 페이지가 제공될 때 사용할 수 있으며, 실제 모델 가용성과 생성 성공 여부는 별도로 확인됩니다. 생성 권한 없이 연결된 계정은 업로드와 배포에는 계속 쓸 수 있지만, 생성 요청은 `ZUKU_GENERATE_SCOPE_REQUIRED`로 거부되고 `zuku auth list`에는 `scope-required`로 표시됩니다.
+`--generate`는 위 세 권한에 더해 `games:generate`를 요청합니다. 이 권한은 서버의 네이티브 게임 API와 승인 페이지가 제공되는 경우에 적용됩니다. 모델 가용성은 서버 권한과 카탈로그에 따릅니다. 생성 권한 없이 연결된 계정은 업로드와 배포에 그대로 쓰입니다. 이 계정의 생성 요청은 `ZUKU_GENERATE_SCOPE_REQUIRED`로 거부되고 `zuku auth list`에는 `scope-required`로 표시됩니다.
 
-일반 웹 로그인, 개발자 API 키, 환경 변수에 둔 다른 인증 정보는 이 연결을 대신할 수 없습니다.
+일반 웹 로그인, 개발자 API 키, 환경 변수에 둔 다른 인증 정보는 이 연결을 대신하지 않습니다.
 
 ### 계정 상태와 배포 한도
 
@@ -68,7 +68,7 @@ zuku login zuku --generate
 zuku account --quota
 ```
 
-서버는 계정당 최근 6시간 동안 성공한 공개 배포를 최대 3회까지 허용합니다. `account --quota`는 사용 수(`used`), 미확정 수(`pending`), 남은 수(`remaining`), 회복 시점(`reset_at`), 대기 시간(`retry_after`)을 보여 줍니다. 초안과 업로드는 이 횟수를 소비하지 않습니다. 배포 흐름은 [배포](publishing.md)를 보세요.
+서버는 계정당 최근 6시간 동안 성공한 공개 배포를 최대 3회까지 허용합니다. `account --quota`는 사용 수(`used`), 미확정 수(`pending`), 남은 수(`remaining`), 회복 시점(`reset_at`), 대기 시간(`retry_after`)을 보여 줍니다. 초안과 업로드는 이 횟수를 소비하지 않습니다. 배포 흐름은 [배포](publishing.md)에 있습니다.
 
 ### 로그아웃과 정리
 
@@ -79,7 +79,7 @@ zuku account logout
 - 로그아웃하면 토큰이 없는 기록이 남아, 늦게 도착한 로그인이나 갱신 응답이 연결을 되살리지 못합니다.
 - 계정이 바뀌면 진행 중이던 기존 작업의 배포는 중단됩니다.
 - 갱신 응답이 유실되면 이전 갱신 토큰을 다시 보내지 않고 재로그인을 요구합니다.
-- 이전 시험용 서버의 계정 기록은 자동 변환되지 않습니다. `ZUKU_ACCOUNT_MIGRATION_REQUIRED`가 나오면 `zuku login zuku`로 다시 승인하세요. 기존 게임 프로젝트와 CLI 설정은 그대로 유지됩니다.
+- 이전 시험용 서버의 계정 기록은 자동 변환되지 않습니다. `ZUKU_ACCOUNT_MIGRATION_REQUIRED`가 나오면 `zuku login zuku`로 다시 승인합니다. 기존 게임 프로젝트와 CLI 설정은 그대로 유지됩니다.
 
 계정 저장소는 Unix에서 사용자 소유 디렉터리와 권한 `0600` 파일을 사용하고 링크를 거부합니다. Windows에서는 현재 사용자 DPAPI 암호화와 사용자 전용 ACL을 사용하며, 평문 저장으로 대체하지 않습니다.
 
@@ -106,7 +106,7 @@ zuku auth login --provider openai --api-key-env MY_OPENAI_KEY      # 환경 변�
 - 비대화형 실행에서 입력 방법을 지정하지 않으면 질문 없이 `AUTH_INPUT_REQUIRED`로 끝납니다.
 - `--api-key-stdin`은 한 줄만 받으며 16 KiB, 30초 제한이 있습니다.
 - `--api-key-env`는 키 값이 아니라 **환경 변수 이름**만 설정에 저장합니다.
-- `auth login --verify`와 `--header`는 현재 Agent Core에서 전달할 수 없어 `CORE_PROTOCOL_GAP`로 실패합니다. 등록 여부는 `zuku auth list --provider <id>`로 확인하세요. 이 명령은 원격 인증 성공을 검사하지 않습니다. `upload --verify`는 별도의 초안 조회 옵션이며 계속 지원됩니다.
+- `auth login --verify`와 `--header`는 현재 Agent Core에 전달되지 않아 `CORE_PROTOCOL_GAP`로 실패합니다. 등록 여부는 `zuku auth list --provider <id>`로 확인합니다. 이 명령은 원격 인증 성공을 검사하지 않습니다. `upload --verify`는 별도의 초안 조회 옵션이며 계속 지원됩니다.
 - Ollama, LM Studio 같은 로컬 제공자는 저장할 자격 증명이 없어 `not-required`로 표시됩니다. Vertex AI는 Google 기본 자격 증명(ADC), AWS Bedrock은 AWS 자격 증명 체인 또는 Bedrock API 키를 사용합니다.
 
 ### 인증 방식과 `(exp!)` 표시
@@ -118,7 +118,7 @@ zuku auth login --provider openai --api-key-env MY_OPENAI_KEY      # 환경 변�
 | Codex 로그인(CLI 연동) | 아니요 | 예 `(exp!)` |
 | 사용자 지정 엔드포인트 | 아니요 | 예 `(exp!)` |
 
-공식 제공자의 API 키 연결은 정식으로 지원되는 일반 기능입니다. 주황색 `(exp!)` 표시는 **이 CLI의 연동 방식**이 비공식·실험적이라는 뜻이며, 해당 서비스 자체가 실험적이라는 의미가 아닙니다. 색을 쓸 수 없는 출력(`NO_COLOR`, `TERM=dumb`, 파이프, `--json`)에서는 색 없이 표시됩니다.
+공식 제공자의 API 키 연결은 정식으로 지원되는 일반 기능입니다. 주황색 `(exp!)` 표시는 이 CLI의 연동 방식이 비공식·실험적이라는 뜻이며, 해당 서비스 자체가 실험적이라는 의미가 아닙니다. 색을 쓸 수 없는 출력(`NO_COLOR`, `TERM=dumb`, 파이프, `--json`)에서는 색 없이 표시됩니다.
 
 Codex 로그인은 처음 한 번 `--experimental`로 동의해야 연결됩니다.
 
@@ -152,7 +152,7 @@ zuku agent "ZUKU 점프 게임을 만들어 주세요" --model codex/<model> --e
 zuku auth logout --provider openai
 ```
 
-ZUKU 계정 연결을 끊으려면 위의 `zuku account logout`을 사용하세요. 제공자 자격 증명 삭제와 계정 로그아웃은 별개입니다.
+ZUKU 계정 연결은 위의 `zuku account logout`으로 끊습니다. 제공자 자격 증명 삭제와 계정 로그아웃은 별개입니다.
 
 ## 자격 증명을 쓰는 순서
 
@@ -168,7 +168,7 @@ ZUKU 계정 연결을 끊으려면 위의 `zuku account logout`을 사용하세�
 
 ## 온라인 생성에 필요한 것
 
-에이전트로 게임을 온라인 생성하려면 **인증**과 **설정된 제공자**가 모두 필요합니다.
+에이전트로 게임을 온라인 생성하려면 인증과 설정된 제공자가 모두 필요합니다.
 
 - 기본 제공자인 ZUKU AI(`zuku/auto`)를 쓰려면 `zuku login zuku --generate`로 생성 권한을 승인합니다.
 - 다른 제공자를 쓰려면 `zuku auth login --provider <id>`로 자격 증명을 등록하고 [제공자](providers.md)와 [모델](models.md)을 선택합니다.
@@ -186,7 +186,7 @@ ZUKU 계정 연결을 끊으려면 위의 `zuku account logout`을 사용하세�
 | `ZUKU_GENERATE_SCOPE_REQUIRED` | ZUKU 계정에 생성 권한이 없음 |
 | `SECRET_STORE_UNAVAILABLE`, `SECRET_STORE_UNSAFE` | 보호 저장소를 쓸 수 없거나 파일 권한이 안전하지 않음 |
 
-전체 오류 목록은 [오류](../errors.md)를 보세요.
+전체 오류 목록은 [오류](../errors.md)에 있습니다.
 
 ## 다음 단계
 

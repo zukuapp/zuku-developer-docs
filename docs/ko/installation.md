@@ -6,14 +6,23 @@ section: Starter
 
 # 설치
 
-관리형 설치 도구의 현재 고정 CLI 릴리스는 0.3.0입니다. 설치 도구는 CLI와 관리형 Node.js 22 런타임을 사용자 디렉터리에 설치하며, 관리자 권한이 필요하지 않습니다.
+관리형 설치 도구의 현재 고정 CLI 릴리스는 0.3.0입니다. 설치 도구는 CLI와 관리형 Node.js 22 런타임을 사용자 디렉터리에 설치합니다. 관리자 권한은 필요하지 않습니다.
 
-> npm 패키지 이름은 아래의 공개 배포 표를 기준으로 선택하세요. 관리형 설치 도구는 기존 고정 릴리스를 계속 제공합니다.
+> npm 패키지 이름은 아래 공개 배포 표를 기준으로 선택합니다. 관리형 설치 도구는 기존 고정 릴리스를 계속 제공합니다.
+
+<span id="지원-플랫폼"></span>
+
+## 요구 사항
+
+| 설치 방법 | 요구 사항 |
+| --- | --- |
+| 관리형 설치 도구 | Linux·macOS(x64, arm64): Bash와 curl 또는 wget. Windows(x64, arm64): PowerShell. Node.js는 설치 도구가 준비합니다. |
+| npm | Node.js 22 이상, npm |
 
 <!-- BEGIN ZUKU NPM DISTRIBUTIONS -->
 ## 게임 개발용 npm 패키지
 
-아래 표는 정확한 설치 버전을 안내합니다. `@zuku/player`는 `0.1.2`로 갱신했으며, 나머지 8개 패키지는 2026-10-04 공개 npm 레지스트리에서 확인한 버전을 유지합니다. 프로젝트에 필요한 패키지만 선택해 설치하세요.
+아래 표는 정확한 설치 버전입니다. `@zuku/player`는 `0.1.2`입니다. 나머지 8개 패키지는 2026-10-04 공개 npm 레지스트리 기준 버전입니다. 프로젝트에 필요한 패키지만 설치합니다.
 
 | 패키지 | 버전 | 용도 |
 | --- | --- | --- |
@@ -31,17 +40,15 @@ section: Starter
 npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.1 @zuku/zwf-runtime@0.1.2 @zuku/lang@0.1.0 @zuku/core@27.0.1 @zuku/player@0.1.2 @zuku/editor@0.1.1
 ```
 
-`@zuku/player` 0.1.2는 WebGPU 어댑터와 장치 획득 대기를 각각 2초로 제한합니다. 렌더러 초기화 실패나 장치 손실 시 새 캔버스에서 WebGL로 복구할 수 있습니다. 복구는 최대 2회 시도하며, 렌더링을 초기화하지 못하면 오류를 알립니다.
+`@zuku/player` 0.1.2는 WebGPU 어댑터와 장치 획득 대기를 각각 2초로 제한합니다. 렌더러 초기화 실패나 장치 손실이 발생하면 새 캔버스에서 WebGL로 복구합니다. 복구는 최대 2회 시도합니다. 렌더링을 초기화하지 못하면 오류를 알립니다.
 
-`@zuku/lang/locales/ko.json` 같은 JSON 내보내기와 `@zuku/zwf-runtime/wasm` 같은 리소스 내보내기를 사용할 수 있습니다. 브라우저 프로젝트에서는 ESM 번들러와 각 패키지의 호스트 안내를 따르세요.
+패키지는 `@zuku/lang/locales/ko.json` 같은 JSON 내보내기와 `@zuku/zwf-runtime/wasm` 같은 리소스 내보내기를 제공합니다. 브라우저 프로젝트는 ESM 번들러와 각 패키지의 호스트 안내를 따릅니다.
 
-ZWF2는 HTML5 ZIP 게임 패키지이고 ZWF1은 애니메이션 형식입니다. 각 형식에 맞는 패키지와 로더를 사용하세요.
+ZWF2는 HTML5 ZIP 게임 패키지 형식입니다. ZWF1은 애니메이션 형식입니다. 각 형식에 맞는 패키지와 로더를 사용합니다.
 
 라이선스는 각 패키지에 포함된 원래 고지를 따릅니다. `@zuku/core`의 기존 `UNLICENSED` 표기는 유지됩니다. Next.js 서버 프레임워크와 운영 서버는 이번 게임 개발 라이브러리 배포 범위에서 제외합니다.
 
 ### npm CLI 설치
-
-Node.js 22 이상과 npm을 준비한 뒤 실행하세요.
 
 ```sh
 npm install -g @zuku/cli@0.3.1
@@ -84,7 +91,7 @@ wget --https-only -O install-zuku-cli.sh https://zuzunza.com/install.sh && bash 
 zuku --version
 ```
 
-`zuku`와 `zukujs`는 같은 런타임, 설정, 로그인 상태(`~/.config/zukujs/`(Windows: `%LOCALAPPDATA%\ZukuJS\`))를 공유하므로 어느 이름을 써도 됩니다.
+`zuku`와 `zukujs`는 같은 런타임, 설정, 로그인 상태(`~/.config/zukujs/`(Windows: `%LOCALAPPDATA%\ZukuJS\`))를 공유합니다. 두 이름은 같은 결과를 냅니다.
 
 ## 설치 옵션
 
@@ -101,7 +108,7 @@ bash install-zuku-cli.sh --prefix "$HOME/도구/ZukuJS CLI" --dry-run
 
 ## 업데이트와 재설치
 
-같은 설치 명령을 다시 실행하면 같은 경로에 다시 설치합니다. 다운로드 검증이나 설치 확인이 실패하면 이전 설치와 두 별칭을 그대로 두거나 복원합니다. 설치 경로에 다른 프로그램의 `zuku` 또는 `zukujs`가 있으면 덮어쓰지 않으므로, 이 경우 `--prefix`(`-Prefix`)로 다른 경로를 지정하세요.
+같은 설치 명령을 다시 실행하면 같은 경로에 다시 설치합니다. 다운로드 검증이나 설치 확인이 실패하면 이전 설치와 두 별칭을 그대로 두거나 복원합니다. 설치 경로에 다른 프로그램의 `zuku` 또는 `zukujs`가 있으면 덮어쓰지 않습니다. 이 경우 `--prefix`(`-Prefix`)로 다른 경로를 지정합니다.
 
 ## 다운로드와 무결성
 
@@ -111,13 +118,13 @@ bash install-zuku-cli.sh --prefix "$HOME/도구/ZukuJS CLI" --dry-run
 https://zuzunza.com/downloads/zukujs/cli/0.3.0/zukujs-cli-0.3.0.tgz
 ```
 
-CLI 아카이브와 공식 Node.js 아카이브의 SHA-256을 릴리스에 고정된 값과 비교한 뒤 설치하고, 값이 다르면 설치하지 않습니다. CLI 의존성은 아카이브에 포함되어 있어 별도 패키지 다운로드 없이 설치됩니다. Studio가 포함된 릴리스는 플랫폼별 검증된 파일을 [공식 GitHub 릴리스](https://github.com/zukuapp/zukujs-cli/releases)에서 받습니다.
+설치 도구는 CLI 아카이브와 공식 Node.js 아카이브의 SHA-256을 릴리스에 고정된 값과 비교합니다. 값이 다르면 설치하지 않습니다. CLI 의존성은 아카이브에 포함되어 있어 별도 패키지 다운로드 없이 설치됩니다. Studio가 포함된 릴리스는 플랫폼별 검증된 파일을 [공식 GitHub 릴리스](https://github.com/zukuapp/zukujs-cli/releases)에서 받습니다.
 
 ## 문제 해결
 
 ### `zuku: command not found`
 
-Linux와 macOS의 설치 도구는 셸 설정 파일을 수정하지 않습니다. 현재 터미널에 PATH를 추가하세요.
+Linux와 macOS의 설치 도구는 셸 설정 파일을 수정하지 않습니다. 현재 터미널의 PATH에 설치 경로를 추가합니다.
 
 ```sh
 # 현재 세션에만 적용
@@ -125,17 +132,13 @@ export PATH="$HOME/.local/bin:$PATH"
 zuku --version
 ```
 
-새 터미널에서도 쓰려면 같은 줄을 사용 중인 셸 설정 파일(예: `~/.bashrc`, `~/.zshrc`)에 추가하세요. `--prefix`로 설치했다면 그 경로 아래 `bin`을 추가합니다.
+새 터미널에도 적용하려면 같은 줄을 셸 설정 파일(예: `~/.bashrc`, `~/.zshrc`)에 추가합니다. `--prefix`로 설치했다면 그 경로 아래 `bin`을 추가합니다.
 
-Windows에서는 **사용자 환경 변수 → Path**에 `%LOCALAPPDATA%\ZukuJS\bin`을 추가한 뒤 새 터미널을 여세요.
+Windows에서는 **사용자 환경 변수 → Path**에 `%LOCALAPPDATA%\ZukuJS\bin`을 추가한 뒤 새 터미널을 엽니다.
 
 ### Node.js 버전
 
-관리형 설치 도구로 설치한 CLI는 함께 설치된 Node.js 22 런타임으로 실행됩니다. 시스템 Node.js를 바꾸지 않으며 Linux에서는 공식 Node.js 바이너리를 실행할 수 있어야 합니다. npm으로 CLI를 설치할 때는 사용자 환경의 Node.js 22 이상을 사용합니다.
-
-### 지원 플랫폼
-
-Linux와 macOS(x64, arm64), Windows(x64, arm64)를 대상으로 합니다.
+관리형 설치 도구로 설치한 CLI는 함께 설치된 Node.js 22 런타임으로 실행됩니다. 설치 도구는 시스템 Node.js를 바꾸지 않습니다. Linux에서는 공식 Node.js 바이너리가 실행되는 환경이 필요합니다. npm으로 설치한 CLI는 사용자 환경의 Node.js 22 이상으로 실행됩니다.
 
 ## 다음 단계
 

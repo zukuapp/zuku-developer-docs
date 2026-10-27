@@ -43,7 +43,7 @@ Publishing is limited by the server to three successful production publishes per
 
 ## Connect AI provider credentials
 
-The local agent needs an AI provider. The default is the official ZUKU AI provider, `zuku`, with model `zuku/auto`. You can also use your own API key with a supported provider such as OpenAI or Anthropic. Official provider API keys are a normal, fully supported option.
+The local agent needs an AI provider. The default is the official ZUKU AI provider, `zuku`, with model `zuku/auto`. The agent also accepts your own API key for a supported provider such as OpenAI or Anthropic. Official provider API keys are a fully supported option.
 
 ```sh
 zuku auth list                          # status only, never secret values
@@ -83,7 +83,7 @@ zuku account logout                     # disconnect your ZUKU account
 zuku auth logout --provider <id>        # remove a provider sign-in
 ```
 
-Signing out of your ZUKU account leaves a token-free record, so a late login or refresh can't bring the connection back. If you set a key with `--api-key-env`, the CLI only stored the variable name, so also remove the variable from your shell. Keep publish receipts in `.zukujs/receipts` if you might need to recover a publish.
+Signing out of your ZUKU account leaves a token-free record, so a late login or refresh can't bring the connection back. If you set a key with `--api-key-env`, the CLI only stored the variable name, so also remove the variable from your shell. Keep publish receipts in `.zukujs/receipts`. Publish recovery reads them.
 
 ## Troubleshooting
 

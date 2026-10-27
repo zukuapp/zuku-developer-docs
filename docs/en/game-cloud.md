@@ -8,7 +8,7 @@ section: API
 
 Game Cloud provides per-project variables, saves, and wallets, along with payment and server function interfaces that are still in development.
 
-> **Warning: current scope.** Separately from the variables and saves APIs, Pay confirm does not verify anything with an external payment provider or receipt. Don't use it as proof that a real payment was completed.
+> Warning: current scope. Separately from the variables and saves APIs, Pay confirm does not verify anything with an external payment provider or receipt. Don't use it as proof that a real payment was completed.
 
 This page covers the Game Cloud HTTP API only. The newer native AI APIs are not covered here.
 
@@ -46,7 +46,7 @@ This page covers the Game Cloud HTTP API only. The newer native AI APIs are not 
 
 ## 2. Projects
 
-Game Cloud is isolated per **project**.
+Game Cloud is isolated per project.
 
 ### Create a project
 
@@ -97,7 +97,7 @@ Authorization: Bearer <token>
 
 ## 4. Vars (cloud variables)
 
-Same concept as the legacy ZVM. **The currency scope cannot be changed from the client** (to prevent self-minting).
+Same concept as the legacy ZVM. The currency scope cannot be changed from the client (to prevent self-minting).
 
 ### Read
 
@@ -135,7 +135,7 @@ Content-Type: application/json
 
 ## 5. Saves (cloud saves)
 
-The legacy ZASE. Inline JSON, with a limit of **256KB** per slot.
+The legacy ZASE. Inline JSON, with a limit of 256KB per slot.
 
 ### Save
 
@@ -187,7 +187,7 @@ POST /api/v1/cloud/pay/session
 }
 ```
 
-Session TTL: **10 minutes**. `status: pending` → `paid` (after confirm).
+Session TTL: 10 minutes. `status: pending` → `paid` (after confirm).
 
 ### Confirm payment
 
@@ -274,7 +274,7 @@ POST /api/v1/cloud/vm/stop
 POST /api/v1/cloud/vm/delete
 ```
 
-Lifecycle POST bodies use `projectId` and a unique `idempotencyKey`. With an expired VM plan, you can't create a new VM or restart a stopped one.
+Lifecycle POST bodies use `projectId` and a unique `idempotencyKey`. With an expired VM plan, creating a new VM or restarting a stopped one is rejected.
 
 ## 10. Dashboard
 

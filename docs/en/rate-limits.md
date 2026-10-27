@@ -6,13 +6,13 @@ section: API
 
 # Rate limits
 
-> **Policy version**: 2026-10-01 · API v1
+> Policy version: 2026-10-01 · API v1
 >
-> This page describes the newly implemented policy. Check responses and `GET /api/v1/rate-limits/policy` to see what's active on the live service. Until the policy is rolled out to production, existing responses may stay the same.
+> This page describes the newly implemented policy. Check responses and `GET /api/v1/rate-limits/policy` to see what's active on the live service. Until the policy is rolled out to production, existing responses stay the same.
 
 ## Default limits per plan
 
-Each number is the **requests allowed in 60 seconds**. Signed-in users are counted per account, so opening more tabs, devices or API keys doesn't raise the limit. Guests are counted by IP, as verified through the trusted proxy path.
+Each number is the requests allowed in 60 seconds. Signed-in users are counted per account, so opening more tabs, devices or API keys doesn't raise the limit. Guests are counted by IP, as verified through the trusted proxy path.
 
 | Plan | Read `read` | Write `write` | Platform pages `platform` | Upload/publish `upload` | AI start `ai` | Cloud `cloud` |
 |---|---:|---:|---:|---:|---:|---:|
@@ -42,9 +42,9 @@ The defaults reflect real client behavior. Aist job polling runs about every 1.2
 
 Regular API routes use the limit for their kind. APIs handled directly by the web server check both `platform` and their own kind. AI status checks don't use up AI start quota. A rejected request never cancels or duplicates a job that has already started, and the client keeps your edits.
 
-Read, page, write, upload and AI requests also have a **fixed 10-second window**. By default it's one third of the per-minute limit, rounded up, with minimums of 20 for read and page, 3 for write, and 1 for upload and AI. Cloud has no 10-second window. Authentication is limited to 20 per 10 seconds regardless of plan. Requests from adjacent fixed windows can land close together at a window boundary, so don't read the per-minute numbers as a steady per-second throughput.
+Read, page, write, upload and AI requests also have a fixed 10-second window. By default it's one third of the per-minute limit, rounded up, with minimums of 20 for read and page, 3 for write, and 1 for upload and AI. Cloud has no 10-second window. Authentication is limited to 20 per 10 seconds regardless of plan. Requests from adjacent fixed windows can land close together at a window boundary, so don't read the per-minute numbers as a steady per-second throughput.
 
-Authentication is **30 per minute** per signed-in account on every plan, including paid plans. Guest authentication is **120 per minute** per IP. Existing failed-login, MFA lockout and one-time verification rules take precedence when they're stricter. Paying doesn't lower authentication protection.
+Authentication is 30 per minute per signed-in account on every plan, including paid plans. Guest authentication is 120 per minute per IP. Existing failed-login, MFA lockout and one-time verification rules take precedence when they're stricter. Paying doesn't lower authentication protection.
 
 Sensitive authentication requests are also limited per target after a small body check. If a sign-in email and handle point to the same local account, they share one target limit. Identifiers are hashed in the stored counter key. These rules apply regardless of plan.
 
@@ -72,13 +72,13 @@ Signed-in accounts also get a separate protection limit on the total traffic fro
 
 Guests on a shared network share one IP limit. Once signed in, a user gets the per-account limits, and the per-IP protection still applies. Changing plans doesn't lift the per-IP protection or the 10-second windows.
 
-An `X-API-Key` authenticated by the public API also has a default limit of **600 per minute per key**. If a server administrator set `api_keys.rate_limit_per_min`, that value is used instead. Multiple keys share their owner account's limits. The developer console `dev_api_keys` setting is a separate feature and isn't used for public API authentication or for determining a paid plan.
+An `X-API-Key` authenticated by the public API also has a default limit of 600 per minute per key. If a server administrator set `api_keys.rate_limit_per_min`, that value is used instead. Multiple keys share their owner account's limits. The developer console `dev_api_keys` setting is a separate feature and isn't used for public API authentication or for determining a paid plan.
 
 Monthly Cloud usage, free allowances, QoS, spending caps and AI provider limits are separate from these rate limits. A request can pass the rate limit and still be rejected for usage or cost reasons.
 
 ## Responses and retries
 
-Rate-limited requests carry the following headers, based on actual counts. Success responses describe the default 60-second window for that kind. A `429` describes **the window of the condition that actually rejected the request**.
+Rate-limited requests carry the following headers, based on actual counts. Success responses describe the default 60-second window for that kind. A `429` describes the window of the condition that actually rejected the request.
 
 | Header | Meaning |
 |---|---|
@@ -90,7 +90,7 @@ Rate-limited requests carry the following headers, based on actual counts. Succe
 | `X-RateLimit-Plan` | Server-verified plan (`unknown` for IP protection before authentication) |
 | `Retry-After` | Seconds to wait before retrying, on `429` |
 
-Excluded requests such as health checks, OPTIONS and static assets may not have these headers. Success responses for limited requests include personal limit headers, so they're served as `private, no-store`. The remaining count covers one limit only and doesn't guarantee that a future request will pass every check.
+These headers are attached only to limited requests. Health checks, OPTIONS and static assets are excluded requests. Success responses for limited requests include personal limit headers, so they're served as `private, no-store`. The remaining count covers one limit only. Other limits apply separately.
 
 ```json
 {
@@ -114,7 +114,7 @@ Excluded requests such as health checks, OPTIONS and static assets may not have 
 
 The numbers above are illustrative. Clients should follow the actual `Retry-After` first. If it's missing, use the actual reset information or the error message from the service that applied the limit. Pause polling, and spread multiple jobs through a queue. Automatically repeating POST, payment, upload or AI generation requests can create duplicate work, so check job status and any existing idempotency contract first.
 
-On the ZUKU website, API limits show up as a notice on the current screen and your edits are kept. If page navigation itself is limited, the site returns HTTP `429` with a dedicated `/rate-limit` page. It shows the confirmed wait time, plan and request kind, and you can go back once the wait is over. For provider errors with no wait time, the site doesn't make one up. The limit page, sign-in, plans, status and public docs are excluded from page navigation limits so you can always recover.
+On the ZUKU website, API limits show up as a notice on the current screen and your edits are kept. If page navigation itself is limited, the site returns HTTP `429` with a dedicated `/rate-limit` page. It shows the confirmed wait time, plan and request kind, and provides a way back after the wait. For provider errors with no wait time, the site doesn't invent one. The limit page, sign-in, plans, status and public docs are excluded from page navigation limits to keep a recovery path.
 
 ## Policy endpoints
 
@@ -134,6 +134,6 @@ Switching from the old placeholder headers to real limits ships together across 
 
 ## CLI publish limit
 
-The `zuku` CLI's production publish (`zuku deploy --yolo`, or `zuku agent --yolo`) has its own server-enforced limit: **3 successful publishes per ZUKU account in a rolling 6 hours**. Unsettled reservations also hold a slot. Retrying the same account, content and verified package SHA-256 doesn't use another slot, and failed or rejected publishes don't count. Going over returns `429 DEPLOY_QUOTA_EXCEEDED` with `Retry-After`. Drafts and uploads don't use this limit, though uploads still count toward the `upload` request kind above. Check your status with `zuku account --quota`. See [Publishing](cli/publishing.md).
+The `zuku` CLI's production publish (`zuku deploy --yolo`, or `zuku agent --yolo`) has its own server-enforced limit: 3 successful publishes per ZUKU account in a rolling 6 hours. Unsettled reservations also hold a slot. Retrying the same account, content and verified package SHA-256 doesn't use another slot, and failed or rejected publishes don't count. Going over returns `429 DEPLOY_QUOTA_EXCEEDED` with `Retry-After`. Drafts and uploads don't use this limit, though uploads still count toward the `upload` request kind above. Check your status with `zuku account --quota`. See [Publishing](cli/publishing.md).
 
 Related: [Errors](errors.md) · [Authentication](authentication.md) · [Game Cloud](game-cloud.md)

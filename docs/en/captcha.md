@@ -28,7 +28,7 @@ This page covers the sign-up and login gate and the debug verification API.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CAPTCHA_HMAC_SECRET` | (empty string) | **Required in production.** When empty, challenge/verify fail closed with **503**. |
+| `CAPTCHA_HMAC_SECRET` | (empty string) | Required in production. When empty, challenge/verify fail closed with 503. |
 | `CAPTCHA_MAX_NUMBER` | `100000` | Upper bound of the proof-of-work search (0..=maxnumber) |
 | `CAPTCHA_TTL_SECS` | `300` | Expiry (seconds) embedded in the salt |
 | `CAPTCHA_DEV_BYPASS` | off | When `1`, allows local hosts plus a fixed bypass token |
@@ -39,7 +39,7 @@ Protocol (compatible with the legacy gate):
 2. The client searches `0..=maxnumber` for the `number` that matches `challenge`.
 3. The client submits the token `base64(JSON{algorithm,challenge,number,salt,signature})`.
 
-The captcha is unrelated to internal filters or sandboxes. Its purpose is **mitigating authentication abuse**.
+The captcha is unrelated to internal filters or sandboxes. Its purpose is mitigating authentication abuse.
 
 ---
 
@@ -101,8 +101,8 @@ Applies to `POST /auth/register`, `POST /auth/signup`, and `POST /auth/login`:
 
 | Server state | Behavior |
 |--------------|----------|
-| Secret **not set** | Gate disabled. Sign-up and login are not blocked. |
-| Secret **set** | `zcaptcha_token` is required in the body. On failure, **403** `CAPTCHA_FAILED`. |
+| Secret not set | Gate disabled. Sign-up and login are not blocked. |
+| Secret set | `zcaptcha_token` is required in the body. On failure, 403 `CAPTCHA_FAILED`. |
 | `CAPTCHA_DEV_BYPASS=1` + allowed token/host | Development bypass |
 
 Development bypass token (fixed): `__zuzunza_captcha_localhost_bypass__`

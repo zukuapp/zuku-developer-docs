@@ -25,14 +25,14 @@ curl -sS "https://zuzunza.com/api/v1/feed?limit=20"
 | 커뮤니티 타임라인 | `/feed` | 짧은 글 타임라인, 커서 `before` |
 | 커뮤니티 글 | `/posts…` | 단건, 스레드, 답글, 좋아요, 수정, 삭제 |
 
-**인증**
+인증 규칙:
 
-- 읽기(feeds, feed, 글 단건·스레드): Bearer 선택. 로그인하면 `is_liked` 등 뷰어 상태가 채워질 수 있습니다.
-- 쓰기(작성, 답글, 좋아요, 수정, 삭제): **Bearer 필수**. 이 경로들은 `X-API-Key`를 받지 않습니다.
+- 읽기(feeds, feed, 글 단건·스레드): Bearer 선택. 로그인하면 `is_liked` 등 뷰어 상태 필드를 채웁니다.
+- 쓰기(작성, 답글, 좋아요, 수정, 삭제): Bearer 필수. 이 경로들은 `X-API-Key`를 받지 않습니다.
 
 응답은 공통 형식 `{ success, data, meta }` / `{ success, error, meta }`를 따르며, 삭제 성공은 `204 No Content`입니다.
 
-> 글 목록용 `GET /posts` 경로는 **없습니다**. 목록은 `GET /feed` 또는 `GET /users/me/posts`([소셜](social.md))를 사용하세요.
+> 글 목록용 `GET /posts` 경로는 없습니다. 목록은 `GET /feed` 또는 `GET /users/me/posts`([소셜](social.md))를 사용합니다.
 
 ## 엔드포인트 요약
 
@@ -77,28 +77,28 @@ curl -sS "https://zuzunza.com/api/v1/feed?limit=20"
 }
 ```
 
-미디어 `/feeds` 계열은 `sort` / `order` 쿼리를 **사용하지 않으며**, 서버가 정한 순서로 반환합니다.
+미디어 `/feeds` 계열은 `sort` / `order` 쿼리를 사용하지 않으며, 서버가 정한 순서로 반환합니다.
 
 ### 커서 (커뮤니티)
 
 | 쿼리 | 용도 |
 |---|---|
 | `limit` | 페이지 크기(`> 0`) |
-| `before` | 타임라인·내 글: 이 id보다 **오래된** 쪽 |
-| `after` | 스레드: 이 id **이후** 쪽 |
+| `before` | 타임라인·내 글: 이 id보다 오래된 쪽 |
+| `after` | 스레드: 이 id 이후 쪽 |
 
 | 엔드포인트 | `limit` 기본값 | 커서 |
 |---|---|---|
 | `GET /feed` | 20 | `before` → 응답 `next_cursor` |
 | `GET /posts/{id}/thread` | 50 | `after` → 응답 `next_cursor` |
 
-`next_cursor`는 현재 페이지 **마지막 항목의 id**입니다. 빈 페이지면 `null`이므로 "더 불러오기"를 끄면 됩니다.
+`next_cursor`는 현재 페이지 마지막 항목의 id입니다. 빈 페이지면 `null`입니다. 이때 클라이언트는 "더 불러오기"를 끕니다.
 
 ## GET /feeds
 
 | 쿼리 | 설명 |
 |---|---|
-| `category` | `hype` \| `swipe` \| `jump`. 인식할 수 없는 값은 전체 피드로 처리될 수 있습니다. |
+| `category` | `hype` \| `swipe` \| `jump` |
 | `page`, `per_page` | [페이지네이션](#page--per_page-미디어-피드) 참고 |
 
 응답 `data`:
@@ -152,7 +152,7 @@ curl -sS "https://zuzunza.com/api/v1/feed?limit=20&before=$POST_ID"
 
 | 필드 | 필수 | 규칙 |
 |---|---|---|
-| `body` | 조건부 | 최대 280자. 사진이 있으면 생략할 수 있습니다. |
+| `body` | 조건부 | 최대 280자. 사진이 있으면 생략 가능 |
 | `image_urls` | 아니요 | 최대 4장. 본인이 업로드한 10MB 이하 JPEG·PNG·WEBP·GIF·AVIF |
 
 ```bash
@@ -172,7 +172,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/posts" \
 
 ## PATCH /posts/{id}
 
-작성자만 호출할 수 있으며 `body`와 `image_urls` 중 전달한 필드만 바꿉니다.
+작성자만 호출하며 `body`와 `image_urls` 중 전달한 필드만 바꿉니다.
 
 - `image_urls: []`는 사진 전체 삭제입니다.
 - 수정 결과 본문과 사진이 모두 없으면 `422`이며 기존 글은 그대로 유지됩니다.
@@ -199,7 +199,7 @@ curl -sS -X PATCH "https://zuzunza.com/api/v1/posts/$POST_ID" \
 
 ## GET /posts/{id}/thread
 
-답글 id로 호출해도 그 글이 속한 스레드(`root_id`)를 반환합니다. 화면에서는 `parent_id`로 트리를 구성하세요.
+답글 id로 호출해도 그 글이 속한 스레드(`root_id`)를 반환합니다. 화면에서는 `parent_id`로 트리를 구성합니다.
 
 쿼리: `limit`(기본 50), `after`
 
@@ -246,7 +246,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/posts/$POST_ID/like" \
 - 신규 우선 기간은 최근 7일 공개 게임 수 `N`에 따라 `min(7일, 7일 × 6 / max(N, 1))`입니다. 기간 안의 게임은 최초 공개 시각 내림차순으로 먼저 나오며, 반응 수나 썸네일 유무는 이 순서를 뒤집지 않습니다. 기간이 끝나면 일반 추천 순서로 돌아갑니다.
 - `N`은 전체 공개 JUMP 게임 기준이므로 `source`나 `exclude_ids`에 따라 달라지지 않습니다. 초안, 아카이브, 미래 공개 시각은 제외합니다.
 - 오래 저장한 초안을 오늘 처음 게시하면 새 게임으로 취급하며, 재요청이나 저장으로 공개 시각이 갱신되지 않습니다.
-- 페이지 순서는 요청 시점의 공개 상태·반응·시간을 반영합니다. `pagination.has_next`와 `next_cursor`를 사용하고, 필터가 다른 요청의 커서를 재사용하지 마세요.
+- 페이지 순서는 요청 시점의 공개 상태·반응·시간을 반영합니다. `pagination.has_next`와 `next_cursor`를 사용하고, 필터가 다른 요청의 커서는 재사용하지 않습니다.
 
 ```bash
 curl -sS "https://zuzunza.com/api/v1/jump/games?sort=new&page=1&per_page=20"

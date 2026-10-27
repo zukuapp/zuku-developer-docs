@@ -6,7 +6,7 @@ section: Guide
 
 # Providers
 
-A provider is the AI service the local game agent calls while it builds your game. By default, the CLI uses the official **ZUKU AI** provider, `zuku`, with the model `zuku/auto`. Other providers are only used when you select them yourself.
+A provider is the AI service the local game agent calls while it builds your game. By default, the CLI uses the official ZUKU AI provider, `zuku`, with the model `zuku/auto`. Other providers are only used when you select them yourself.
 
 The CLI never switches providers on its own. If the selected provider fails, the run stops with an error. It never falls back to another provider, Codex, or any paid service.
 
@@ -68,9 +68,9 @@ Official provider API keys are a normal, supported way to run the agent. Store a
 | `cloudflare-ai-gateway` | Cloudflare AI Gateway | API key; required account and gateway IDs cannot currently be configured through the CLI |
 | `ollama` | Ollama | Local, no credentials |
 | `lmstudio` | LM Studio | Local, no credentials |
-| `codex` | Codex **Experimental** | Codex sign-in, `zuku login codex --experimental` |
+| `codex` | Codex Experimental | Codex sign-in, `zuku login codex --experimental` |
 
-The `codex` provider is an **Experimental**, unofficial integration, marked `(exp!)` in CLI output. It is never selected automatically.
+The `codex` provider is an Experimental, unofficial integration, marked `(exp!)` in CLI output. It is never selected automatically.
 
 ### Configure a built-in provider
 
@@ -84,16 +84,16 @@ Official endpoints are fixed and can't be changed (`PROVIDER_ENDPOINT_FIXED`). C
 
 `--project`, account or gateway ID options, project or catalog options, `--clear-api-key-env`, `--header-env`, `--header-secret` and `--remove-header` remain in the parser but fail with `CORE_PROTOCOL_GAP` before changing settings. Vertex project configuration and Cloudflare gateway configuration therefore aren't usable through these CLI commands yet.
 
-## Custom endpoints **Experimental**
+## Custom endpoints (experimental)
 
-You can add an OpenAI-compatible or Anthropic-compatible endpoint:
+`zuku provider add` registers an OpenAI-compatible or Anthropic-compatible endpoint:
 
 ```sh
 zuku provider add --id local-ai --name "Local AI" --type openai-chat \
   --base-url http://localhost:8000/v1 --model my-model --api-key-env LOCAL_AI_KEY
 ```
 
-`--type` accepts `openai-chat`, `openai-responses` or `anthropic`. `--base-url` must use `https://`, or `http://` on loopback (`127.0.0.1`, `localhost`, `[::1]`). The first `--model` becomes the default. Custom endpoints are always marked **Experimental** and unofficial, because the CLI can't confirm the service behind them. Running the agent with one requires `--experimental`.
+`--type` accepts `openai-chat`, `openai-responses` or `anthropic`. `--base-url` must use `https://`, or `http://` on loopback (`127.0.0.1`, `localhost`, `[::1]`). The first `--model` becomes the default. Custom endpoints are always marked Experimental and unofficial, because the CLI can't confirm the service behind them. Running the agent with one requires `--experimental`.
 
 ## Storage
 

@@ -130,7 +130,7 @@ zuku create <name>
 
 Creates a new folder `<name>/` with a playable HTML5 game: a Canvas JUMP obstacle runner where Space or a tap makes the player jump.
 
-- `<name>` may contain lowercase letters, digits, `_` and `-`, up to 64 characters.
+- `<name>` contains lowercase letters, digits, `_` and `-`, up to 64 characters.
 - The command never overwrites an existing path. If `<name>` already exists, it fails with `PROJECT_EXISTS`.
 - `create` takes only a name. There is no template flag.
 
@@ -158,7 +158,7 @@ For other starting points, see [Starters](../starters/index.md).
 zuku run [--port <n>] [--once]
 ```
 
-Previews the game in the **current folder**. `run` doesn't take a path, so `cd` into the project first. The CLI asks Agent Core for a read-only snapshot of the project and serves it on `127.0.0.1` until you press Ctrl+C. Stopping with Ctrl+C is a normal exit (code 0).
+Previews the game in the current folder. `run` doesn't take a path, so `cd` into the project first. The CLI asks Agent Core for a read-only snapshot of the project and serves it on `127.0.0.1` until you press Ctrl+C. Stopping with Ctrl+C is a normal exit (code 0).
 
 | Flag | Default | Description |
 | --- | --- | --- |
@@ -237,7 +237,7 @@ Builds the game, verifies it in a browser and reports the result. In an existing
 | --- | --- |
 | `--name <name>` | Name for a new game |
 | `--model <provider/model>` | Model to use. `auto` means `zuku/auto`. See [Models](models.md). |
-| `--draft` | After verification, upload the game as a **draft** only |
+| `--draft` | After verification, upload the game as a draft only |
 | `--yolo` | After verification, publish to production once, with no further prompt. Limited by the server to 3 successful production publishes per account in a rolling 6 hours. |
 | `--experimental` | Required to run with an experimental `(exp!)` auth method, such as the Codex integration |
 | `--resume <run_id>` | Resume an earlier run from this folder |
@@ -262,7 +262,7 @@ zuku init ["<request>"] [--name <name>] [--model <provider/model>]
           [--draft | --yolo] [--experimental]
 ```
 
-Always creates a **new** game in the current folder through Agent Core. Flags mean the same as for `agent`.
+Always creates a new game in the current folder through Agent Core. Flags mean the same as for `agent`.
 
 ### chat
 
@@ -398,7 +398,7 @@ Shows whether a ZUKU account is connected and its scope. `--quota` also shows yo
 zuku upload <dir | file.zwf | file.zip> [options]
 ```
 
-Uploads a package and creates a **draft** JUMP game. It never publishes. If you pass a directory, it's packaged with the same rules as `package` first. Metadata comes from `zukujs.json`, and flags override it.
+Uploads a package and creates a draft JUMP game. It never publishes. If you pass a directory, it's packaged with the same rules as `package` first. Metadata comes from `zukujs.json`, and flags override it.
 
 | Flag | Description |
 | --- | --- |
