@@ -12,8 +12,6 @@ ZUKU CLI는 터미널에서 ZUKU 게임을 만들고, 로컬에서 실행하고,
 
 CLI는 `zuku`와 `zukujs` 두 이름으로 설치됩니다. 두 이름은 별칭이며 같은 런타임, 같은 설정, 같은 로그인 정보, 같은 상태(`~/.config/zukujs/`(Windows: `%LOCALAPPDATA%\ZukuJS\`))를 공유합니다. 한쪽에서 로그인하면 다른 쪽에서도 로그인된 상태입니다.
 
-이 문서는 `zuku`를 기준으로 설명합니다.
-
 ```sh
 zuku --version
 zukujs --version   # 같은 CLI입니다
@@ -23,7 +21,7 @@ zukujs --version   # 같은 CLI입니다
 
 공식 설치 스크립트로 설치합니다. 설치 스크립트가 CLI와 관리형 Node.js 22.22.3 런타임을 사용자 디렉터리에 함께 설치합니다. 설치 절차는 [설치](../installation.md)에 있습니다.
 
-> `@zukujs/cli`는 npm 레지스트리에 게시되어 있지 않습니다. `npm install -g @zukujs/cli`는 동작하지 않습니다.
+> npm으로 설치할 때는 `@zuku/cli` 패키지를 사용합니다([설치](../installation.md#npm-cli-설치)).
 
 ## 기본 흐름
 
@@ -67,7 +65,7 @@ CLI에는 목적이 다른 두 종류의 인증이 있습니다.
 
 ## 데스크톱 Studio
 
-같은 런타임과 Agent Core를 그래픽 화면에서 사용하는 데스크톱 앱입니다. 현재 상태와 실행 방법은 [Studio](studio.md)에 있습니다.
+같은 런타임과 Agent Core를 그래픽 화면에서 사용하는 데스크톱 앱입니다. 실행 방법은 [Studio](studio.md)에 있습니다.
 
 ## 문제가 생겼을 때
 

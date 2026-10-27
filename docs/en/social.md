@@ -1,19 +1,12 @@
 ---
 title: Social
-description: Likes, bookmarks, follows, comments, notifications, direct messages, personal lists, and admin user APIs.
+description: Likes, bookmarks, follows, comments, notifications, direct messages, and personal lists.
 section: API
 ---
 
 # Social
 
-This page covers content social features (likes, bookmarks, comments), notifications, DMs, your own profile lists, and the admin user API.
-
-**Base URL**
-
-| Environment | Base URL |
-|-------------|----------|
-| Production | `https://zuzunza.com/api/v1` |
-| Local | `http://localhost:3001/api/v1` |
+**Base URL**: `https://zuzunza.com/api/v1`
 
 ## Contents
 
@@ -24,8 +17,7 @@ This page covers content social features (likes, bookmarks, comments), notificat
 5. [Notifications](#5-notifications)
 6. [DM](#6-dm)
 7. [Your lists (users/me)](#7-your-lists-usersme)
-8. [Admin users](#8-admin-users)
-9. [curl and JS/TS examples](#9-curl-and-jsts-examples)
+8. [curl and JS/TS examples](#8-curl-and-jsts-examples)
 
 ---
 
@@ -40,13 +32,12 @@ This page covers content social features (likes, bookmarks, comments), notificat
 | Notification read-all / `{id}/read` | Bearer required |
 | All DM routes | Bearer required + conversation participants only |
 | `GET /users/me/{kind}` | Bearer required |
-| Admin users | Bearer + `role=admin` (non-admins get 403 `FORBIDDEN`) |
 
 Session format: `Authorization: Bearer <access_token>`.
 The social, DM, and notification write routes on this page do not accept X-API-Key (unlike other routes such as content *creation*).
 
 Common envelope: `{ success, data, meta }` / `{ success, error, meta }`.
-Unlike marking a single notification as read, comment deletion and some other deletes return 204.
+Comment deletion and some other deletes return 204.
 
 ---
 
@@ -71,9 +62,6 @@ Unlike marking a single notification as read, comment deletion and some other de
 | `POST` | `/dm/conversations/{id}/messages` | Bearer + participant | Send → `201` |
 | `POST` | `/dm/conversations/{id}/read` | Bearer + participant | Mark conversation as read |
 | `GET` | `/users/me/{kind}` | Bearer | Your works, likes, bookmarks, posts |
-| `GET` | `/admin/users` | Admin | Search users |
-| `GET` | `/admin/users/{id}` | Admin | User details |
-| `PATCH` | `/admin/users/{id}` | Admin | Role / suspension |
 
 ---
 
@@ -147,7 +135,7 @@ Response: `data.comments`, `data.pagination`.
 { "body": "Edited comment" }
 ```
 
-Author only. Someone else's comment or a missing one → 404 `COMMENT_NOT_FOUND` (to avoid revealing whether it exists).
+Author only. Someone else's comment or a missing one → 404 `COMMENT_NOT_FOUND`.
 
 ### `DELETE /comments/{id}`
 
@@ -173,7 +161,7 @@ Notification item: `id`, `type` (`like` \| `comment` \| `follow` \| `mention` \|
 
 ### `GET /notifications/unread-count`
 
-For badge polling. Returns only `data.unread_count`. (No WebSocket/SSE; single HTTP requests.)
+For badge polling. Returns only `data.unread_count`.
 
 ### `POST /notifications/read-all`
 
@@ -188,8 +176,7 @@ Not found → 404 `NOTIFICATION_NOT_FOUND`.
 
 ## 6. DM
 
-One-to-one only. Group chats, end-to-end encryption, and real-time read sync are out of scope.
-If you are not a participant, even the existence of the conversation is hidden → the same 404 `CONVERSATION_NOT_FOUND`.
+DMs are one-to-one. If you are not a participant → 404 `CONVERSATION_NOT_FOUND`.
 
 ### `GET /dm/conversations`
 
@@ -233,7 +220,7 @@ Body up to 2000 characters. 201 `data.message`.
 
 ## 7. Your lists (users/me)
 
-`GET /users/me/{kind}` always uses the currently logged-in user (the server applies the filter).
+`GET /users/me/{kind}` always uses the currently logged-in user.
 
 | `kind` | Meaning | Pagination |
 |--------|---------|------------|
@@ -246,55 +233,27 @@ Any other `kind` → 404 `ROUTE_NOT_FOUND`.
 
 ---
 
-## 8. Admin users
-
-All three routes require an admin user: not authenticated 401, non-admin 403 `FORBIDDEN`.
-
-### `GET /admin/users`
-
-Query: `q` (search), `page`, `per_page` → `users` + `pagination`.
-
-### `GET /admin/users/{id}`
-
-`id` is parsed in the public format (`usr_…`). Returns details including activity counts.
-
-### `PATCH /admin/users/{id}`
-
-```json
-{
-  "role": "user",
-  "is_suspended": true,
-  "reason": "Violation of community policy"
-}
-```
-
-- **At least one** of `role` / `is_suspended` is required
-- `role`: `user` \| `admin` only
-- Removing your own admin role or suspending yourself → 409 `SELF_ACTION_FORBIDDEN`
-
----
-
-## 9. curl and JS/TS examples
+## 8. curl and JS/TS examples
 
 ### Content likes, bookmarks, comments
 
 ```bash
-curl -sS -X POST "http://localhost:3001/api/v1/contents/$CID/like" \
+curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CID/like" \
   -H "Authorization: Bearer $ACCESS"
 
-curl -sS -X POST "http://localhost:3001/api/v1/contents/$CID/bookmark" \
+curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CID/bookmark" \
   -H "Authorization: Bearer $ACCESS"
 
-curl -sS "http://localhost:3001/api/v1/contents/$CID/comments?page=1&per_page=20"
+curl -sS "https://zuzunza.com/api/v1/contents/$CID/comments?page=1&per_page=20"
 
-curl -sS -X POST "http://localhost:3001/api/v1/contents/$CID/comments" \
+curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CID/comments" \
   -H "Authorization: Bearer $ACCESS" \
   -H "Content-Type: application/json" \
   -d '{"body":"Love it!"}'
 ```
 
 ```ts
-const base = "http://localhost:3001/api/v1";
+const base = "https://zuzunza.com/api/v1";
 const headers = {
   Authorization: `Bearer ${accessToken}`,
   "Content-Type": "application/json",
@@ -320,10 +279,10 @@ await fetch(`${base}/contents/${contentId}/comments`, {
 ### Notifications
 
 ```bash
-curl -sS "http://localhost:3001/api/v1/notifications/unread-count" \
+curl -sS "https://zuzunza.com/api/v1/notifications/unread-count" \
   -H "Authorization: Bearer $ACCESS"
 
-curl -sS -X POST "http://localhost:3001/api/v1/notifications/read-all" \
+curl -sS -X POST "https://zuzunza.com/api/v1/notifications/read-all" \
   -H "Authorization: Bearer $ACCESS"
 ```
 
@@ -341,20 +300,20 @@ await fetch(`${base}/notifications/read-all`, {
 ### DM
 
 ```bash
-curl -sS -X POST "http://localhost:3001/api/v1/dm/conversations" \
+curl -sS -X POST "https://zuzunza.com/api/v1/dm/conversations" \
   -H "Authorization: Bearer $ACCESS" \
   -H "Content-Type: application/json" \
   -d '{"handle":"friend"}'
 
-curl -sS "http://localhost:3001/api/v1/dm/conversations/$CONV/messages?limit=50" \
+curl -sS "https://zuzunza.com/api/v1/dm/conversations/$CONV/messages?limit=50" \
   -H "Authorization: Bearer $ACCESS"
 
-curl -sS -X POST "http://localhost:3001/api/v1/dm/conversations/$CONV/messages" \
+curl -sS -X POST "https://zuzunza.com/api/v1/dm/conversations/$CONV/messages" \
   -H "Authorization: Bearer $ACCESS" \
   -H "Content-Type: application/json" \
   -d '{"body":"Hi"}'
 
-curl -sS -X POST "http://localhost:3001/api/v1/dm/conversations/$CONV/read" \
+curl -sS -X POST "https://zuzunza.com/api/v1/dm/conversations/$CONV/read" \
   -H "Authorization: Bearer $ACCESS"
 ```
 
@@ -381,10 +340,10 @@ await fetch(`${base}/dm/conversations/${conversation.id}/read`, {
 ### Your lists
 
 ```bash
-curl -sS "http://localhost:3001/api/v1/users/me/likes?page=1&per_page=20" \
+curl -sS "https://zuzunza.com/api/v1/users/me/likes?page=1&per_page=20" \
   -H "Authorization: Bearer $ACCESS"
 
-curl -sS "http://localhost:3001/api/v1/users/me/posts?limit=20" \
+curl -sS "https://zuzunza.com/api/v1/users/me/posts?limit=20" \
   -H "Authorization: Bearer $ACCESS"
 ```
 
@@ -400,18 +359,16 @@ const myPosts = await fetch(`${base}/users/me/posts?limit=20`, {
 
 ---
 
-## Error codes (this page)
+## Error codes
 
 | code | HTTP | Situation |
 |------|------|-----------|
 | `UNAUTHORIZED` | 401 | Bearer required |
-| `FORBIDDEN` | 403 | Non-admin calling an admin API |
 | `CONTENT_NOT_FOUND` | 404 | Content |
 | `COMMENT_NOT_FOUND` | 404 | Comment |
 | `NOTIFICATION_NOT_FOUND` | 404 | Notification |
 | `CONVERSATION_NOT_FOUND` | 404 | DM (including non-participants) |
 | `VALIDATION_ERROR` | 422 | Body, recipient, and similar |
-| `SELF_ACTION_FORBIDDEN` | 409 | Admin demoting or suspending themselves |
 | `ROUTE_NOT_FOUND` | 404 | Invalid `/users/me/{kind}` and similar |
 
 See [Errors](errors.md) and [Rate limits](rate-limits.md) for shared behavior.

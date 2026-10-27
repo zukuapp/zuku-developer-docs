@@ -7,7 +7,7 @@ section: Guide
 # Examples
 
 A collection of **real-world scenarios** that connect authentication, captcha, feeds, content, and social features.
-All examples call the HTTP API directly with `curl` or `fetch`; no npm SDK is required. The base URL is production, `https://zuzunza.com/api/v1`. In the curl examples, set it first:
+All examples call the HTTP API directly with `curl` or `fetch`. The base URL is production, `https://zuzunza.com/api/v1`. In the curl examples, set it first:
 
 ```bash
 API="https://zuzunza.com/api/v1"

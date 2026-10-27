@@ -7,7 +7,6 @@ section: API
 # Contents
 
 > Base URL: `/api/v1`
-> Use only the paths and fields documented here. For newer fields, check the API response and the page for that feature.
 
 All media categories (`hype` / `swipe` / `jump` / `vive` / `vine`) share a single content contract. Get upload URLs from [Media](media.md) first, then reference them in this page's `thumbnail_url` / `media_url` / package metadata fields.
 
@@ -109,7 +108,7 @@ For Jump playback and the IR stream, see [Media](media.md).
 
 ## Automatic game thumbnails
 
-After a JUMP game is registered, a thumbnail is generated from the actual game screen. HTML5 ZIP, ZWF, and legacy SWF are supported, and generation does not change the publish status. Existing games are checked in sequence and valid images are kept. A manually uploaded image is replaced by a generated one only when you explicitly request replacement.
+After a JUMP game is registered, a thumbnail is generated from the actual game screen. HTML5 ZIP, ZWF, and legacy SWF are supported, and generation does not change the publish status. A manually uploaded image is replaced by a generated one only when you explicitly request replacement.
 
 ### GET `/api/v1/contents/{id}/thumbnail-job`
 
@@ -365,7 +364,7 @@ curl -sS -X DELETE "https://zuzunza.com/api/v1/contents/{id}" \
 
 ## Likes and bookmarks (summary)
 
-The detailed social and interaction contracts are in [Social](social.md). This section only summarizes the content-side boundary.
+The detailed social and interaction contracts are in [Social](social.md).
 
 | Method | Path | Auth | Behavior |
 |---|---|---|---|
@@ -406,6 +405,6 @@ Success is `200` · `data.content`, and `jump.status` becomes `published`. The p
 | `404` | Unknown content, content owned by another author, or archived |
 | `409` | Not a publishable draft, or pending review, rejected, or changes requested |
 | `422` | Executable package is missing or invalid |
-| `503` | Storage failure. Handled atomically so that the draft and Thread are never partially published. |
+| `503` | Storage failure |
 
 Drafts are hidden from all content and game lookups except the owner's preview, and from public feeds, search, other users' profiles, and Thread. Upload URLs themselves are public file addresses, so don't use them to store secret files.

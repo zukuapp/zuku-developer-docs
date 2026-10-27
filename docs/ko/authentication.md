@@ -6,9 +6,9 @@ section: API
 
 # 인증
 
-ZUKU API는 로그인 세션의 Bearer 토큰과 개발자 포털에서 발급하는 API 키(`X-API-Key`)로 요청을 인증합니다. 이 페이지는 가입, 로그인, 토큰 갱신, 프로필, 세션 관리, 브라우저 공통 로그인, 개발자 API 키를 다룹니다.
+ZUKU API는 로그인 세션의 Bearer 토큰과 개발자 포털에서 발급하는 API 키(`X-API-Key`)로 요청을 인증합니다.
 
-> API 인증과 CLI 로그인은 다릅니다. 이 페이지는 HTTP API를 직접 호출할 때 쓰는 토큰과 키를 설명합니다. `zuku` CLI의 로그인 방법과 저장 위치는 [CLI 인증](cli/authentication.md)에 있습니다.
+> `zuku` CLI의 로그인 방법과 저장 위치는 [CLI 인증](cli/authentication.md)에 있습니다.
 
 **Base URL**: `https://zuzunza.com/api/v1`
 
@@ -93,13 +93,6 @@ curl -sS "https://zuzunza.com/api/v1/auth/me" \
 
 `POST /captcha/challenge`와 `POST /captcha/verify`의 전체 계약과 풀이 방법은 [캡차](captcha.md)에 있습니다.
 
-| 서버 상태 | register / signup / login 동작 |
-|---|---|
-| 캡차 비활성 | 게이트가 꺼져 있어 가입·로그인을 막지 않습니다. |
-| 캡차 활성 | 본문 `zcaptcha_token`이 필수이며, 실패하면 `403 CAPTCHA_FAILED`입니다. |
-
-챌린지·검증 API는 캡차가 설정되지 않은 서버에서 `503 CAPTCHA_NOT_CONFIGURED`를 반환합니다.
-
 ## POST /auth/register
 
 회원가입합니다. `POST /auth/signup`은 같은 동작을 하는 별칭입니다.
@@ -155,7 +148,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/auth/register" \
 | `device_id` | 아니요 | 세션 메타데이터 |
 | `zcaptcha_token` | 조건부 | 캡차가 활성화된 서버에서 필수 |
 
-기존(레거시) ZUKU 계정도 로그인을 지원합니다. 처음 성공하면 현재 계정 체계로 연결됩니다.
+기존(레거시) ZUKU 계정도 로그인을 지원합니다.
 
 ```bash
 curl -sS -X POST "https://zuzunza.com/api/v1/auth/login" \
@@ -242,7 +235,7 @@ curl -sS -X PATCH "https://zuzunza.com/api/v1/auth/me" \
 
 ### GET /auth/sessions
 
-`data.sessions[]` 항목: `id`, `device_label`, `created_at`, `last_seen_at`, `is_current`. 토큰 원문은 절대 반환하지 않습니다.
+`data.sessions[]` 항목: `id`, `device_label`, `created_at`, `last_seen_at`, `is_current`.
 
 ### DELETE /auth/sessions/{id}
 
@@ -261,9 +254,9 @@ ZUKU 공식 도메인 사이에서는 공통 HttpOnly 세션 쿠키를 사용합
 
 - 브라우저에서 API를 호출할 때는 `credentials: 'include'`를 지정합니다.
 - 유효한 공통 쿠키가 있으면 오래 저장된 Bearer 토큰보다 쿠키의 계정이 우선합니다.
-- 쿠키가 없는 서버 클라이언트는 기존 Bearer 방식을 그대로 사용합니다.
-- `GET /auth/me`가 성공하면 같은 브라우저 세션의 만료가 7일로 연장됩니다. 기존 쿠키는 정상 세션 확인 과정에서 새 브라우저 세션으로 전환됩니다.
-- 쿠키는 HttpOnly이므로 문서 페이지나 게임 코드에서 읽지 못합니다. 브라우저 세션용 자격 증명은 응답 JSON에 포함되지 않습니다.
+- 쿠키가 없는 서버 클라이언트는 Bearer 토큰을 사용합니다.
+- `GET /auth/me`가 성공하면 같은 브라우저 세션의 만료가 7일로 연장됩니다.
+- 쿠키는 HttpOnly이므로 문서 페이지나 게임 코드에서 읽지 못합니다.
 
 ### POST /auth/session
 
@@ -279,7 +272,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/auth/session" \
 
 ## POST /auth/oauth/{provider}
 
-항상 `501 Not Implemented`, code `NOT_IMPLEMENTED`를 반환합니다. OAuth 로그인은 제공되지 않습니다.
+항상 `501 Not Implemented`, code `NOT_IMPLEMENTED`를 반환합니다.
 
 ## 개발자 API 키
 

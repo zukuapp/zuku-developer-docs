@@ -15,7 +15,7 @@ zuku create my-game
 cd my-game
 ```
 
-The name contains lowercase letters, digits, `_`, and `-`, starts with a letter or digit, and is up to 64 characters long. `create` only makes a new folder and fails if `my-game/` already exists. It takes only a name. There are no template options.
+The name contains lowercase letters, digits, `_`, and `-`, starts with a letter or digit, and is up to 64 characters long. `create` only makes a new folder and fails if `my-game/` already exists.
 
 The same starter is available as an archive: [zuku-canvas-starter.zip](/assets/starters/zuku-canvas-starter.zip).
 
@@ -74,7 +74,7 @@ zuku validate dist/my-game-0.1.0.zwf
 
 `zuku run` works on the current folder and doesn't take a path. `package` doesn't overwrite an existing output file unless you add `--force`. Increase `version` in `zukujs.json` for each new build. `--format zip` builds a ZIP instead.
 
-None of these commands uses the network. Creating a draft on ZUKU is covered in [Publishing](../cli/publishing.md).
+Creating a draft on ZUKU is covered in [Publishing](../cli/publishing.md).
 
 ## Next steps
 

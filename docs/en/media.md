@@ -12,7 +12,7 @@ section: API
 
 ## POST `/api/v1/uploads`
 
-**Single-file** upload for the one-drop studio.
+**Single-file** upload.
 
 | Item | Contract |
 |---|---|
@@ -30,14 +30,14 @@ section: API
 | `wasm` | 50MB | `\0asm` |
 | `archive` | 500MB | ZIP `PK\x03\x04` / `PK\x05\x06` |
 | `zwf` | 500MB | `ZWF1` / `ZWF2` (ZUKBOX) |
-| `swf` | 500MB | Flash `FWS` / `CWS` / `ZWS`. Stored as media only. The server never executes SWF; Jump plays it with Ruffle. |
+| `swf` | 500MB | Flash `FWS` / `CWS` / `ZWS`. Stored as media only. Jump plays it with Ruffle. |
 
 Unsupported format → `415` · `UNSUPPORTED_MEDIA_TYPE`.
 Over the limit → `413` · `PAYLOAD_TOO_LARGE`.
 Not multipart, or no `file` part → `400` · `BAD_REQUEST`.
 Not logged in → `401` · `UNAUTHORIZED`.
 
-Files are stored under a month folder with a UUID file name (`/uploads/{yyyy-mm}/{uuid}.{ext}`). The original file name is recorded as metadata only and never used in the path.
+Files are stored under a month folder with a UUID file name (`/uploads/{yyyy-mm}/{uuid}.{ext}`).
 
 ### Success response (`201 Created`)
 
@@ -128,9 +128,7 @@ async function uploadFile(token: string, file: File) {
 Serves uploaded files statically with their original MIME type.
 
 - Path prefix: `/uploads/…` only (not `/api/v1/uploads/…`)
-- Served without a database connection, so it is isolated from connection pool exhaustion and database outages
-- Path traversal outside the upload root is blocked
-- Missing or blocked → `404` · `NOT_FOUND` ("Upload file not found")
+- Missing → `404` · `NOT_FOUND` ("Upload file not found")
 
 Example: `GET /uploads/2026-08/a1b2c3….jpg`
 
@@ -186,11 +184,11 @@ Example success (`data`):
 }
 ```
 
-> The internal logic of the syscall filter and memory accounting is not public. Docs and clients should rely only on the boundary and limit contract above.
+> Clients use only the boundary and limit values above.
 
 ### POST `/api/v1/jump/games/{id}/stream` (authentication required)
 
-The server interprets SWF and similar sources and streams them as zuku IR (`ZIR\0` family) binary. This assumes the client has no SWF parser.
+The server interprets SWF and similar sources and streams them as zuku IR (`ZIR\0` family) binary. The client doesn't need an SWF parser.
 
 - A successful response is binary (`application/octet-stream`), not a JSON envelope. Errors return a JSON envelope, so check the status code first.
 - No source → `SOURCE_UNAVAILABLE`
@@ -198,7 +196,7 @@ The server interprets SWF and similar sources and streams them as zuku IR (`ZIR\
 
 ### POST `/api/v1/jump/games/{id}/swf` (authentication required)
 
-An original SWF byte proxy for Jump games that need an AVM, for example for keyboard controls. No conversion or cache write-back.
+An original SWF byte proxy for Jump games that need an AVM, for example for keyboard controls.
 
 - Authenticated clients only
 - No source → `SOURCE_UNAVAILABLE`
@@ -253,14 +251,14 @@ curl -sS "https://zuzunza.com/api/v1/contents/{id}/conversion"
 
 ---
 
-## Recommended workflow (studio)
+## Recommended workflow
 
 1. Upload thumbnails, media, and ZIP/ZWF/SWF/WASM files with `POST /api/v1/uploads` → get `upload.url`
 2. Publish with `POST /api/v1/contents`, including the URL and category metadata ([Contents](contents.md))
 3. For Jump, check the sandbox boundary with `play`. For SWF, play it on the client with Ruffle, and use the `stream`/`swf` proxies when needed
 4. Track legacy conversion with `GET …/conversion`
 
-> Replacing a package: there is no API for replacing the package bytes of an existing content id. Register a new version as a new Jump draft.
+> Register a new package version as a new Jump draft.
 
 ---
 

@@ -26,7 +26,7 @@ zuku create my-game
 cd my-game
 ```
 
-이름은 영문 소문자, 숫자, `_`, `-`로 구성하며 최대 64자입니다. 같은 이름의 경로가 이미 있으면 덮어쓰지 않고 오류를 표시합니다. `create`는 이름만 받으며 템플릿 선택 옵션은 없습니다.
+이름은 영문 소문자, 숫자, `_`, `-`로 구성하며 최대 64자입니다. 같은 이름의 경로가 이미 있으면 덮어쓰지 않고 오류를 표시합니다.
 
 생성되는 파일은 다음과 같습니다.
 
@@ -96,7 +96,7 @@ zuku validate . --json
 
 ## AI로 게임 만들기
 
-CLI 게임 에이전트는 선택한 외부 AI 제공자의 자격 증명이나 로컬 모델로 실행됩니다. ZUKU AI와 초안 업로드·게시에는 ZUKU 계정이 필요합니다. 관련 문서: [CLI 인증](cli/authentication.md), [제공자](cli/providers.md), [게임 에이전트](cli/agent.md). 호스팅 웹 AI와 앱 내 AI는 공개되지 않았으며 개시 일정은 미정입니다. Android 앱은 [APK 미리보기](https://apk.zuzunza.com/)에서 내려받습니다.
+CLI 게임 에이전트는 선택한 외부 AI 제공자의 자격 증명이나 로컬 모델로 실행됩니다. ZUKU AI와 초안 업로드·게시에는 ZUKU 계정이 필요합니다. 관련 문서: [CLI 인증](cli/authentication.md), [제공자](cli/providers.md), [게임 에이전트](cli/agent.md).
 
 ## 다음 단계
 

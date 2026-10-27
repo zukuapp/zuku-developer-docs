@@ -6,7 +6,7 @@ section: Guide
 
 # Authentication
 
-The ZUKU CLI uses two separate kinds of sign-in. They do different jobs, so it helps to keep them apart:
+The ZUKU CLI uses two separate kinds of sign-in:
 
 | Kind | What it is for | Commands |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ The ZUKU CLI uses two separate kinds of sign-in. They do different jobs, so it h
 
 `zuku` and `zukujs` are the same CLI. They share the same runtime, configuration, sign-in and state (`~/.config/zukujs/` (Windows: `%LOCALAPPDATA%\ZukuJS\`)), so signing in with one also signs you in with the other. User configuration and accounts live in that shared directory; a project's `.zukujs/` directory stores run records and receipts.
 
-This page covers the CLI only. For bearer tokens used with the HTTP API, see [HTTP API authentication](../authentication.md).
+For bearer tokens used with the HTTP API, see [HTTP API authentication](../authentication.md).
 
 ## Sign in to your ZUKU account
 
@@ -23,7 +23,7 @@ This page covers the CLI only. For bearer tokens used with the HTTP API, see [HT
 zuku login zuku
 ```
 
-The CLI opens the official ZUKU page in your browser. You confirm your account there and approve the connection, the same way you approve access for a game. The CLI never asks for your password or a copied token. On a machine without a browser, add `--no-browser` and open the URL the CLI prints yourself.
+The CLI opens the official ZUKU page in your browser. You confirm your account there and approve the connection. Sign-in only happens through approval on the official browser page; never type a password or token into the terminal. Upload, draft and publish permissions come only from the `zuku login zuku` connection. On a machine without a browser, add `--no-browser` and open the URL the CLI prints yourself.
 
 By default, the connection asks for the `games:upload games:create games:publish` permissions, which cover uploads and publishing. To use the official ZUKU AI provider (`zuku/auto`) with the local agent, also request the generation permission explicitly:
 
@@ -43,7 +43,7 @@ Publishing is limited by the server to three successful production publishes per
 
 ## Connect AI provider credentials
 
-The local agent needs an AI provider. The default is the official ZUKU AI provider, `zuku`, with model `zuku/auto`. The agent also accepts your own API key for a supported provider such as OpenAI or Anthropic. Official provider API keys are a fully supported option.
+The local agent needs an AI provider. The default is the official ZUKU AI provider, `zuku`, with model `zuku/auto`. The agent also accepts your own API key for a supported provider such as OpenAI or Anthropic.
 
 ```sh
 zuku auth list                          # status only, never secret values
@@ -58,7 +58,7 @@ printf '%s\n' "$KEY" | zuku auth login --provider openai --api-key-stdin
 zuku auth login --provider openai --api-key-env MY_OPENAI_KEY
 ```
 
-`auth login --verify` and `--header` currently fail with `CORE_PROTOCOL_GAP`; Agent Core has no carrier for them. Use `zuku auth list --provider <id>` to inspect stored status. It does not verify credentials with the remote service. The separate `upload --verify` draft-readback option remains supported.
+`auth login --verify` and `--header` fail with `CORE_PROTOCOL_GAP`. Use `zuku auth list --provider <id>` to inspect stored status. It does not verify credentials with the remote service.
 
 If `--provider` is omitted, a terminal session lets you pick from a list, and a non-interactive session uses `zuku`. See [Providers](providers.md) for the full list and [Models](models.md) for choosing a model.
 
@@ -68,13 +68,12 @@ If `--provider` is omitted, a terminal session lets you pick from a list, and a 
 zuku login codex --experimental
 ```
 
-Codex sign-in through the CLI integration is an **Experimental**, unofficial integration. It is marked `(exp!)` in CLI output. The first sign-in requires `--experimental`, and the CLI records your sign-in opt-in in its own protected store. Separately, each new Agent Core game session using Codex or a custom provider requires `--experimental` on the agent command; otherwise it fails with `AUTH_EXPERIMENTAL_OPT_IN`. The CLI doesn't import an existing Codex session or key files from other tools. The selected provider never falls back to Codex, or to any other provider, on its own.
+Codex sign-in through the CLI integration is an **Experimental**, unofficial integration. It is marked `(exp!)` in CLI output. The first sign-in requires `--experimental`, and the CLI records your sign-in opt-in in its own protected store. Separately, each new Agent Core game session using Codex or a custom provider requires `--experimental` on the agent command; otherwise it fails with `AUTH_EXPERIMENTAL_OPT_IN`. The selected provider never falls back to Codex, or to any other provider, on its own.
 
 ## Where credentials are stored
 
 - API keys go into a protected secret store that only your user can read: owner-only files on Linux and macOS, and per-user DPAPI encryption on Windows. If the store can't be protected, the CLI fails instead of saving plaintext.
-- Keys and tokens never appear in logs, error messages, `--json` output or model input.
-- `zuku auth list` reports states such as `configured`, `environment`, `not-configured` and `scope-required`, and never prints the values.
+- `zuku auth list` reports states such as `configured`, `environment`, `not-configured` and `scope-required`.
 
 ## Sign out and clean up
 
@@ -83,7 +82,7 @@ zuku account logout                     # disconnect your ZUKU account
 zuku auth logout --provider <id>        # remove a provider sign-in
 ```
 
-Signing out of your ZUKU account leaves a token-free record, so a late login or refresh can't bring the connection back. If you set a key with `--api-key-env`, the CLI only stored the variable name, so also remove the variable from your shell. Keep publish receipts in `.zukujs/receipts`. Publish recovery reads them.
+If you set a key with `--api-key-env`, the CLI only stored the variable name, so also remove the variable from your shell. Keep publish receipts in `.zukujs/receipts`. Publish recovery reads them.
 
 ## Troubleshooting
 

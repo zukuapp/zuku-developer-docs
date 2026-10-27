@@ -10,7 +10,7 @@ Phaser 스타터는 씬 전환, 스프라이트 애니메이션, 아케이드 �
 
 ## 시작하기 전에
 
-- `zuku create`는 [Canvas 러너](html5.md)만 만듭니다. Phaser 템플릿을 고르는 옵션은 없으므로 Phaser 스타터는 압축 파일로 받습니다.
+- Phaser 스타터는 압축 파일로 받습니다. `zuku create`는 [Canvas 러너](html5.md)를 만듭니다.
 - CLI가 설치되어 있어야 합니다. 설치 절차는 [설치](../installation.md)에 있습니다.
 - `npm install`이나 빌드 도구는 필요하지 않습니다.
 
@@ -91,7 +91,7 @@ zuku package . --format zwf
 
 ## 에이전트로 Phaser 게임 만들기
 
-CLI 0.3.0에는 Phaser가 포함되어 있지 않습니다. [게임 개발 에이전트](../cli/agent.md)는 CLI 설치본 옆에 `phaser` 패키지가 설치된 경우에만 Phaser를 선택합니다. 이때 에이전트는 Phaser 파일과 라이선스를 프로젝트에 복사하며 CDN에 의존하지 않습니다. 이 페이지의 스타터 압축 파일에는 Phaser가 포함되어 별도 설치가 필요 없습니다. 에이전트의 모델 연결은 [인증](../cli/authentication.md)과 [제공자](../cli/providers.md)에 있습니다.
+[게임 개발 에이전트](../cli/agent.md)는 CLI 설치본 옆에 `phaser` 패키지가 설치된 경우에만 Phaser를 선택합니다. 이때 에이전트는 Phaser 파일과 라이선스를 프로젝트에 복사하며 CDN에 의존하지 않습니다. 이 페이지의 스타터 압축 파일에는 Phaser가 포함되어 별도 설치가 필요 없습니다. 에이전트의 모델 연결은 [인증](../cli/authentication.md)과 [제공자](../cli/providers.md)에 있습니다.
 
 ## 다음 단계
 

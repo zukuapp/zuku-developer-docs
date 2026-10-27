@@ -32,7 +32,7 @@ curl -sS "https://zuzunza.com/api/v1/feed?limit=20"
 
 응답은 공통 형식 `{ success, data, meta }` / `{ success, error, meta }`를 따르며, 삭제 성공은 `204 No Content`입니다.
 
-> 글 목록용 `GET /posts` 경로는 없습니다. 목록은 `GET /feed` 또는 `GET /users/me/posts`([소셜](social.md))를 사용합니다.
+> 글 목록은 `GET /feed` 또는 `GET /users/me/posts`([소셜](social.md))를 사용합니다.
 
 ## 엔드포인트 요약
 
@@ -231,7 +231,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/posts/$POST_ID/like" \
 
 ## DELETE /posts/{id}
 
-소프트 삭제하며 답글 자리는 보존됩니다. 작성자만 성공(`204`)하며, 다른 사람의 글과 없는 글은 모두 `404 POST_NOT_FOUND`입니다(존재 여부 비공개).
+소프트 삭제하며 답글 자리는 보존됩니다. 작성자만 성공(`204`)하며, 다른 사람의 글과 없는 글은 모두 `404 POST_NOT_FOUND`입니다.
 
 ## JUMP 게임 목록 정렬
 

@@ -36,7 +36,7 @@ zuku model current
 
 ## The model catalog is dynamic
 
-The CLI doesn't hard-code a list of models. In particular, `zuku/auto` is a routing alias on the ZUKU server, and the models behind it can change. To see what is available right now, run:
+`zuku/auto` is a routing alias on the ZUKU server, and the models behind it can change. To see what is available right now, run:
 
 ```sh
 zuku model list --provider zuku
@@ -52,17 +52,17 @@ Each entry has a `source`:
 | `configured` | Added by you with `provider add` or `provider configure --model` |
 | `discovered` | Returned by the provider's own model list API |
 
-If a provider has a model list API, the CLI asks it. If not, the CLI shows only the models you registered and never makes up entries. Selecting a model that isn't listed fails with `MODEL_UNAVAILABLE`.
+If a provider has a model list API, the CLI asks it. If not, the CLI shows only the models you registered. Selecting a model that isn't listed fails with `MODEL_UNAVAILABLE`.
 
 The list also reports a discovery status: `fresh`, `cached`, `stale` (the fetch failed and an earlier cache was used), `unavailable` or `unsupported`.
 
 ## Caching
 
-Results are cached per provider for 15 minutes. The cache is skipped when the provider's endpoint, options, sign-in method or account changes. It never contains keys, tokens or secret header values. After you sign out, or when sign-in fails, the CLI won't show the previous account's catalog. Failed fetches aren't retried automatically. Run `zuku model refresh` when you want a fresh list.
+Results are cached per provider for 15 minutes. The cache is skipped when the provider's endpoint, options, sign-in method or account changes. Failed fetches aren't retried automatically. Run `zuku model refresh` when you want a fresh list.
 
 ## Model details
 
-`zuku model info` shows a model's capabilities, context window, output limit and price where known. These values are only filled in when the provider's API or your own configuration supplies them. Unknown values are shown as `null` instead of being guessed.
+`zuku model info` shows a model's capabilities, context window, output limit and price where known. These values are only filled in when the provider's API or your own configuration supplies them. Unknown values are shown as `null`.
 
 ```sh
 zuku model info openai/<model> --json
@@ -76,7 +76,7 @@ zuku agent "a one-button space dodger" --model anthropic/<model>
 
 - Without `--model`, the agent uses the model selected with `zuku model use`. If none is selected, it uses `zuku/auto`.
 - `--model auto` means `zuku/auto`. A model ID without a provider is attached to the current provider.
-- If the selected provider is disabled or the model is unknown, the run fails. The CLI never switches to another provider, and never to a paid one.
+- If the selected provider is disabled or the model is unknown, the run fails. The CLI never switches to another provider.
 - Custom endpoints and Codex are **Experimental** and require `--experimental` on the agent command.
 
-The agent is limited to ZUKU game development, whichever model you choose. See [Agent](agent.md), [Providers](providers.md) and [Commands](commands.md). Error codes are listed in [Errors](../errors.md).
+See [Agent](agent.md), [Providers](providers.md) and [Commands](commands.md). Error codes are listed in [Errors](../errors.md).

@@ -6,14 +6,13 @@ section: API
 
 # Captcha
 
-ZUKU uses a self-hosted proof-of-work captcha. Challenges are issued and verified with an HMAC based on `CAPTCHA_HMAC_SECRET`, with no third-party widget (such as reCAPTCHA).
-This page covers the sign-up and login gate and the debug verification API.
+ZUKU uses a self-hosted proof-of-work captcha. The server issues HMAC-signed challenges, and the client finds the answer by computation and submits it as a token.
 
-**Base URL**: `https://zuzunza.com/api/v1` (local: `http://localhost:3001/api/v1`)
+**Base URL**: `https://zuzunza.com/api/v1`
 
 ## Contents
 
-1. [Overview and environment variables](#1-overview-and-environment-variables)
+1. [Protocol](#1-protocol)
 2. [Challenge](#2-challenge)
 3. [Verify](#3-verify)
 4. [Auth gate (`zcaptcha_token`)](#4-auth-gate-zcaptcha_token)
@@ -24,22 +23,16 @@ This page covers the sign-up and login gate and the debug verification API.
 
 ---
 
-## 1. Overview and environment variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `CAPTCHA_HMAC_SECRET` | (empty string) | Required in production. When empty, challenge/verify fail closed with 503. |
-| `CAPTCHA_MAX_NUMBER` | `100000` | Upper bound of the proof-of-work search (0..=maxnumber) |
-| `CAPTCHA_TTL_SECS` | `300` | Expiry (seconds) embedded in the salt |
-| `CAPTCHA_DEV_BYPASS` | off | When `1`, allows local hosts plus a fixed bypass token |
-
-Protocol (compatible with the legacy gate):
+## 1. Protocol
 
 1. The server issues `salt`, `challenge=hex(SHA-256(salt‖number))`, and `signature=hex(HMAC-SHA256(secret, challenge))`.
 2. The client searches `0..=maxnumber` for the `number` that matches `challenge`.
 3. The client submits the token `base64(JSON{algorithm,challenge,number,salt,signature})`.
 
-The captcha is unrelated to internal filters or sandboxes. Its purpose is mitigating authentication abuse.
+| Item | Default |
+|------|---------|
+| `maxnumber` (search upper bound) | `100000` |
+| Challenge expiry | 300 seconds (expiry time embedded in `salt`) |
 
 ---
 
@@ -63,7 +56,7 @@ No authentication. No body.
 
 | HTTP | code | Condition |
 |------|------|-----------|
-| 503 | `CAPTCHA_NOT_CONFIGURED` | `CAPTCHA_HMAC_SECRET` not set |
+| 503 | `CAPTCHA_NOT_CONFIGURED` | Captcha not configured on the server |
 | 405 | — | Disallowed method such as GET |
 
 ---
@@ -78,18 +71,15 @@ For server-to-server use and debugging. The sign-up and login gate uses the same
 
 ```json
 {
-  "token": "<solved-base64-token>",
-  "dev_host": "localhost"
+  "token": "<solved-base64-token>"
 }
 ```
-
-`dev_host` only matters when `CAPTCHA_DEV_BYPASS=1`.
 
 **Success `200`**: `data`: `{ "success": true }`
 
 | HTTP | code | Condition |
 |------|------|-----------|
-| 503 | `CAPTCHA_NOT_CONFIGURED` | No secret |
+| 503 | `CAPTCHA_NOT_CONFIGURED` | Captcha not configured on the server |
 | 403 | `CAPTCHA_FAILED` | Signature, expiry, number, or replay check failed |
 | 400 | `BAD_REQUEST` | JSON parse failure and similar |
 
@@ -101,12 +91,8 @@ Applies to `POST /auth/register`, `POST /auth/signup`, and `POST /auth/login`:
 
 | Server state | Behavior |
 |--------------|----------|
-| Secret not set | Gate disabled. Sign-up and login are not blocked. |
-| Secret set | `zcaptcha_token` is required in the body. On failure, 403 `CAPTCHA_FAILED`. |
-| `CAPTCHA_DEV_BYPASS=1` + allowed token/host | Development bypass |
-
-Development bypass token (fixed): `__zuzunza_captcha_localhost_bypass__`
-(Never enable `CAPTCHA_DEV_BYPASS` in production.)
+| Captcha disabled | The gate is off and sign-up and login are not blocked. |
+| Captcha enabled | `zcaptcha_token` is required in the body. On failure, 403 `CAPTCHA_FAILED`. |
 
 For the full sign-up and login fields, see [Authentication](authentication.md).
 
@@ -206,7 +192,7 @@ For more end-to-end scenarios, see [Examples](examples.md).
 
 | code | HTTP | Meaning |
 |------|------|---------|
-| `CAPTCHA_NOT_CONFIGURED` | 503 | HMAC secret not set (challenge/verify) |
+| `CAPTCHA_NOT_CONFIGURED` | 503 | Captcha not configured on the server (challenge/verify) |
 | `CAPTCHA_FAILED` | 403 | Token verification failed or the gate rejected the request |
 | `BAD_REQUEST` | 400 | Malformed body |
 

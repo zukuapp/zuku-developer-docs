@@ -76,21 +76,18 @@ Every JSON response from the ZUKU API uses one shared envelope. Failures carry a
 | `422 Unprocessable Entity` | Field validation (`VALIDATION_ERROR`, Jump ID validation codes, and others) |
 | `429 Too Many Requests` | Rate limit exceeded (`RATE_LIMITED`) |
 | `500 Internal Server Error` | Server or database (`INTERNAL_ERROR`, `DB_UNAVAILABLE`) |
-| `501 Not Implemented` | Out of scope (`NOT_IMPLEMENTED`, for example OAuth) |
+| `501 Not Implemented` | Not implemented (`NOT_IMPLEMENTED`, for example OAuth) |
 | `503 Service Unavailable` | Captcha not configured (`CAPTCHA_NOT_CONFIGURED`), rate-limit counter unavailable (`RATE_LIMIT_UNAVAILABLE`) |
 
 ## Error codes
-
-These are the codes the API actually returns.
 
 ### Authentication and permissions
 
 | code | Typical HTTP | Meaning |
 |---|---|---|
 | `UNAUTHORIZED` | 401 | A Bearer session/Authorization header or a valid access token is required |
-| `FORBIDDEN` | 403 | No permission, or admin only |
+| `FORBIDDEN` | 403 | No permission |
 | `ALREADY_AUTHENTICATED` | 409 | Tried to sign up while already signed in |
-| `SELF_ACTION_FORBIDDEN` | 409 | Forbidden administrative action on yourself |
 
 ### Validation and request format
 
@@ -171,9 +168,9 @@ Common `field` values when creating content are `title`, `description`, `tags`, 
 
 ## Response headers
 
-Rate-limited requests carry headers based on actual measured counts. Success responses describe the default window for that request kind. A `429` describes the window of the condition that actually rejected the request.
+Rate-limited requests carry rate-limit headers. Success responses describe the default window for that request kind. A `429` describes the window of the condition that rejected the request.
 
-| Header | Current behavior |
+| Header | Behavior |
 |---|---|
 | `X-API-Version` | Always `v1` |
 | `X-RateLimit-Limit` | Allowed requests in the reported window |
@@ -183,11 +180,9 @@ Rate-limited requests carry headers based on actual measured counts. Success res
 | `X-RateLimit-Scope` / `X-RateLimit-Plan` | Request kind and the server-verified plan (`unknown` for IP protection before authentication) |
 | `Retry-After` | Seconds to wait, on `429` |
 
-For `429 RATE_LIMITED`, `error.details` includes `plan`, `scope`, `limit`, `remaining`, `window_seconds`, `retry_after_seconds`, `reset_at` and `upgrade_available`. `reset_at` is in Unix epoch seconds. If the counter can't be confirmed, the API returns `503 RATE_LIMIT_UNAVAILABLE`. Existing MFA, chat and provider limits keep their own error codes and retry guidance.
+For `429 RATE_LIMITED`, `error.details` includes `plan`, `scope`, `limit`, `remaining`, `window_seconds`, `retry_after_seconds`, `reset_at` and `upgrade_available`. `reset_at` is in Unix epoch seconds. If the counter can't be confirmed, the API returns `503 RATE_LIMIT_UNAVAILABLE`.
 
-See [Rate limits](rate-limits.md) for the limits and rollout conditions. To tell the old placeholder headers from the new policy, check real responses and `GET /api/v1/rate-limits/policy`.
-
-Other CORS and API version headers keep their existing contract. Personal limits and `429` responses aren't stored in shared caches.
+See [Rate limits](rate-limits.md) for the limits. Query the current policy with `GET /api/v1/rate-limits/policy`.
 
 ## Handling errors in JavaScript
 
@@ -261,13 +256,13 @@ try {
 
 ## CLI troubleshooting
 
-The `zuku` CLI reports failures as `CODE: message` on stderr, or as `{"success":false,"error":{...}}` with `--json`. It reports server failures with the HTTP status and a verified API code, and never prints raw remote responses or tokens.
+The `zuku` CLI reports failures as `CODE: message` on stderr, or as `{"success":false,"error":{...}}` with `--json`. It reports server failures with the HTTP status and an API code.
 
 | Code | What to do |
 |---|---|
 | `INVALID_INPUT` (exit 2) | An argument is unknown, duplicated, conflicting or malformed. Check [Commands](cli/commands.md). |
 | `UNAUTHORIZED`, `ZUKU_LOGIN_REQUIRED` | Connect your account with `zuku login zuku`. |
-| `ZUKU_ACCOUNT_MIGRATION_REQUIRED` | The connection is from the earlier test server. Run `zuku login zuku` again. |
+| `ZUKU_ACCOUNT_MIGRATION_REQUIRED` | The account connection must be approved again. Run `zuku login zuku` again. |
 | `ZUKU_GENERATE_SCOPE_REQUIRED` | Approve generation explicitly with `zuku login zuku --generate`. |
 | `DEPLOY_YOLO_REQUIRED` | Production publishing needs `--yolo`. |
 | `DEPLOY_QUOTA_EXCEEDED` | You've used 3 successful publishes in the last 6 hours. Wait for `retry_after`. |

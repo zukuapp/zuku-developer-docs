@@ -1,12 +1,10 @@
 # ZUKU Android 앱 원스토어 출시 가이드
 
-확인 기준: 2026년 10월 4일. 이 문서는 ZUKU Android 앱을 정식 서명한 뒤 원스토어에 등록하고, 심사·공개·업데이트하는 담당자용 절차입니다. 계정 생성이나 스토어 업로드를 자동으로 수행하는 문서는 아닙니다.
-
 ## 1. 제출 대상과 현재 상태 확인
 
-원스토어에 제출할 대상은 Android 앱입니다. `@zukujs/cli`와 동일 런타임을 사용하는 `zuku`·`zukujs` 명령, CLI가 만드는 게임 패키지는 Android APK가 아닙니다. 게임 패키지를 APK 업로드 화면에 제출하지 않습니다.
+원스토어에 제출할 대상은 Android 앱입니다. CLI가 만드는 게임 패키지는 APK 업로드 화면에 제출하지 않습니다.
 
-현재 [ZUKU APK 페이지](https://apk.zuzunza.com/)에서 제공하는 프리뷰 APK의 실제 측정값은 다음과 같습니다.
+현재 [ZUKU APK 페이지](https://apk.zuzunza.com/)에서 제공하는 프리뷰 APK의 값은 다음과 같습니다.
 
 | 항목 | 현재 프리뷰 |
 | --- | --- |
@@ -18,9 +16,7 @@
 | 서명 | Android Debug 인증서 |
 | APK SHA-256 | `ee0cc23906ba44681b34ac9542b0f924504dac818ff03b151122c6a04e15647c` |
 
-현재 프리뷰는 정식 출시용 서명 상태가 아닙니다. 확인한 공개 프리뷰와 기본 Gradle 설정에서는 release도 `signingConfigs.debug`를 사용합니다. 공식 빌드 스크립트에는 정식 서명 설정을 받아 별도로 구성하는 경로가 있으며 5단계에서 설명합니다. `assembleRelease` 성공이나 `debuggable=false`만으로 정식 서명 준비가 끝났다고 판단하지 말고 실제 결과물을 검증합니다.
-
-앱의 ZUKU AI는 현재 오픈 준비중입니다. 소개·스크린샷·심사용 설명도 이 상태와 일치시킵니다. 아직 검증하지 않은 AI 이용권, 구독, 결제 기능을 사용 가능한 기능으로 설명하지 않습니다.
+현재 프리뷰는 정식 출시용 서명 상태가 아닙니다. 공개 프리뷰와 기본 Gradle 설정에서는 release도 `signingConfigs.debug`를 사용합니다. 공식 빌드 스크립트에는 정식 서명 설정을 받아 별도로 구성하는 경로가 있으며 5단계에서 설명합니다. `assembleRelease` 성공이나 `debuggable=false`만으로 정식 서명 준비가 끝났다고 판단하지 말고 실제 결과물을 검증합니다.
 
 ## 2. APK와 서명 운영 방식 결정
 
@@ -55,11 +51,11 @@ fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c
 
 릴리스 대상으로 정한 소스와 `package-lock.json`을 고정하고 프로젝트가 사용하는 Node·JDK·Android SDK·Gradle wrapper 환경을 준비합니다. `applicationId`는 `com.zuzunza.zuku`로 유지합니다.
 
-`versionCode`는 기존에 배포하거나 등록한 모든 대상 버전보다 커야 합니다. 현재 공개 프리뷰에서 확인한 값은 `3`이므로, 다른 등록 이력이 없다면 다음 릴리스에는 최소 `4`를 사용합니다. 콘솔에 더 큰 코드가 있으면 그 값보다 높여야 합니다. `versionName`은 실제 릴리스 이름으로 따로 정합니다. [Android 버전 관리](https://developer.android.com/studio/publish/versioning)
+`versionCode`는 기존에 배포하거나 등록한 모든 대상 버전보다 커야 합니다. 현재 프리뷰의 값은 `3`이므로, 다른 등록 이력이 없다면 다음 릴리스에는 최소 `4`를 사용합니다. 콘솔에 더 큰 코드가 있으면 그 값보다 높여야 합니다. `versionName`은 실제 릴리스 이름으로 따로 정합니다. [Android 버전 관리](https://developer.android.com/studio/publish/versioning)
 
-현재 프로젝트의 공식 빌드 스크립트는 `ZUKU_ANDROID_KEYSTORE_PATH`, `ZUKU_ANDROID_KEYSTORE_PASSWORD`, `ZUKU_ANDROID_KEY_ALIAS`, `ZUKU_ANDROID_KEY_PASSWORD` 네 설정이 모두 제공될 때 정식 서명 구성을 생성합니다. 키와 비밀번호는 보호된 로컬 환경 또는 CI 비밀 저장소에서 주입합니다. 값이 들어간 명령을 문서·로그·셸 기록에 남기지 않습니다.
+공식 빌드 스크립트는 `ZUKU_ANDROID_KEYSTORE_PATH`, `ZUKU_ANDROID_KEYSTORE_PASSWORD`, `ZUKU_ANDROID_KEY_ALIAS`, `ZUKU_ANDROID_KEY_PASSWORD` 네 설정이 모두 제공될 때 정식 서명 구성을 생성합니다. 키와 비밀번호는 보호된 로컬 환경 또는 CI 비밀 저장소에서 주입합니다. 값이 들어간 명령을 문서·로그·셸 기록에 남기지 않습니다.
 
-공식 `build:apk` 스크립트는 Linux·macOS에서 실행합니다. Windows에서는 WSL2 안의 Linux Node·JDK·Android SDK 환경을 사용하며, Windows 네이티브 Node로 이 스크립트를 실행하는 방식은 지원하지 않습니다.
+공식 `build:apk` 스크립트는 Linux·macOS에서 실행합니다. Windows에서는 WSL2 안의 Linux Node·JDK·Android SDK 환경을 사용합니다.
 
 아래 명령은 네 정식 서명 설정을 제공한 뒤 앱 프로젝트 루트에서 실행합니다. 설정이 빠지면 APK 빌드는 프리뷰(Debug) 서명을 사용합니다. 따라서 다음 단계의 인증서 검사까지 완료해야 합니다.
 
@@ -99,13 +95,13 @@ sha256sum "$ZUKU_ANDROID_APK"
 
 macOS에서는 마지막 줄 대신 `shasum -a 256 "$ZUKU_ANDROID_APK"`를 사용합니다. 명령은 파일의 manifest, 포함 ABI, 서명과 해시를 검사합니다. [APK Analyzer](https://developer.android.com/tools/apkanalyzer), [AAPT2](https://developer.android.com/tools/aapt2), [apksigner](https://developer.android.com/tools/apksigner)
 
-결과에서 패키지, 새 versionCode, `debuggable=false`, 실제 지원 ABI와 정식 인증서 지문을 확인합니다. 서명 검증 성공은 정식 키 사용이나 스토어 심사 통과를 대신하지 않습니다. 모든 값이 릴리스 기록과 일치하는 바로 그 파일을 업로드 대상으로 고정합니다.
+결과에서 패키지, 새 versionCode, `debuggable=false`, 실제 지원 ABI와 정식 인증서 지문을 확인합니다. 모든 값이 릴리스 기록과 일치하는 바로 그 파일을 업로드 대상으로 고정합니다.
 
 ## 7. 실제 기기에서 출시 동작 확인
 
 정식 결과물을 설치해 새 설치와 기존 정식 버전에서의 업데이트를 각각 확인합니다. 지원을 선언할 실제 Android 기기에서 시작 화면, 로그인·로그아웃, 기본 탐색, 게임 실행, 뒤로 가기, 키보드, 권한 거절, 네트워크 단절과 복귀를 점검합니다. 해당 화면이나 기능이 릴리스에 없다면 제공한다고 기재하지 않습니다.
 
-좁은 화면과 큰 글자, 다크 모드, 앱 재시작도 확인합니다. AI 화면은 "오픈 준비중" 표시를 유지하며, 닫힌 백엔드를 이미 이용 가능한 기능처럼 보여주지 않아야 합니다. 개인정보처리방침 링크와 사용자 지원 경로가 실제로 열리는지도 점검합니다.
+좁은 화면과 큰 글자, 다크 모드, 앱 재시작도 확인합니다. 앱 AI 화면은 "오픈 준비중" 표시를 유지합니다. 개인정보처리방침 링크와 사용자 지원 경로가 실제로 열리는지도 점검합니다.
 
 ## 8. 원스토어 Android 상품 등록
 
@@ -113,13 +109,13 @@ ONEconsole에서 Apps → 상품현황 → 신규 상품 등록으로 이동해 
 
 현재 배포 파일의 "프리뷰" 명칭과 원스토어의 "베타" 상품 유형은 다릅니다. 원스토어 베타로 등록한 상품을 정식 출시하려면 신규 상품과 다른 패키지가 필요하므로, 이 절차에서는 정식 출시를 선택합니다. 같은 패키지가 다른 소유자의 상품으로 표시되면 소유권을 해결한 뒤 진행합니다.
 
-공식 등록 가이드는 다른 Android 마켓별 패키지 분리를 권장합니다. 이는 강제 요건으로 해석하지 않으며, 이 문서의 실제 앱 패키지를 임의로 변경하지 않습니다. 추가 마켓을 운영하려면 별도 패키지 여부와 기존 사용자 업데이트·서명 경로를 먼저 설계합니다.
+공식 등록 가이드는 다른 Android 마켓별 패키지 분리를 권장합니다. 추가 마켓을 운영하려면 별도 패키지 여부와 기존 사용자 업데이트·서명 경로를 먼저 설계합니다.
 
 ## 9. 소개·스크린샷·등급·개인정보 입력
 
 상품명, 기본 언어, 설명, 실제 성격에 맞는 카테고리, 지원 연락처와 판매 국가를 입력합니다. 신 ZUKU 로고를 적용한 실제 앱 아이콘과 현재 정식 빌드의 화면을 사용합니다. 데스크톱 웹 화면을 모바일 앱의 화면으로 대신 제출하지 않습니다.
 
-스크린샷은 공식 안내의 2~8장 범위로 준비합니다. 앱이 제공하는 화면과 기능만 소개하고, AI는 오픈 준비중이라고 명시합니다. [상품 등록 FAQ](https://onestore-dev.gitbook.io/dev/help/faq/apps)
+스크린샷은 공식 안내의 2~8장 범위로 준비합니다. 앱이 제공하는 화면과 기능만 소개하고, 소개·스크린샷·심사용 설명에서 ZUKU AI는 오픈 준비중으로 적습니다. AI 이용권·구독·결제는 사용 가능한 기능으로 소개하지 않습니다. [상품 등록 FAQ](https://onestore-dev.gitbook.io/dev/help/faq/apps)
 
 실제 콘텐츠와 이용 흐름에 따라 요구되는 이용 등급 정보를 작성합니다. 공개 HTTPS 개인정보처리방침을 준비하고 앱 안에서도 접근할 수 있게 연결합니다. 실제 수집 항목·목적·보관 및 삭제 방법, 제3자 처리와 연락처를 반영하고, 빌드된 manifest의 권한과 설명을 맞춥니다. 불필요한 권한은 제거합니다. [원스토어 검증 가이드라인](https://onestore-dev.gitbook.io/dev/docs/review/one-store-review-guideline)
 
@@ -133,7 +129,7 @@ ONEconsole에서 Apps → 상품현황 → 신규 상품 등록으로 이동해 
 
 ## 11. 유료 기능과 인앱결제는 실제 구현에 맞게
 
-앱 등록 시 외부 결제 사용 여부를 실제 서비스 계획에 맞게 정합니다. 이 선택은 등록 후 바꿀 수 없다는 공식 안내가 있으므로, 공개 전에 운영 책임자가 결제 계획을 확정합니다. 현재 ZUKU AI가 준비중이라는 사실만으로 원스토어 결제 연동이 완료된 것은 아닙니다. [결제 방식 FAQ](https://onestore-dev.gitbook.io/dev/help/faq/apps)
+앱 등록 시 외부 결제 사용 여부를 실제 서비스 계획에 맞게 정합니다. 이 선택은 등록 후 바꿀 수 없다는 공식 안내가 있으므로, 공개 전에 운영 책임자가 결제 계획을 확정합니다. [결제 방식 FAQ](https://onestore-dev.gitbook.io/dev/help/faq/apps)
 
 유료 AI·크레딧·구독을 나중에 제공한다면 별도의 결제 릴리스를 준비합니다. 현재 공식 SDK 안내를 기준으로 라이브러리와 상품을 연동하고, 결제용 서버 인증 정보는 서버의 비밀 저장소에서 관리합니다. [IAP 사전준비](https://onestore-dev.gitbook.io/dev/tools/billing/v21/pre)
 

@@ -6,11 +6,6 @@ section: Reference
 
 # 오류와 응답 형식
 
-이 문서는 두 부분으로 나뉩니다.
-
-- ZUKU API: `/api/v1` 응답 봉투, HTTP 상태, 서버 오류 코드
-- ZukuJS CLI: `zuku`/`zukujs` 명령의 출력 형식, 종료 코드, CLI 오류 코드
-
 ## API 응답 봉투
 
 모든 JSON API 응답은 같은 봉투를 사용합니다.
@@ -75,27 +70,24 @@ section: Reference
 | `401 Unauthorized` | 세션·토큰 없음 또는 무효(`UNAUTHORIZED`) |
 | `403 Forbidden` | 권한 부족(`FORBIDDEN`) |
 | `404 Not Found` | 리소스·경로 없음(코드는 리소스별) |
-| `409 Conflict` | 중복·상태 충돌(`EMAIL_EXISTS`, `HANDLE_EXISTS`, `ALREADY_AUTHENTICATED`, `LEGACY_ACCOUNT_EXISTS`, `SELF_ACTION_FORBIDDEN` 등) |
+| `409 Conflict` | 중복·상태 충돌(`EMAIL_EXISTS`, `HANDLE_EXISTS`, `ALREADY_AUTHENTICATED`, `LEGACY_ACCOUNT_EXISTS` 등) |
 | `413 Payload Too Large` | 업로드 한도 초과(`PAYLOAD_TOO_LARGE`) |
 | `415 Unsupported Media Type` | 매직 바이트 기준 미지원 형식(`UNSUPPORTED_MEDIA_TYPE`) |
 | `422 Unprocessable Entity` | 필드 검증(`VALIDATION_ERROR`, JUMP ID 검증 코드 등) |
 | `429 Too Many Requests` | 요청 한도 초과(`RATE_LIMITED`), CLI 게시 한도 초과(`DEPLOY_QUOTA_EXCEEDED`) |
 | `500 Internal Server Error` | 서버·DB 오류(`INTERNAL_ERROR`, `DB_UNAVAILABLE`) |
-| `501 Not Implemented` | 범위 밖 기능(`NOT_IMPLEMENTED`, 예: `/auth/oauth/{provider}`) |
+| `501 Not Implemented` | 미구현 기능(`NOT_IMPLEMENTED`, 예: `/auth/oauth/{provider}`) |
 | `503 Service Unavailable` | 캡차 미설정(`CAPTCHA_NOT_CONFIGURED`), 한도 카운터 확인 불가(`RATE_LIMIT_UNAVAILABLE`), 저장소·업로드 장애 |
 
 ## API 오류 코드
-
-서버가 실제로 반환하는 코드입니다.
 
 ### 인증·권한
 
 | code | 전형적 HTTP | 의미 |
 |---|---|---|
 | `UNAUTHORIZED` | 401 | Bearer 세션 또는 유효한 `access_token` 필요 |
-| `FORBIDDEN` | 403 | 권한 없음, 관리자 전용 |
+| `FORBIDDEN` | 403 | 권한 없음 |
 | `ALREADY_AUTHENTICATED` | 409 | 이미 로그인한 상태로 회원가입 시도 |
-| `SELF_ACTION_FORBIDDEN` | 409 | 자기 자신에 대한 금지된 관리 조작 |
 
 ### 검증·요청 형식
 
@@ -188,11 +180,11 @@ section: Reference
 ]
 ```
 
-콘텐츠 생성에서 흔한 `field` 값은 `title`, `description`, `tags`, `age_rating`, `type`입니다. UI는 `details`를 필드별 인라인 오류로 표시하고, 없으면 `error.message`를 토스트나 배너로 보여 주면 됩니다.
+콘텐츠 생성에서 흔한 `field` 값은 `title`, `description`, `tags`, `age_rating`, `type`입니다. UI는 `details`를 필드별 인라인 오류로 표시하고, 없으면 `error.message`를 토스트나 배너로 보여 줍니다.
 
 ## 응답 헤더
 
-제한 대상 요청에는 실제로 측정한 요청 한도 헤더가 붙습니다. 성공 응답은 해당 종류의 기본 구간을, `429`는 실제로 거절한 조건의 구간을 표시합니다.
+제한 대상 요청에는 요청 한도 헤더가 붙습니다. 성공 응답은 해당 종류의 기본 구간을, `429`는 거절한 조건의 구간을 표시합니다.
 
 | 헤더 | 동작 |
 |---|---|
@@ -204,9 +196,9 @@ section: Reference
 | `X-RateLimit-Scope` / `X-RateLimit-Plan` | 요청 종류 / 서버가 검증한 요금제(IP 보호에서 인증 전이면 `unknown`) |
 | `Retry-After` | `429`의 대기 시간(초) |
 
-`429 RATE_LIMITED`의 `error.details`에는 `plan`, `scope`, `limit`, `remaining`, `window_seconds`, `retry_after_seconds`, `reset_at`, `upgrade_available`이 들어갑니다. `reset_at`은 Unix epoch 초입니다. 카운터를 확인할 수 없으면 `503 RATE_LIMIT_UNAVAILABLE`을 반환합니다. 기존 MFA·채팅·제공자 제한은 각자의 오류 코드와 재시도 안내를 유지합니다.
+`429 RATE_LIMITED`의 `error.details`에는 `plan`, `scope`, `limit`, `remaining`, `window_seconds`, `retry_after_seconds`, `reset_at`, `upgrade_available`이 들어갑니다. `reset_at`은 Unix epoch 초입니다. 카운터를 확인할 수 없으면 `503 RATE_LIMIT_UNAVAILABLE`을 반환합니다.
 
-한도 수치와 운영 적용 조건은 [요청 한도](rate-limits.md)에 있습니다. 이전 릴리스의 더미 헤더와 새 정책을 구분하려면 실제 응답과 `GET /api/v1/rate-limits/policy`를 확인합니다. CORS·API 버전 헤더는 기존 계약을 유지하며, 개인 한도 정보나 429 응답은 공유 캐시에 저장하지 않습니다.
+한도 수치는 [요청 한도](rate-limits.md)에 있습니다. 현재 정책은 `GET /api/v1/rate-limits/policy`로 조회합니다.
 
 ## 클라이언트 처리 예시
 
@@ -293,7 +285,7 @@ POST·업로드·결제·AI 생성 같은 변경 요청은 자동으로 반복�
 | 실패, `--json` | stderr | `{"success":false,"error":{"code","message"},"meta":{...}}` 한 줄 |
 | 실패, 일반 | stderr | `CODE: message` |
 
-서버 오류는 HTTP 상태와 검증된 API 오류 코드로 보고하며, 원격 응답 전문이나 헤더, 토큰은 출력하지 않습니다. `dev`·`build` 같은 웹 프레임워크 전달 명령은 이 봉투를 쓰지 않고 프레임워크 자체 규칙을 따릅니다.
+서버 오류는 HTTP 상태와 API 오류 코드로 보고합니다. `dev`·`build` 같은 웹 프레임워크 전달 명령은 이 봉투를 쓰지 않고 프레임워크 자체 규칙을 따릅니다.
 
 ### 종료 코드
 
@@ -312,13 +304,13 @@ POST·업로드·결제·AI 생성 같은 변경 요청은 자동으로 반복�
 | `UNKNOWN_COMMAND` | 알 수 없는 명령 |
 | `COMMAND_CANCELLED` | 사용자가 취소함 |
 | `FRAMEWORK_UNAVAILABLE` | 웹 프레임워크 명령을 전달할 `zukujs` 프레임워크 패키지가 없음 |
-| `ZUKU_ACCOUNT_MIGRATION_REQUIRED` | 이전 시험용 서버의 계정 기록. `zuku login zuku`로 다시 승인 |
+| `ZUKU_ACCOUNT_MIGRATION_REQUIRED` | 계정 연결을 다시 승인해야 함. `zuku login zuku`로 다시 승인 |
 
 ### 제공자 인증
 
 | code | 의미 |
 |---|---|
-| `AUTH_SECRET_ARGUMENT` | 비밀 값을 명령 인수로 전달함(값은 오류에 다시 나오지 않음) |
+| `AUTH_SECRET_ARGUMENT` | 비밀 값을 명령 인수로 전달함 |
 | `AUTH_INPUT_REQUIRED` | 비대화형에서 입력 방법이 없음 / 입력 시간 초과 |
 | `AUTH_SECRET_INVALID` | 줄바꿈·제어 문자·크기 초과 |
 | `AUTH_REQUIRED` | 선택한 제공자의 자격 증명이 없음 |
@@ -345,7 +337,7 @@ POST·업로드·결제·AI 생성 같은 변경 요청은 자동으로 반복�
 | `AGENT_RECOVERY_REQUIRED` | 게시 상태를 서버에서 조회할 수 없어 멈춤 |
 | `DEPLOY_QUOTA_EXCEEDED` | 계정당 6시간 3회 게시 한도 초과(`retry_after` 포함) |
 
-에이전트 오류 메시지에는 모델·제공자·API·브라우저 원문이나 토큰이 들어가지 않습니다. 대처 방법은 [게임 개발 에이전트](cli/agent.md)와 [패키징과 게시](cli/publishing.md)에 있습니다.
+대처 방법은 [게임 개발 에이전트](cli/agent.md)와 [패키징과 게시](cli/publishing.md)에 있습니다.
 
 ## 관련 문서
 

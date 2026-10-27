@@ -8,7 +8,7 @@ section: Starter
 
 [Phaser](https://phaser.io) is an open-source framework for 2D browser games, with scenes, sprites, arcade physics, and an asset loader. The ZUKU Phaser starter is a working Phaser project. It uses the same CLI commands as every other ZUKU game to preview, validate, and package.
 
-`zuku create` always scaffolds the [Canvas runner](html5.md), and it has no template option. The Phaser starter is a separate download.
+The Phaser starter is a separate download. `zuku create` scaffolds the [Canvas runner](html5.md).
 
 ## Download
 
@@ -29,7 +29,7 @@ The archive contains:
 - a bundled Phaser vendor file that ships with the game,
 - your game code, which `index.html` loads with relative paths.
 
-Phaser is vendored: the library file sits inside the project and is loaded from there. The starter doesn't load anything from a CDN, and there's no `npm install` step.
+Phaser is vendored: the library file sits inside the project and is loaded from there.
 
 Before you run anything, check the project root for a `zukujs.json` manifest. The CLI needs it, along with the `source` folder it points to (`src` by default), where `index.html` must be. If the manifest is missing, `zuku validate` reports `MANIFEST_MISSING`. [Bring an existing game](existing-game.md) explains how to create one.
 
@@ -64,13 +64,13 @@ zuku package . --format zwf
 zuku validate dist/<name>-<version>.zwf
 ```
 
-All three commands run offline. Draft uploads are covered in [Publishing](../cli/publishing.md).
+Draft uploads are covered in [Publishing](../cli/publishing.md).
 
 <span id="prefer-to-generate-a-phaser-game"></span>
 
 ## Generate a Phaser game
 
-CLI 0.3.0 does not include Phaser. The agent selects Phaser only if the `phaser` package is installed separately alongside the CLI. It then copies the build and license into the project's `src/vendor/` folder without relying on a CDN. The downloadable starter on this page already includes Phaser and needs no additional installation. Agent generation requires credentials for the selected provider or a local model. ZUKU AI, uploading, and publishing require a ZUKU account. See [Game agent](../cli/agent.md) and [Authentication](../cli/authentication.md).
+The agent selects Phaser only if the `phaser` package is installed separately alongside the CLI. It then copies the build and license into the project's `src/vendor/` folder without relying on a CDN. The downloadable starter on this page already includes Phaser and needs no additional installation. Agent generation requires credentials for the selected provider or a local model. ZUKU AI, uploading, and publishing require a ZUKU account. See [Game agent](../cli/agent.md) and [Authentication](../cli/authentication.md).
 
 ## Next steps
 

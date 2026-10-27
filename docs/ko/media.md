@@ -6,7 +6,7 @@ section: API
 
 # 미디어
 
-이미지, 영상, 게임 패키지 같은 파일은 먼저 업로드 API로 올리고, 응답의 `url`을 [콘텐츠](contents.md) 생성에 사용합니다. 이 페이지는 업로드, 업로드 파일 제공, JUMP 게임 API를 다룹니다.
+이미지, 영상, 게임 패키지 같은 파일은 먼저 업로드 API로 올리고, 응답의 `url`을 [콘텐츠](contents.md) 생성에 사용합니다.
 
 **Base URL**: `https://zuzunza.com/api/v1`
 
@@ -55,9 +55,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/uploads" \
 | `wasm` | 50MB | `\0asm` |
 | `archive` | 500MB | ZIP `PK\x03\x04` / `PK\x05\x06` |
 | `zwf` | 500MB | `ZWF1` / `ZWF2` |
-| `swf` | 500MB | Flash `FWS` / `CWS` / `ZWS` — 저장만 합니다. 서버에서 실행하지 않으며, JUMP에서는 Ruffle로 재생합니다. |
-
-원본 파일명은 저장 경로에 쓰지 않고 메타데이터로만 기록합니다.
+| `swf` | 500MB | Flash `FWS` / `CWS` / `ZWS` — 저장만 합니다. JUMP에서는 Ruffle로 재생합니다. |
 
 ### 응답
 
@@ -104,8 +102,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/uploads" \
 업로드된 파일을 원래 MIME으로 제공합니다.
 
 - 경로는 `/uploads/…`이며 `/api/v1/uploads/…`가 아닙니다.
-- 업로드 디렉터리 밖으로 나가는 경로는 차단됩니다.
-- 파일이 없거나 차단되면 `404 NOT_FOUND`(«업로드 파일을 찾을 수 없습니다»).
+- 파일이 없으면 `404 NOT_FOUND`(«업로드 파일을 찾을 수 없습니다»).
 
 ```bash
 curl -sS -O "https://zuzunza.com/uploads/2026-08/a1b2c3….jpg"
@@ -159,7 +156,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/jump/games/$GAME_ID/play" \
 }
 ```
 
-클라이언트는 위 경계와 한도 값만 사용합니다. 샌드박스 내부 구현은 공개하지 않습니다.
+클라이언트는 위 경계와 한도 값만 사용합니다.
 
 | code | 상황 |
 |---|---|
@@ -185,7 +182,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/jump/games/$GAME_ID/stream" \
 
 ### POST /api/v1/jump/games/{id}/swf
 
-키 입력 등 AVM이 필요한 JUMP를 위해 원본 SWF 바이트를 그대로 전달합니다. 변환하거나 캐시에 쓰지 않습니다. 인증된 클라이언트만 호출합니다.
+키 입력 등 AVM이 필요한 JUMP를 위해 원본 SWF 바이트를 그대로 전달합니다. 인증된 클라이언트만 호출합니다.
 
 - 원본 없음: `SOURCE_UNAVAILABLE`
 - 지원하지 않는 형식: `SWF_PARSE_FAILED`
@@ -205,7 +202,7 @@ curl -sS "https://zuzunza.com/api/v1/contents/$CONTENT_ID/conversion"
 3. JUMP는 `play`로 실행 경계를 확인하고, SWF는 클라이언트 Ruffle 또는 필요 시 `stream`/`swf`를 사용합니다.
 4. 레거시 변환 상태는 `GET …/conversion`으로 확인합니다.
 
-> 기존 콘텐츠 id의 패키지 파일을 교체하는 API는 없습니다. 새 버전은 새 JUMP 초안으로 등록합니다.
+> 패키지의 새 버전은 새 JUMP 초안으로 등록합니다.
 
 ## 오류
 

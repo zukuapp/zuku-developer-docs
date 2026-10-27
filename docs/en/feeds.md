@@ -6,14 +6,7 @@ section: API
 
 # Feeds and Community Posts
 
-This page covers the media feeds (Hype / Swipe / Jump) and the community short-post (posts) API.
-
-**Base URL**
-
-| Environment | Base URL |
-|-------------|----------|
-| Production | `https://zuzunza.com/api/v1` |
-| Local | `http://localhost:3001/api/v1` |
+**Base URL**: `https://zuzunza.com/api/v1`
 
 ## Contents
 
@@ -44,7 +37,7 @@ Authentication:
 
 Responses follow the common envelope `{ success, data, meta }` / `{ success, error, meta }`. Successful deletes return 204 No Content.
 
-> Note: there is no `GET /api/v1/posts` (list) route. For lists, use `GET /feed` or `GET /users/me/posts`.
+> Note: for post lists, use `GET /feed` or `GET /users/me/posts`.
 
 ---
 
@@ -133,7 +126,7 @@ Response `data`:
 }
 ```
 
-`swipe` uses a dedicated feed list. Other categories and the all-categories feed use the general content list. The server attaches conversion metadata.
+The server attaches conversion metadata.
 
 ### Shortcut routes
 
@@ -226,7 +219,7 @@ Response:
 ### `DELETE /posts/{id}`
 
 Soft delete (the reply's position in the thread is kept). Only the owner can delete.
-Someone else's post and a missing post both return 404 `POST_NOT_FOUND` (to avoid revealing whether it exists).
+Someone else's post and a missing post both return 404 `POST_NOT_FOUND`.
 Success: 204.
 
 ---
@@ -236,12 +229,12 @@ Success: 204.
 ### Media feeds
 
 ```bash
-curl -sS "http://localhost:3001/api/v1/feeds?category=hype&page=1&per_page=20"
-curl -sS "http://localhost:3001/api/v1/feeds/swipe?page=1&per_page=10"
+curl -sS "https://zuzunza.com/api/v1/feeds?category=hype&page=1&per_page=20"
+curl -sS "https://zuzunza.com/api/v1/feeds/swipe?page=1&per_page=10"
 ```
 
 ```ts
-const base = "http://localhost:3001/api/v1";
+const base = "https://zuzunza.com/api/v1";
 
 const feedsRes = await fetch(
   `${base}/feeds?category=hype&page=1&per_page=20`,
@@ -253,8 +246,8 @@ console.log(feedsJson.data.feeds.length, feedsJson.data.pagination);
 ### Community timeline (cursor)
 
 ```bash
-curl -sS "http://localhost:3001/api/v1/feed?limit=20"
-curl -sS "http://localhost:3001/api/v1/feed?limit=20&before=POST_ID"
+curl -sS "https://zuzunza.com/api/v1/feed?limit=20"
+curl -sS "https://zuzunza.com/api/v1/feed?limit=20&before=POST_ID"
 ```
 
 ```ts
@@ -275,14 +268,14 @@ if (cursor) await loadTimeline(cursor);
 ### Create a post, read a thread, like
 
 ```bash
-curl -sS -X POST "http://localhost:3001/api/v1/posts" \
+curl -sS -X POST "https://zuzunza.com/api/v1/posts" \
   -H "Authorization: Bearer $ACCESS" \
   -H "Content-Type: application/json" \
   -d '{"body":"My first post"}'
 
-curl -sS "http://localhost:3001/api/v1/posts/$POST_ID/thread?limit=50"
+curl -sS "https://zuzunza.com/api/v1/posts/$POST_ID/thread?limit=50"
 
-curl -sS -X POST "http://localhost:3001/api/v1/posts/$POST_ID/like" \
+curl -sS -X POST "https://zuzunza.com/api/v1/posts/$POST_ID/like" \
   -H "Authorization: Bearer $ACCESS"
 ```
 
@@ -321,7 +314,7 @@ await fetch(`${base}/posts/${post.id}/replies`, {
 
 ---
 
-## Error codes (this page)
+## Error codes
 
 | code | HTTP | Situation |
 |------|------|-----------|

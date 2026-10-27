@@ -12,7 +12,7 @@ The current version is 0.3.0.
 
 ## One tool, two names
 
-The CLI installs two commands: `zuku` and `zukujs`. They are the same program. Both run the same runtime and share the same configuration, sign-in state, providers and session history under `~/.config/zukujs/` (Windows: `%LOCALAPPDATA%\ZukuJS\`). Either name works. This documentation uses `zuku`.
+The CLI installs two commands: `zuku` and `zukujs`. They are the same program. Both run the same runtime and share the same configuration, sign-in state, providers and session history under `~/.config/zukujs/` (Windows: `%LOCALAPPDATA%\ZukuJS\`). Either name works.
 
 ```sh
 zuku --version
@@ -23,7 +23,7 @@ zukujs --version   # same CLI, same output
 
 Install the CLI with the official installer at `https://zuzunza.com/install.sh` (Linux and macOS) or `https://zuzunza.com/install.ps1` (Windows PowerShell). The installer sets up a managed Node.js runtime, so you don't need to install Node yourself. See [Installation](../installation.md) for the exact commands and options.
 
-> The CLI is not published to npm. `npm install @zukujs/cli` does not work; use the official installer.
+> To install from npm, use the `@zuku/cli` package ([Installation](../installation.md#install-the-cli-from-npm)).
 
 ## Mental model
 
@@ -49,7 +49,7 @@ zuku package . --format zwf    # write dist/my-game-0.1.0.zwf
 
 `zuku run` doesn't take a path. It always previews the game in the current folder.
 
-The scaffold is a small Canvas obstacle runner: press Space or tap to jump. It includes `zukujs.json`, `src/index.html`, `src/game.js`, a README and a `.gitignore`. `create` takes only a project name. There is no template flag. For other starting points, see [Starters](../starters/index.md).
+The scaffold is a small Canvas obstacle runner: press Space or tap to jump. It includes `zukujs.json`, `src/index.html`, `src/game.js`, a README and a `.gitignore`. For other starting points, see [Starters](../starters/index.md).
 
 ## Command overview
 

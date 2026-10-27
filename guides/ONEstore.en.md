@@ -1,12 +1,10 @@
 # Publish the ZUKU Android app on ONE store
 
-Verified on October 4, 2026. This guide takes the release owner from production signing through registration, review, publication, and updates. It does not create a developer account or upload an app automatically.
-
 ## 1. Identify the app and its current status
 
-The submission is the native Android app. `@zukujs/cli`, its shared-runtime `zuku` and `zukujs` commands, and the game packages produced by the CLI are separate artifacts. A game package is not an Android APK and must not be submitted as one.
+The submission is the native Android app. A game package produced by the CLI is not an Android APK and must not be submitted as one.
 
-The preview APK currently offered on the [ZUKU APK page](https://apk.zuzunza.com/) was independently measured with these values.
+The preview APK currently offered on the [ZUKU APK page](https://apk.zuzunza.com/) has these values.
 
 | Field | Current preview |
 | --- | --- |
@@ -18,9 +16,7 @@ The preview APK currently offered on the [ZUKU APK page](https://apk.zuzunza.com
 | Signing | Android Debug certificate |
 | APK SHA-256 | `ee0cc23906ba44681b34ac9542b0f924504dac818ff03b151122c6a04e15647c` |
 
-This preview does not have production release signing. The inspected preview and default Gradle release configuration use `signingConfigs.debug`. The official build script also supports a separate production signing configuration, described in step 5. A successful `assembleRelease` build or `debuggable=false` does not establish that a protected production key was used; verify the actual artifact.
-
-ZUKU AI in the app is currently "Coming soon". The listing, screenshots, and review instructions must reflect that state. Do not advertise unverified AI access, subscriptions, or purchases as available features.
+This preview does not have production release signing. The preview and default Gradle release configuration use `signingConfigs.debug`. The official build script also supports a separate production signing configuration, described in step 5. A successful `assembleRelease` build or `debuggable=false` does not establish that a protected production key was used; verify the actual artifact.
 
 ## 2. Choose the format and signing arrangement
 
@@ -55,11 +51,11 @@ The existing Debug-signed preview cannot be updated normally with an app bearing
 
 Freeze the release source and `package-lock.json`. Prepare the project's Node, JDK, Android SDK, and Gradle wrapper environment. Retain `com.zuzunza.zuku` as the application ID.
 
-The new `versionCode` must exceed every previously distributed or registered version. The publicly verified preview uses `3`; use at least `4` next if there is no higher registration history. If the console contains a higher value, exceed it. Choose `versionName` separately for the actual release. [Android versioning](https://developer.android.com/studio/publish/versioning)
+The new `versionCode` must exceed every previously distributed or registered version. The current preview uses `3`; use at least `4` next if there is no higher registration history. If the console contains a higher value, exceed it. Choose `versionName` separately for the actual release. [Android versioning](https://developer.android.com/studio/publish/versioning)
 
-The project's official build script generates production signing configuration when all four settings are supplied: `ZUKU_ANDROID_KEYSTORE_PATH`, `ZUKU_ANDROID_KEYSTORE_PASSWORD`, `ZUKU_ANDROID_KEY_ALIAS`, and `ZUKU_ANDROID_KEY_PASSWORD`. Inject the key and passwords through a protected local environment or CI secret store. Keep commands containing their values out of documentation, logs, and shell history.
+The official build script generates production signing configuration when all four settings are supplied: `ZUKU_ANDROID_KEYSTORE_PATH`, `ZUKU_ANDROID_KEYSTORE_PASSWORD`, `ZUKU_ANDROID_KEY_ALIAS`, and `ZUKU_ANDROID_KEY_PASSWORD`. Inject the key and passwords through a protected local environment or CI secret store. Keep commands containing their values out of documentation, logs, and shell history.
 
-Run the official `build:apk` script on Linux or macOS. On Windows, use Linux Node, JDK, and Android SDK inside WSL2; running this script with native Windows Node is unsupported.
+Run the official `build:apk` script on Linux or macOS. On Windows, use Linux Node, JDK, and Android SDK inside WSL2.
 
 Run these commands at the app project root after providing all four production signing settings. If any setting is missing, the APK build uses the preview (Debug) signer, so the certificate verification in the next step is required.
 
@@ -99,13 +95,13 @@ sha256sum "$ZUKU_ANDROID_APK"
 
 On macOS, replace the final command with `shasum -a 256 "$ZUKU_ANDROID_APK"`. These tools inspect the manifest, included ABIs, signature, and file hash. [APK Analyzer](https://developer.android.com/tools/apkanalyzer), [AAPT2](https://developer.android.com/tools/aapt2), [apksigner](https://developer.android.com/tools/apksigner)
 
-Check the package, increased versionCode, `debuggable=false`, supported ABIs, and expected production certificate fingerprint. Cryptographic signature verification does not establish production key ownership or store approval. Freeze the exact verified file as the submission artifact.
+Check the package, increased versionCode, `debuggable=false`, supported ABIs, and expected production certificate fingerprint. Freeze the exact verified file as the submission artifact.
 
 ## 7. Test the release on devices
 
 Test a fresh installation and an update from the previous production version. On Android devices that will be supported, exercise startup, login and logout, navigation, game playback, back navigation, the keyboard, denied permissions, and network loss and recovery. Only describe screens and features that actually exist in the release.
 
-Also check narrow screens, larger text, dark mode, and app restart. The AI screen must retain "Coming soon" and must not present a closed backend as available. Confirm that the privacy policy and support links work.
+Also check narrow screens, larger text, dark mode, and app restart. The app's AI screen keeps its "Coming soon" label. Confirm that the privacy policy and support links work.
 
 ## 8. Register the Android product
 
@@ -113,13 +109,13 @@ In ONEconsole, open Apps → Applications → Register app, then select "Officia
 
 Calling the current download a preview is different from selecting ONE store's "Beta" product type. A Beta product requires a new product with a different package for official release, so this procedure selects Official release. Resolve ownership if another account is reported as owning the package.
 
-The registration guide recommends separate packages for other Android markets. Treat this as a recommendation, not a mandatory requirement or permission to rename this app's existing package. Plan package separation, existing-user upgrades, and signing continuity before adding another market.
+The registration guide recommends separate packages for other Android markets. Plan package separation, existing-user upgrades, and signing continuity before adding another market.
 
 ## 9. Supply listing, screenshots, rating, and privacy information
 
 Enter the title, default language, description, appropriate category, support contacts, and launch countries. Use the new ZUKU logo and screenshots from the actual production app. Do not present desktop website captures as mobile app screenshots.
 
-Prepare 2–8 screenshots, as specified by the official FAQ. Show available features and identify AI as Coming soon. [Product FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps)
+Prepare 2–8 screenshots, as specified by the official FAQ. Show only available features, and identify ZUKU AI as "Coming soon" in the listing, screenshots, and review notes. Do not present AI access, subscriptions, or purchases as available features. [Product FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps)
 
 Complete rating information based on actual content and use. Publish an accessible HTTPS privacy policy and link to it inside the app. Describe actual collection, purposes, retention and deletion, third-party processing, and contacts. Align disclosures with the built manifest's permissions and remove unnecessary permissions. [Review guideline](https://onestore-dev.gitbook.io/dev/docs/review/one-store-review-guideline)
 
@@ -133,7 +129,7 @@ ONE store describes the popup about a missing `assets/adi-registration.propertie
 
 ## 11. Match payments to implemented functionality
 
-Decide the external-payment setting from the actual product plan before registration; the official FAQ says it cannot be changed afterward. The release owner settles this choice before launch. A Coming soon AI feature does not establish that ONE store billing has been integrated. [Payment configuration FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps)
+Decide the external-payment setting from the actual product plan before registration; the official FAQ says it cannot be changed afterward. The release owner settles this choice before launch. [Payment configuration FAQ](https://onestore-dev.gitbook.io/dev/eng/help/faq/apps)
 
 Prepare a separate billing release before introducing paid AI, credits, or subscriptions. Use the current official SDK guidance and configure products. Keep server billing authentication material in server-side secret storage. [IAP preparation](https://onestore-dev.gitbook.io/dev/tools/billing/v21/pre)
 

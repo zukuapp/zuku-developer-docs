@@ -6,9 +6,9 @@ section: Starter
 
 # 스타터
 
-ZUKU 게임은 시작점과 관계없이 같은 흐름을 따릅니다. 로컬에서 만들고, 브라우저로 확인하고, 검사한 뒤 `.zwf` 패키지로 묶습니다. 이 섹션은 세 가지 시작점을 다룹니다.
+ZUKU 게임은 시작점과 관계없이 같은 흐름을 따릅니다. 로컬에서 만들고, 브라우저로 확인하고, 검사한 뒤 `.zwf` 패키지로 묶습니다.
 
-CLI 설치 절차는 [설치](../installation.md)와 [시작하기](../getting-started.md)에 있습니다. `zuku`와 `zukujs`는 같은 명령이며, 이 문서는 `zuku`로 표기합니다.
+CLI 설치 절차는 [설치](../installation.md)와 [시작하기](../getting-started.md)에 있습니다. `zuku`와 `zukujs`는 같은 명령입니다.
 
 ## 한눈에 비교
 

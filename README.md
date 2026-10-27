@@ -26,9 +26,9 @@ ZUKU 개발 문서의 공개 소스입니다. 한국어 27페이지와 영어 27
 
 This is the public source for ZUKU's developer documentation: 27 Korean pages, 27 English pages, a shared theme, search and navigation, local fonts, and playable game starters. `zuku` and `zukujs` are two command names for [the same CLI](docs/en/cli/index.md).
 
-원스토어 정식 출시 준비, 등록, 심사, 출시와 업데이트 절차는 [한국어 원스토어 배포 가이드](guides/ONEstore.ko.md)에 있습니다. 이 가이드는 현재 공개 APK의 프리뷰 상태와 정식 서명 준비 사항도 설명합니다.
+원스토어 정식 출시 준비, 등록, 심사, 출시와 업데이트 절차는 [한국어 원스토어 배포 가이드](guides/ONEstore.ko.md)에 있습니다.
 
-The [English ONEstore release guide](guides/ONEstore.en.md) covers production preparation, registration, review, release and updates. It also explains the current public APK's preview status and production signing requirements.
+The [English ONEstore release guide](guides/ONEstore.en.md) covers production preparation, registration, review, release and updates.
 
 ## 요구 사항 / Requirements
 
@@ -42,7 +42,7 @@ The [English ONEstore release guide](guides/ONEstore.en.md) covers production pr
 
 ### 게임 개발용 npm 패키지
 
-아래 표는 정확한 설치 버전입니다. `@zuku/player`는 `0.1.2`입니다. 나머지 8개 패키지는 2026-10-04 공개 npm 레지스트리 기준 버전입니다. 프로젝트에 필요한 패키지만 설치합니다.
+아래 표는 정확한 설치 버전입니다. 프로젝트에 필요한 패키지만 설치합니다.
 
 | 패키지 | 버전 | 용도 |
 | --- | --- | --- |
@@ -64,7 +64,7 @@ npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.
 
 ZWF2는 HTML5 ZIP 게임 패키지 형식입니다. ZWF1은 애니메이션 형식입니다. 각 형식에 맞는 패키지와 로더를 사용합니다.
 
-라이선스는 각 패키지에 포함된 원래 고지를 따릅니다. `@zuku/core`의 기존 `UNLICENSED` 표기는 유지됩니다. Next.js 서버 프레임워크와 운영 서버는 이번 게임 개발 라이브러리 배포 범위에서 제외합니다.
+라이선스는 각 패키지에 포함된 원래 고지를 따릅니다. `@zuku/core`는 `UNLICENSED`입니다.
 
 ### npm CLI 설치
 
@@ -90,12 +90,12 @@ zukujs --version
 | [@zuku/editor](https://www.npmjs.com/package/@zuku/editor/v/0.1.1) | `0.1.1` | Browser editor and embedding helper |
 | [@zuku/cli](https://www.npmjs.com/package/@zuku/cli/v/0.3.1) | `0.3.1` | Shared zuku and zukujs commands |
 
-The table lists the public npm releases. The English installation guide lists the exact install commands and per-package scope.
+The English installation guide lists the exact install commands and per-package scope.
 <!-- END ZUKU NPM DISTRIBUTIONS -->
 
 ## 사용법: 로컬 빌드 / Usage: local build
 
-소스, 가상 환경, 결과물은 별도 작업 폴더에 나란히 둡니다. 이 구성에서는 의존성과 생성 파일이 저장소에 들어가지 않습니다.
+소스, 가상 환경, 결과물은 별도 작업 폴더에 나란히 둡니다.
 
 Keep the checkout, virtual environment and output beside each other in a dedicated workspace.
 
@@ -134,13 +134,7 @@ zuku-docs-workspace/
 └── artifact/    # generated website / 생성된 사이트
 ```
 
-## 설정 / Configuration
-
-생성된 MkDocs 설정(`mkdocs-*.yml`)과 `source/.codex/`의 검증 기록은 Git에서 제외됩니다. 이 저장소는 문서와 공개 에셋만 포함합니다. 서비스 배포 설정은 이 저장소에 없습니다.
-
-Generated MkDocs configuration (`mkdocs-*.yml`) and local verification records in `source/.codex/` are ignored by Git. The repository contains documentation and public assets only. Service deployment configuration is managed separately.
-
-### 소스 구성 / Source layout
+## 소스 구성 / Source layout
 
 | Path | 내용 / Contents |
 | --- | --- |

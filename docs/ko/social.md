@@ -122,7 +122,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CID/comments" \
 
 ### PATCH /comments/{id}
 
-본문 `{ "body": "수정한 댓글" }`. 작성자만 수정합니다. 다른 사람의 댓글이나 없는 댓글은 `404 COMMENT_NOT_FOUND`입니다(존재 여부 비공개).
+본문 `{ "body": "수정한 댓글" }`. 작성자만 수정합니다. 다른 사람의 댓글이나 없는 댓글은 `404 COMMENT_NOT_FOUND`입니다.
 
 ### DELETE /comments/{id}
 
@@ -142,7 +142,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/contents/$CID/comments" \
 
 ### GET /notifications/unread-count
 
-배지 갱신용으로 `data.unread_count`만 반환합니다. WebSocket/SSE는 없으므로 HTTP로 주기적으로 조회합니다.
+배지 갱신용으로 `data.unread_count`만 반환합니다. HTTP로 주기적으로 조회합니다.
 
 ```bash
 curl -sS "https://zuzunza.com/api/v1/notifications/unread-count" \
@@ -159,7 +159,7 @@ curl -sS "https://zuzunza.com/api/v1/notifications/unread-count" \
 
 ## DM
 
-1:1 대화만 지원하며 그룹 대화, 종단 간 암호화, 실시간 읽음 동기화는 제공하지 않습니다. 참여자가 아니면 대화의 존재 여부도 숨기고 `404 CONVERSATION_NOT_FOUND`를 반환합니다.
+DM은 1:1 대화입니다. 참여자가 아니면 `404 CONVERSATION_NOT_FOUND`를 반환합니다.
 
 ### GET /dm/conversations
 

@@ -25,9 +25,9 @@ The output goes to `dist/<name>-<version>.zwf` by default. Use `--format zip` fo
 zuku login zuku
 ```
 
-The CLI opens the official ZUKU page in your browser, where you confirm your account and approve the game permissions (`games:upload games:create games:publish`). The CLI never asks for your password or a copied token. Use `--no-browser` to open the page yourself.
+The CLI opens the official ZUKU page in your browser, where you confirm your account and approve the game permissions (`games:upload games:create games:publish`). Use `--no-browser` to open the page yourself.
 
-`zuku` and `zukujs` share the same sign-in and state in `~/.config/zukujs/` (Windows: `%LOCALAPPDATA%\ZukuJS\`). Web sessions, developer keys and other environment credentials can't stand in for this connection. See [Authentication](authentication.md).
+`zuku` and `zukujs` share the same sign-in and state in `~/.config/zukujs/` (Windows: `%LOCALAPPDATA%\ZukuJS\`). See [Authentication](authentication.md).
 
 ## 3. Upload a draft
 
@@ -83,4 +83,4 @@ This only works from the same installation, with the original account connection
 zuku account logout
 ```
 
-Logging out leaves a token-free record behind, so a late sign-in or refresh can't bring the connection back. If you switch accounts mid-run, in-progress publishing stops (`ZUKU_ACCOUNT_CHANGED`). Records from the earlier test server aren't converted. If you see `ZUKU_ACCOUNT_MIGRATION_REQUIRED`, run `zuku login zuku` again. Don't commit `.zukujs/` to a repository.
+If you switch accounts mid-run, in-progress publishing stops (`ZUKU_ACCOUNT_CHANGED`). If you see `ZUKU_ACCOUNT_MIGRATION_REQUIRED`, run `zuku login zuku` again. Don't commit `.zukujs/` to a repository.

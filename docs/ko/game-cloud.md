@@ -6,13 +6,11 @@ section: API
 
 # Game Cloud
 
-ZUKU Game Cloud는 게임 프로젝트 단위로 격리된 지갑, 클라우드 변수, 세이브를 제공하고, 개발 중인 결제·서버 함수 인터페이스를 함께 제공합니다.
-
-> 현재 지원 범위: Pay confirm은 외부 결제사나 영수증을 검증하지 않습니다. 실제 결제 완료 증빙으로 사용하지 않습니다.
+ZUKU Game Cloud는 게임 프로젝트 단위로 격리된 지갑, 클라우드 변수, 세이브와 결제·서버 함수 인터페이스를 제공합니다.
 
 **Base URL**: `https://zuzunza.com/api/v1/cloud`
 
-**인증**: 모든 엔드포인트에 `Authorization: Bearer <session_token>`이 필요합니다. ZUKU 세션을 관리하는 신뢰된 앱에서 호출합니다. 게임 샌드박스에는 계정 토큰을 넘기지 않습니다. 별도 SDK 설치 없이 HTTP로 호출합니다.
+**인증**: 모든 엔드포인트에 `Authorization: Bearer <session_token>`이 필요합니다. ZUKU 세션을 관리하는 신뢰된 앱에서 호출합니다. 게임 샌드박스에는 계정 토큰을 넘기지 않습니다.
 
 ## 빠른 예제
 
@@ -27,22 +25,22 @@ curl -sS -X POST "https://zuzunza.com/api/v1/cloud/saves/save" \
 
 경로는 모두 `/api/v1/cloud` 기준입니다.
 
-| 기능(레거시 이름) | Method | Path | 설명 |
+| 기능 | Method | Path | 설명 |
 |---|---|---|---|
 | 프로젝트 | `POST` | `/projects` | 프로젝트 생성 |
 | 프로젝트 | `GET` | `/projects` | 프로젝트 목록 |
-| Economy (ZCloud Economy) | `GET` | `/economy/balance` | `POINT` · `CASH_KRW` 지갑 |
-| Vars (ZVM) | `POST` | `/vars/get` | 변수 읽기 |
-| Vars (ZVM) | `POST` | `/vars/mutate` | 변수 변경 |
-| Saves (ZASE) | `POST` | `/saves/save` | 세이브 저장 |
-| Saves (ZASE) | `POST` | `/saves/load` | 세이브 불러오기 |
-| Saves (ZASE) | `GET` | `/saves/list` | 슬롯 목록 |
+| Economy | `GET` | `/economy/balance` | `POINT` · `CASH_KRW` 지갑 |
+| Vars | `POST` | `/vars/get` | 변수 읽기 |
+| Vars | `POST` | `/vars/mutate` | 변수 변경 |
+| Saves | `POST` | `/saves/save` | 세이브 저장 |
+| Saves | `POST` | `/saves/load` | 세이브 불러오기 |
+| Saves | `GET` | `/saves/list` | 슬롯 목록 |
 | Pay | `GET` | `/pay/products` | 상품 목록 |
 | Pay | `POST` | `/pay/session` | 구매 세션 생성 |
 | Pay | `POST` | `/pay/confirm` | 결제 확인 |
-| Functions (WebFunc) | `POST` | `/functions` | 함수 등록·수정 |
-| Functions (WebFunc) | `POST` | `/functions/{id}/publish` | 함수 게시 |
-| Functions (WebFunc) | `POST` | `/functions/{id}/invoke` | 함수 호출 |
+| Functions | `POST` | `/functions` | 함수 등록·수정 |
+| Functions | `POST` | `/functions/{id}/publish` | 함수 게시 |
+| Functions | `POST` | `/functions/{id}/invoke` | 함수 호출 |
 | Billing | `GET` | `/billing/catalog` | 요금 카탈로그 |
 | Billing | `GET` | `/billing/account` | 프로젝트 요금 계정 |
 | Billing | `POST` | `/billing/limit` | 지출 한도 설정 |
@@ -89,7 +87,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/cloud/projects" \
 
 ## Vars (클라우드 변수)
 
-`global`(전체 공유) 또는 `user`(플레이어별) 스코프의 변수입니다. 재화(currency) 스코프는 클라이언트에서 변경할 수 없습니다(임의 발행 방지).
+`global`(전체 공유) 또는 `user`(플레이어별) 스코프의 변수입니다. 재화(currency) 스코프는 클라이언트에서 변경할 수 없습니다.
 
 ### POST /cloud/vars/get
 
@@ -145,7 +143,7 @@ confirm은 외부 결제사나 영수증을 검증하지 않으므로 실제 결
 
 ## Functions (서버 함수)
 
-함수 소스를 등록하고 Deno 런타임에서 실행합니다. 함수마다 네트워크가 분리되고 파일시스템은 최소 읽기 전용입니다. 격리 환경을 갖추지 못하면 실행을 거부합니다.
+함수 소스를 등록하고 Deno 런타임에서 실행합니다. 함수마다 네트워크가 분리되고 파일시스템은 최소 읽기 전용입니다.
 
 | 한도 | 값 |
 |---|---|
@@ -187,7 +185,7 @@ curl -sS -X POST "https://zuzunza.com/api/v1/cloud/billing/limit" \
 
 ## 게임 전용 VM
 
-Cloud Scale과 Game Dedicated 요금제는 고정 사양의 격리 KVM 서버 요청을 지원합니다. 요청은 먼저 dry-run 검토 대기열에 들어갑니다.
+Cloud Scale과 Game Dedicated 요금제는 고정 사양의 격리 KVM 서버 요청을 지원합니다. VM 요청은 바로 생성되지 않고 검토 대기 상태로 접수되며, 상태는 `GET /cloud/vm`으로 조회합니다.
 
 | Method | Path | 본문 / 쿼리 |
 |---|---|---|

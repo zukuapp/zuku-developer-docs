@@ -8,8 +8,6 @@ section: Starter
 
 관리형 설치 도구의 현재 고정 CLI 릴리스는 0.3.0입니다. 설치 도구는 CLI와 관리형 Node.js 22 런타임을 사용자 디렉터리에 설치합니다. 관리자 권한은 필요하지 않습니다.
 
-> npm 패키지 이름은 아래 공개 배포 표를 기준으로 선택합니다. 관리형 설치 도구는 기존 고정 릴리스를 계속 제공합니다.
-
 <span id="지원-플랫폼"></span>
 
 ## 요구 사항
@@ -22,7 +20,7 @@ section: Starter
 <!-- BEGIN ZUKU NPM DISTRIBUTIONS -->
 ## 게임 개발용 npm 패키지
 
-아래 표는 정확한 설치 버전입니다. `@zuku/player`는 `0.1.2`입니다. 나머지 8개 패키지는 2026-10-04 공개 npm 레지스트리 기준 버전입니다. 프로젝트에 필요한 패키지만 설치합니다.
+아래 표는 정확한 설치 버전입니다. 프로젝트에 필요한 패키지만 설치합니다.
 
 | 패키지 | 버전 | 용도 |
 | --- | --- | --- |
@@ -46,7 +44,7 @@ npm install --save-exact @zuku/zwf@0.1.1 @zuku/sdk@0.2.0 zuku-engine-next2d@0.1.
 
 ZWF2는 HTML5 ZIP 게임 패키지 형식입니다. ZWF1은 애니메이션 형식입니다. 각 형식에 맞는 패키지와 로더를 사용합니다.
 
-라이선스는 각 패키지에 포함된 원래 고지를 따릅니다. `@zuku/core`의 기존 `UNLICENSED` 표기는 유지됩니다. Next.js 서버 프레임워크와 운영 서버는 이번 게임 개발 라이브러리 배포 범위에서 제외합니다.
+라이선스는 각 패키지에 포함된 원래 고지를 따릅니다. `@zuku/core`는 `UNLICENSED`입니다.
 
 ### npm CLI 설치
 
@@ -91,7 +89,7 @@ wget --https-only -O install-zuku-cli.sh https://zuzunza.com/install.sh && bash 
 zuku --version
 ```
 
-`zuku`와 `zukujs`는 같은 런타임, 설정, 로그인 상태(`~/.config/zukujs/`(Windows: `%LOCALAPPDATA%\ZukuJS\`))를 공유합니다. 두 이름은 같은 결과를 냅니다.
+`zuku`와 `zukujs`는 같은 런타임, 설정, 로그인 상태(`~/.config/zukujs/`(Windows: `%LOCALAPPDATA%\ZukuJS\`))를 공유합니다.
 
 ## 설치 옵션
 

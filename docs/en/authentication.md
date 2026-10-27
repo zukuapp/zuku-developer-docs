@@ -6,14 +6,7 @@ section: API
 
 # Authentication
 
-This page covers the contracts for account sign-up, login, sessions, captcha, and developer API keys.
-
-**Base URL**
-
-| Environment | Base URL |
-|-------------|----------|
-| Production | `https://zuzunza.com/api/v1` |
-| Local | `http://localhost:3001/api/v1` |
+**Base URL**: `https://zuzunza.com/api/v1`
 
 ## Contents
 
@@ -107,48 +100,13 @@ Some successful responses are `204 No Content` with no body (logout, session rev
 | `GET` | `/developer/keys` | Bearer | List your keys |
 | `DELETE` | `/developer/keys/{id}` | Bearer | Revoke a key → `204` |
 
-† In environments where `CAPTCHA_HMAC_SECRET` is set, the register and login bodies must include a valid `zcaptcha_token`.
+† When captcha is enabled on the server, the register, signup, and login bodies must include a valid `zcaptcha_token`.
 
 ---
 
 ## 4. Captcha
 
-The captcha protocol, environment variables, and solving flow are described in detail in [Captcha](captcha.md).
-
-### `POST /captcha/challenge`
-
-- **503** `CAPTCHA_NOT_CONFIGURED`: `CAPTCHA_HMAC_SECRET` is not set
-- Example `data` on success:
-
-```json
-{
-  "algorithm": "SHA-256",
-  "challenge": "…",
-  "salt": "…",
-  "signature": "…",
-  "maxnumber": 100000
-}
-```
-
-### `POST /captcha/verify`
-
-Request:
-
-```json
-{ "token": "<solved-token>", "dev_host": "localhost" }
-```
-
-- **503** `CAPTCHA_NOT_CONFIGURED`
-- **403** `CAPTCHA_FAILED`: invalid token
-- Success: `{ "success": true }` (inside the envelope's `data`)
-
-### Register / login gate (`zcaptcha_token`)
-
-| Server configuration | Behavior |
-|----------------------|----------|
-| `CAPTCHA_HMAC_SECRET` not set | Gate disabled (passes). Sign-up and login are not blocked. |
-| `CAPTCHA_HMAC_SECRET` set | `zcaptcha_token` is required in the body. On failure, 403 `CAPTCHA_FAILED`. |
-| `CAPTCHA_DEV_BYPASS=1` + allowed token/host | Development bypass is possible |
+The full contract for `POST /captcha/challenge` and `POST /captcha/verify` and the solving flow are in [Captcha](captcha.md).
 
 ---
 
@@ -165,7 +123,7 @@ Request:
 | `password_confirm` | Yes | Must match `password` |
 | `handle` | Yes | Must not be empty |
 | `display_name` | Optional | Defaults to the handle |
-| `zcaptcha_token` | Conditional | Required when the captcha secret is set |
+| `zcaptcha_token` | Conditional | Required when captcha is enabled on the server |
 
 ### Success `201`
 
@@ -178,7 +136,7 @@ Request:
 | 409 | `ALREADY_AUTHENTICATED` | Sign-up attempted while already logged in with a valid Bearer token |
 | 409 | `EMAIL_EXISTS` | Email already in use |
 | 409 | `LEGACY_ACCOUNT_EXISTS` | An existing ZUKU account already has this email/handle → direct the user to log in |
-| 409 | `HANDLE_EXISTS` | Handle already in use (or a database duplicate) |
+| 409 | `HANDLE_EXISTS` | Handle already in use |
 | 422 | `VALIDATION_ERROR` | Password, email, or handle validation failed |
 | 403 | `CAPTCHA_FAILED` | Captcha gate failed |
 
@@ -195,9 +153,9 @@ Request:
 | `identifier` or `email` | Yes (one of them) | `identifier` takes precedence. Accepts an email, username, or nickname. |
 | `password` | Yes | |
 | `device_id` | Optional | Session metadata |
-| `zcaptcha_token` | Conditional | When the captcha secret is set |
+| `zcaptcha_token` | Conditional | Required when captcha is enabled on the server |
 
-The server first tries a current ZUKU account, then falls back to linking a legacy account. When a legacy login succeeds, the account is linked to a current ZUKU account and the password is re-hashed.
+Login also accepts legacy ZUKU accounts.
 
 ### Success `200`
 
@@ -249,12 +207,11 @@ Only the fields you send are updated. Allowed fields: `display_name`, `bio`, `we
 
 ## 9. Sessions
 
-Instead of forcing a full logout when the same account signs in elsewhere, users can end only the sessions they don't recognize.
+Session management revokes individual sessions without a full logout.
 
 ### `GET /auth/sessions`
 
 `data.sessions[]`: `id`, `device_label`, `created_at`, `last_seen_at`, `is_current`
-**Raw tokens are never returned.**
 
 ### `DELETE /auth/sessions/{id}`
 
@@ -269,7 +226,6 @@ Instead of forcing a full logout when the same account signs in elsewhere, users
 `POST /auth/oauth/{provider}`
 
 Always returns 501 Not Implemented with code `NOT_IMPLEMENTED`.
-OAuth providers are currently out of scope.
 
 ---
 
@@ -300,12 +256,10 @@ Issued keys can be used as `X-API-Key: sk_live_…` in place of Bearer on some A
 
 ## 12. curl and JS/TS examples
 
-These examples use the local base URL. For production, replace it with `https://zuzunza.com/api/v1`.
-
 ### Register
 
 ```bash
-curl -sS -X POST "http://localhost:3001/api/v1/auth/register" \
+curl -sS -X POST "https://zuzunza.com/api/v1/auth/register" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "demo@example.com",
@@ -317,7 +271,7 @@ curl -sS -X POST "http://localhost:3001/api/v1/auth/register" \
 ```
 
 ```ts
-const base = "http://localhost:3001/api/v1";
+const base = "https://zuzunza.com/api/v1";
 
 const registerRes = await fetch(`${base}/auth/register`, {
   method: "POST",
@@ -327,7 +281,7 @@ const registerRes = await fetch(`${base}/auth/register`, {
     password: "password1",
     password_confirm: "password1",
     handle: "demo_user",
-    // When CAPTCHA_HMAC_SECRET is set:
+    // When captcha is enabled on the server:
     // zcaptcha_token: solvedToken,
   }),
 });
@@ -338,7 +292,7 @@ const { access_token, refresh_token } = registerJson.data.tokens;
 ### Login
 
 ```bash
-curl -sS -X POST "http://localhost:3001/api/v1/auth/login" \
+curl -sS -X POST "https://zuzunza.com/api/v1/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "identifier": "demo@example.com",
@@ -363,7 +317,7 @@ const refreshToken = loginJson.data.tokens.refresh_token;
 ### Refresh
 
 ```bash
-curl -sS -X POST "http://localhost:3001/api/v1/auth/refresh" \
+curl -sS -X POST "https://zuzunza.com/api/v1/auth/refresh" \
   -H "Content-Type: application/json" \
   -d "{\"refresh_token\":\"$REFRESH\"}"
 ```
@@ -381,7 +335,7 @@ const newAccess = refreshed.data.tokens.access_token;
 ### Me
 
 ```bash
-curl -sS "http://localhost:3001/api/v1/auth/me" \
+curl -sS "https://zuzunza.com/api/v1/auth/me" \
   -H "Authorization: Bearer $ACCESS"
 ```
 
@@ -396,7 +350,7 @@ console.log(me.data.user.handle);
 ### Create an API key
 
 ```bash
-curl -sS -X POST "http://localhost:3001/api/v1/developer/keys" \
+curl -sS -X POST "https://zuzunza.com/api/v1/developer/keys" \
   -H "Authorization: Bearer $ACCESS" \
   -H "Content-Type: application/json" \
   -d '{"name":"my-integration"}'
@@ -431,7 +385,7 @@ const rawKey = keyJson.data.key;
 | `ACCOUNT_SUSPENDED` | 403 | Suspended account |
 | `UNAUTHORIZED` | 401 | Missing or invalid Bearer token |
 | `INVALID_REFRESH_TOKEN` | 401 | Invalid refresh token |
-| `CAPTCHA_NOT_CONFIGURED` | 503 | No captcha secret (challenge/verify) |
+| `CAPTCHA_NOT_CONFIGURED` | 503 | Captcha not configured on the server (challenge/verify) |
 | `CAPTCHA_FAILED` | 403 | Captcha failed |
 | `NOT_IMPLEMENTED` | 501 | OAuth |
 | `API_KEY_NOT_FOUND` | 404 | Key to delete not found |
@@ -443,7 +397,7 @@ See [Errors](errors.md) for the full list and [Rate limits](rate-limits.md) for 
 
 ## Shared browser login
 
-ZUKU's official domains share an HttpOnly session cookie. Set `credentials: 'include'` on regular browser API requests. When a valid shared cookie is present, the cookie's account takes precedence over a long-stored Bearer token. Server clients without cookies can keep using the existing Bearer contract.
+ZUKU's official domains share an HttpOnly session cookie. Set `credentials: 'include'` on regular browser API requests. When a valid shared cookie is present, the cookie's account takes precedence over a long-stored Bearer token. Server clients without cookies use Bearer tokens.
 
 ```ts
 const response = await fetch('https://zuzunza.com/api/v1/auth/me', {
@@ -454,7 +408,7 @@ const { data } = await response.json();
 // data.user: the user of the current shared session
 ```
 
-A successful `GET /auth/me` extends the same browser session's expiry to 7 days. The cookie is HttpOnly and is never read by docs pages or game code. Existing cookies are migrated to a new browser session during a normal session check.
+A successful `GET /auth/me` extends the same browser session's expiry to 7 days. The cookie is HttpOnly, so docs pages and game code can't read it.
 
 ### POST `/api/v1/auth/session`
 
@@ -468,4 +422,4 @@ await fetch('https://zuzunza.com/api/v1/auth/session', {
 });
 ```
 
-`POST /auth/refresh` keeps the existing `{ refresh_token }` → `data.tokens` contract and keeps the same browser session. `POST /auth/logout` ends the shared session and clears the cookie. Repeated logouts also return `204`. Browser session credentials themselves are never included in response JSON.
+`POST /auth/refresh` also keeps the same browser session. `POST /auth/logout` ends the shared session and clears the cookie. Repeated logouts also return `204`.

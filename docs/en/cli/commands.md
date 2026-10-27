@@ -6,7 +6,7 @@ section: Reference
 
 # Command reference
 
-This page lists every command in ZUKU CLI 0.3.0. `zuku` and `zukujs` are the same program and accept the same commands. The examples use `zuku`.
+`zuku` and `zukujs` are the same program and accept the same commands.
 
 ```sh
 zuku [command] [options]
@@ -83,8 +83,6 @@ Without flags, reports the runtime and CLI versions, the API address and whether
 | --- | --- |
 | `--check-api` | Make read-only requests to confirm the public API is reachable and, if you are signed in, that your credentials work. |
 
-Account IDs, email addresses and tokens are never printed.
-
 ```sh
 # Check local setup without touching the network
 zuku status
@@ -99,7 +97,7 @@ zuku status --check-api
 zuku doctor [--no-start]
 ```
 
-Read-only health report: CLI identity (both names), Agent Core connection, active provider and model, auth status (metadata only), framework availability and what kind of folder you are in. It never prints credentials.
+Read-only health report: CLI identity (both names), Agent Core connection, active provider and model, auth status (metadata only), framework availability and what kind of folder you are in.
 
 | Flag | Description |
 | --- | --- |
@@ -132,7 +130,6 @@ Creates a new folder `<name>/` with a playable HTML5 game: a Canvas JUMP obstacl
 
 - `<name>` contains lowercase letters, digits, `_` and `-`, up to 64 characters.
 - The command never overwrites an existing path. If `<name>` already exists, it fails with `PROJECT_EXISTS`.
-- `create` takes only a name. There is no template flag.
 
 Generated files:
 
@@ -242,7 +239,7 @@ Builds the game, verifies it in a browser and reports the result. In an existing
 | `--experimental` | Required to run with an experimental `(exp!)` auth method, such as the Codex integration |
 | `--resume <run_id>` | Resume an earlier run from this folder |
 
-`--browser <path>` is listed in help, but the current Agent Core protocol can't accept it.
+`--browser <path>` is listed in help but fails with `CORE_PROTOCOL_GAP`. Don't use it.
 
 ```sh
 # Build and verify a game, without uploading
@@ -300,11 +297,11 @@ If the ZukuJS web framework is installed in the project, `build` is passed to th
 zuku studio [--port <n>]
 ```
 
-Starts the local browser adapter on `127.0.0.1` (default port `43127`) for the official local browser frontend at `https://ai.zuzunza.com`, backed by the same Agent Core. Browser pairing, session resume and sign-in requests must be approved in this terminal. Press Ctrl+C to stop; running agent sessions are not cancelled. Hosted web AI access is currently closed. See [ZUKU Studio](studio.md).
+Starts the local browser adapter on `127.0.0.1` (default port `43127`) for the official local browser frontend at `https://ai.zuzunza.com`, backed by the same Agent Core. Browser pairing, session resume and sign-in requests must be approved in this terminal. Press Ctrl+C to stop; running agent sessions are not cancelled. See [ZUKU Studio](studio.md).
 
 ## Providers, models and credentials
 
-All three commands share settings with Agent Core and Studio, and never print secrets.
+All three commands share settings with Agent Core and Studio.
 
 ### provider
 
@@ -468,4 +465,4 @@ Commands print results as `zuku-command/1`.
 | 2 | Invalid arguments (`INVALID_INPUT`) or unknown command (`UNKNOWN_COMMAND`) |
 | 130 | Cancelled by the user (`COMMAND_CANCELLED`, Ctrl+C) |
 
-Server errors are reported with the HTTP status and a verified API error code, such as `UNAUTHORIZED`, `INVALID_PACKAGE`, `PAYLOAD_TOO_LARGE` or `VALIDATION_ERROR`. See [Errors](../errors.md).
+Server errors are reported with the HTTP status and an API error code, such as `UNAUTHORIZED`, `INVALID_PACKAGE`, `PAYLOAD_TOO_LARGE` or `VALIDATION_ERROR`. See [Errors](../errors.md).

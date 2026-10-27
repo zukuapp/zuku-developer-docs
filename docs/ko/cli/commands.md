@@ -58,8 +58,6 @@ zuku create <name>
 | --- | --- |
 | `<name>` | 소문자 영문, 숫자, `_`, `-`만 사용, 최대 64자 |
 
-`create`는 `<name>` 외의 옵션을 받지 않습니다. 템플릿을 고르는 플래그는 없습니다.
-
 만들어지는 결과물은 플레이 가능한 Canvas JUMP 장애물 러너 게임입니다. 스페이스 키나 화면 탭으로 점프해 장애물을 피합니다.
 
 | 파일 | 내용 |
@@ -178,8 +176,6 @@ zuku diagnostics
 | --- | --- |
 | `--check-api` | `GET /billing/catalog`(익명)과, 토큰이 있으면 `GET /auth/me`를 호출해 연결과 인증을 확인 |
 
-계정 ID, 이메일, 토큰은 출력하지 않습니다.
-
 ## 그 밖의 명령
 
 아래 명령은 각 문서에서 자세히 설명합니다.
@@ -191,7 +187,7 @@ zuku agent "<요청>" [--name <name>] [--model <id>] [--experimental] [--draft |
 zuku agent --resume <run_id> [--yolo | --draft]
 ```
 
-`--browser`는 현재 Agent Core에 전달되지 않아 `CORE_PROTOCOL_GAP`로 실패합니다. Codex나 사용자 지정 제공자를 사용하는 세션에는 `--experimental`을 명시합니다.
+`--browser`는 `CORE_PROTOCOL_GAP`로 실패하므로 사용하지 않습니다. Codex나 사용자 지정 제공자를 사용하는 세션에는 `--experimental`을 명시합니다.
 
 기본 실행은 패키지까지 만들고 게시하지 않습니다. `--draft`는 초안만 업로드하고, `--yolo`는 명시적으로 한 번 프로덕션 게시까지 진행합니다. `--draft`와 `--yolo`는 함께 쓸 수 없습니다. [에이전트](agent.md)
 
@@ -205,7 +201,7 @@ zuku account logout
 zuku deploy <dir> --yolo
 ```
 
-`zuku login codex --experimental`은 CLI의 Codex 로그인 연동이며 실험적(Experimental)·비공식 연동입니다. 이 표시는 CLI 연동에 대한 것이며 Codex 서비스 자체를 말하는 것이 아닙니다. 게시는 ZUKU 계정당 최근 6시간 동안 성공한 프로덕션 게시 3회로 제한됩니다. [인증](authentication.md), [게시](publishing.md)
+`zuku login codex --experimental`은 CLI의 Codex 로그인 연동이며 실험적(Experimental)·비공식 연동입니다. 게시는 ZUKU 계정당 최근 6시간 동안 성공한 프로덕션 게시 3회로 제한됩니다. [인증](authentication.md), [게시](publishing.md)
 
 ### 모델 제공자 인증
 
@@ -282,4 +278,4 @@ zuku start
 | `2` | 인수 오류(`INVALID_INPUT`), 알 수 없는 명령(`UNKNOWN_COMMAND`) |
 | `130` | 사용자 취소(`COMMAND_CANCELLED`, Ctrl+C) |
 
-서버 오류는 HTTP 상태와 API 오류 코드(예: `UNAUTHORIZED`, `INVALID_PACKAGE`, `PAYLOAD_TOO_LARGE`, `VALIDATION_ERROR`)로 보고하며, 원격 응답 전문이나 헤더는 출력하지 않습니다. 오류 코드별 해결 방법은 [오류](../errors.md)에 있습니다.
+서버 오류는 HTTP 상태와 API 오류 코드(예: `UNAUTHORIZED`, `INVALID_PACKAGE`, `PAYLOAD_TOO_LARGE`, `VALIDATION_ERROR`)로 보고합니다. 오류 코드별 해결 방법은 [오류](../errors.md)에 있습니다.

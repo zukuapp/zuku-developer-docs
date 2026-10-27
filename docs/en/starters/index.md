@@ -56,8 +56,8 @@ zuku validate .               # check the manifest and source files
 zuku package . --format zwf   # build dist/<name>-<version>.zwf
 ```
 
-`zuku run` previews the project in the current folder, so `cd` into it first. `validate` and `package` take a path, and `.` means the current folder. None of the three needs a network connection. Sharing a game is covered in [Publishing](../cli/publishing.md). Every flag is listed in the [command reference](../cli/commands.md).
+`zuku run` previews the project in the current folder, so `cd` into it first. `validate` and `package` take a path, and `.` means the current folder. Sharing a game is covered in [Publishing](../cli/publishing.md). Every flag is listed in the [command reference](../cli/commands.md).
 
 ## Generating a game instead
 
-`zuku agent` generates a game from a one-line request. It designs, implements, playtests in a real browser, and packages the result. CLI 0.3.0 does not bundle Phaser. The agent selects Phaser only when it is installed separately alongside the CLI. The agent only builds games and needs credentials for the selected model provider or a local model. A ZUKU account is needed for ZUKU AI, draft uploads and publishing. See [Game agent](../cli/agent.md) and [Authentication](../cli/authentication.md).
+`zuku agent` generates a game from a one-line request. It designs, implements, playtests in a real browser, and packages the result. The agent selects Phaser only when it is installed separately alongside the CLI. The agent needs credentials for the selected model provider or a local model. A ZUKU account is needed for ZUKU AI, draft uploads and publishing. See [Game agent](../cli/agent.md) and [Authentication](../cli/authentication.md).

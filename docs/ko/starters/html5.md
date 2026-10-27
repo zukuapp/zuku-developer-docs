@@ -16,7 +16,7 @@ zuku create my-runner
 cd my-runner
 ```
 
-이름은 소문자 영문, 숫자, `_`, `-`로 구성하며 최대 64자입니다. 같은 이름의 경로가 이미 있으면 아무것도 덮어쓰지 않고 `PROJECT_EXISTS`로 멈춥니다. `create`가 받는 인수는 프로젝트 이름 하나뿐이며 템플릿을 고르는 옵션은 없습니다.
+이름은 소문자 영문, 숫자, `_`, `-`로 구성하며 최대 64자입니다. 같은 이름의 경로가 이미 있으면 아무것도 덮어쓰지 않고 `PROJECT_EXISTS`로 멈춥니다.
 
 같은 구조의 압축 파일 [zuku-canvas-starter.zip](/assets/starters/zuku-canvas-starter.zip)도 제공합니다. 내려받아 풀면 명령 없이 시작합니다.
 

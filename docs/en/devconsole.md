@@ -8,8 +8,6 @@ section: API
 
 The ZUKU Developer Console API lets you register apps and manage API keys and webhooks.
 
-This page covers the Developer Console endpoints only. The newer native AI APIs are not covered here.
-
 ## Base URL
 
 `/api/v1/devconsole`
@@ -124,7 +122,7 @@ GET /api/v1/devconsole/webhooks/{webhook_id}/deliveries
 
 ---
 
-## Differences from legacy API keys
+## Differences from user API keys
 
 | | `/developer/keys` | `/devconsole/apps/.../keys` |
 |--|-------------------|------------------------------|
@@ -132,4 +130,4 @@ GET /api/v1/devconsole/webhooks/{webhook_id}/deliveries
 | Use | Simple server-to-server (content creation) | Per-app keys and webhook management |
 | Scopes | None | JSON `scopes` array |
 
-The two systems run side by side. For user-level keys, see [Authentication](authentication.md#11-developer-api-keys). See also [Errors](errors.md) and [Rate limits](rate-limits.md).
+For user-level keys, see [Authentication](authentication.md#11-developer-api-keys). See also [Errors](errors.md) and [Rate limits](rate-limits.md).

@@ -18,7 +18,7 @@ Generation needs a selected model and that provider's credentials, or a working 
 - [Providers](providers.md): configure where model calls go.
 - [Models](models.md): pick a model with `zuku model use <provider/model>`. Without a choice, the agent uses `zuku/auto`.
 
-Run the agent as a regular user, not root. The playtest browser always runs with its sandbox enabled. `--browser` remains in help and the parser, but currently fails with `CORE_PROTOCOL_GAP` because Agent Core cannot accept it.
+Run the agent as a regular user, not root. The playtest browser always runs with its sandbox enabled. `--browser` appears in help but fails with `CORE_PROTOCOL_GAP`; don't use it.
 
 ## Usage
 
@@ -54,19 +54,19 @@ Each model stage is bound to one mandatory game skill and returns schema-validat
 
 The CLI checks every stage with code gates. Unsafe output (path escapes, commands, network access, secrets) is never written. The project is then validated, played in sandboxed Chromium on `127.0.0.1` with external requests blocked, and packaged with the same core as `zuku package`. If the playtest fails, the editable project stays on disk but nothing is packaged, uploaded or published.
 
-**Engines.** The agent can generate Phaser games when the `phaser` package is installed alongside the CLI; Phaser is not bundled with CLI 0.3.0. Otherwise, it uses the Canvas scaffold family from `zuku create`.
+**Engines.** The agent generates Phaser games only when the `phaser` package is installed alongside the CLI. Otherwise, it uses the Canvas scaffold family from `zuku create`.
 
 ## Modes
 
 - **Default**: stops at `packaged`. Nothing is uploaded or published.
-- **`--draft`**: creates a draft through the regular upload flow. The draft is not published.
+- **`--draft`**: creates a draft through the regular upload flow.
 - **`--yolo`**: publishes exactly once, and only if the packaged bytes match the bytes that passed the playtest. There are no extra confirmation prompts.
 
 The server allows 3 successful production publishes per ZUKU account in a rolling 6 hours. Failed or rejected publishes do not count. A fourth attempt gets `DEPLOY_QUOTA_EXCEEDED` with a retry time, and `--yolo` checks the quota before spending model tokens. Check it with `zuku account --quota`. See [Publishing](publishing.md).
 
 ## Unknown outcomes and recovery
 
-Publishing involves paid model usage and a quota-limited server action, so the agent never retries blindly. If a publish times out or the response can't be read, the run is recorded as `AGENT_PUBLISH_OUTCOME_UNKNOWN` and is not retried automatically. Resume it instead:
+If a publish times out or the response can't be read, the run is recorded as `AGENT_PUBLISH_OUTCOME_UNKNOWN` and is not retried automatically. Resume it instead:
 
 ```sh
 zuku agent --resume <run_id> --yolo

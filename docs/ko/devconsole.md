@@ -136,8 +136,6 @@ curl -sS -X POST "https://zuzunza.com/api/v1/devconsole/apps/$APP_ID/webhooks" \
 | 용도 | 간단한 서버 간 호출(콘텐츠 생성) | 앱별 키·웹훅 관리 |
 | 권한 범위 | 없음 | `scopes` 배열 |
 
-두 방식은 함께 운영됩니다.
-
 ## 오류
 
 응답은 공통 형식을 따릅니다. 코드 목록은 [오류](errors.md)에, 호출 한도는 [요청 한도](rate-limits.md)에 있습니다.

@@ -6,7 +6,7 @@ section: Starter
 
 # Bring an existing game
 
-A ZUKU project is a folder of game files plus a manifest. This guide restructures an existing HTML5, Canvas, or Phaser game so that `zuku validate` passes and `zuku package` produces a `.zwf` file.
+A ZUKU project is a folder of game files plus a manifest. Restructure an existing HTML5, Canvas, or Phaser game so that `zuku validate` passes and `zuku package` produces a `.zwf` file.
 
 ## The target layout
 

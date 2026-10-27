@@ -1,16 +1,12 @@
 ---
 title: ZUKU Game Cloud
-description: Per-project cloud variables, saves, and wallets, plus in-development payment and server function interfaces.
+description: Per-project cloud variables, saves, wallets, payments, and server functions.
 section: API
 ---
 
 # ZUKU Game Cloud
 
-Game Cloud provides per-project variables, saves, and wallets, along with payment and server function interfaces that are still in development.
-
-> Warning: current scope. Separately from the variables and saves APIs, Pay confirm does not verify anything with an external payment provider or receipt. Don't use it as proof that a real payment was completed.
-
-This page covers the Game Cloud HTTP API only. The newer native AI APIs are not covered here.
+Game Cloud provides per-project variables, saves, and wallets, along with payment and server function interfaces.
 
 ## Contents
 
@@ -30,13 +26,13 @@ This page covers the Game Cloud HTTP API only. The newer native AI APIs are not 
 
 ## 1. Overview
 
-| Legacy | zuku v1 | Description |
-|--------|---------|-------------|
-| ZCloud Economy | `/cloud/economy/balance` | POINT · CASH_KRW wallet |
-| ZVM | `/cloud/vars/*` | Global/user scoped variables |
-| ZASE | `/cloud/saves/*` | Versioned save slots |
+| Feature | Path | Description |
+|---------|------|-------------|
+| Economy | `/cloud/economy/balance` | POINT · CASH_KRW wallet |
+| Vars | `/cloud/vars/*` | Global/user scoped variables |
+| Saves | `/cloud/saves/*` | Versioned save slots |
 | Pay | `/cloud/pay/*` | IAP products, sessions, confirmation |
-| WebFunc | `/cloud/functions/*` | Server function CRUD and invoke |
+| Functions | `/cloud/functions/*` | Server function CRUD and invoke |
 
 **Authentication**: every endpoint requires `Authorization: Bearer <session_token>`.
 
@@ -97,7 +93,7 @@ Authorization: Bearer <token>
 
 ## 4. Vars (cloud variables)
 
-Same concept as the legacy ZVM. The currency scope cannot be changed from the client (to prevent self-minting).
+The currency scope cannot be changed from the client.
 
 ### Read
 
@@ -135,7 +131,7 @@ Content-Type: application/json
 
 ## 5. Saves (cloud saves)
 
-The legacy ZASE. Inline JSON, with a limit of 256KB per slot.
+Inline JSON, with a limit of 256KB per slot.
 
 ### Save
 
@@ -199,11 +195,13 @@ POST /api/v1/cloud/pay/confirm
 }
 ```
 
+Confirm does not verify anything with an external payment provider or receipt. Don't use it as proof that a real payment was completed.
+
 ---
 
 ## 7. Functions (server functions)
 
-Register function source code and run it on a real Deno runtime. Each function gets its own isolated network and a minimal read-only filesystem, with a 2-second execution time limit, a 128MiB memory limit, and a cap of 64 processes. If the required sandbox isn't available, execution is refused.
+Register function source code and run it on a Deno runtime. Each function gets its own isolated network and a minimal read-only filesystem, with a 2-second execution time limit, a 128MiB memory limit, and a cap of 64 processes.
 
 ### Register or update a function
 
@@ -259,7 +257,7 @@ On Cloud Free, gentle QoS applies once any single meter reaches 80%, strong QoS 
 
 ## 9. Dedicated game VMs
 
-Cloud Scale and Game Dedicated can request isolated KVM servers with a fixed shape. Requests first go into a dry-run review queue.
+Cloud Scale and Game Dedicated can request isolated KVM servers with a fixed shape. A VM request isn't created right away; it is accepted in a pending review state, and you check its state with `GET /cloud/vm`.
 
 ```http
 POST /api/v1/cloud/vm
@@ -290,7 +288,7 @@ Only the project owner can view it. Returns a usage breakdown per event.
 
 ## HTTP integration example
 
-Call these APIs from a trusted app that manages the ZUKU session. Never pass account tokens into the game sandbox. The example below uses the HTTP API directly and does not assume any npm SDK installation.
+Call these APIs from a trusted app that manages the ZUKU session. Never pass account tokens into the game sandbox. The example below uses the HTTP API directly.
 
 ```javascript
 await fetch("/api/v1/cloud/saves/save", {

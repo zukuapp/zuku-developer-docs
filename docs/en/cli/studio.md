@@ -1,12 +1,12 @@
 ---
 title: ZUKU Studio
-description: The ZUKU Studio desktop app, how it shares the CLI runtime and Agent Core, and its current platform status.
+description: The ZUKU Studio desktop app, how it shares the CLI runtime and Agent Core, and its platforms and requirements.
 section: Guide
 ---
 
 # ZUKU Studio
 
-ZUKU Studio is a desktop workspace for making games with the same local Agent Core that `zuku` and `zukujs` use. It isn't a second product. It has no separate CLI, agent or Node.js runtime. Studio is a native window around the renderer that ships inside the CLI package.
+ZUKU Studio is a desktop workspace for making games with the same local Agent Core that `zuku` and `zukujs` use. Studio is a native window around the renderer that ships inside the CLI package.
 
 ## How Studio relates to the CLI
 
@@ -19,7 +19,7 @@ Studio and the CLI are two front ends to one installation:
 | Settings and sign-in | The same providers, models, credentials and session history in `~/.config/zukujs/` (Windows: `%LOCALAPPDATA%\ZukuJS\`) |
 | Studio UI | Bundled in the CLI package. The native shell only loads these trusted files. |
 
-The native shell starts the Studio host from the installed CLI with the managed runtime. It never runs shell commands, and it never takes file paths from the UI, a game or a link. As a result:
+Because Studio and the CLI share one installation:
 
 - A provider you add with `zuku provider add` appears in Studio, and the other way round.
 - A session started in Studio can be inspected from the CLI, and closing the window doesn't cancel running Core work.
@@ -29,7 +29,7 @@ Inside Studio you open a project with your operating system's folder picker. App
 
 The workspace has a project and session list, a game stage with Build, Test, Run, Stop and Preview, tabs for source, changes, logs and providers, and a chat panel for the agent.
 
-## Platform status
+## Platforms and requirements
 
 Studio's native shell is compiled for six targets:
 
@@ -39,19 +39,11 @@ Studio's native shell is compiled for six targets:
 | macOS | `darwin-x64`, `darwin-arm64` | Swift app bundle (`ZUKU Studio.app`) |
 | Windows | `win-x64`, `win-arm64` | .NET WPF, self-contained, with WebView2 |
 
-GUI verification status by platform:
-
-| Platform | Status |
-| --- | --- |
-| Linux | GUI verified as a normal desktop user with the browser sandbox enabled: folder picking, sessions, events and game preview |
-| macOS | Ad-hoc development signature only. Not Developer ID signed or notarized. Full GUI verification not completed |
-| Windows | Full GUI verification not completed, including systems without .NET and each WebView2 availability case |
-
-Linux requires a graphical desktop session and the GTK 3 and WebKitGTK 4.1 system libraries. The x64 build also requires glibc 2.34 or later. The installer doesn't install system packages or ask for administrator rights.
+Linux requires a graphical desktop session and the GTK 3 and WebKitGTK 4.1 system libraries. Install these libraries yourself. The x64 build also requires glibc 2.34 or later. The macOS build has an ad-hoc development signature only; it is not Developer ID signed or notarized.
 
 ## Getting Studio
 
-Studio is delivered through the official installer, not as a separate download, and not through npm. Install the CLI as described in [Installation](../installation.md). For releases that include Studio, the installer:
+Studio is delivered through the official installer. Install the CLI as described in [Installation](../installation.md). For releases that include Studio, the installer:
 
 1. installs the managed Node.js 22.22.3 runtime (in these releases, `--no-node` / `-NoNode` is an error),
 2. downloads the native Studio asset for your platform and checks its SHA-256 against the pinned release values,
@@ -72,7 +64,7 @@ zuku studio
 zuku studio --port 43200
 ```
 
-Pairing, session resume and sign-in requests must be approved in the terminal. Press Ctrl+C to stop the adapter. Running sessions are not cancelled. Hosted web AI access is currently closed. The CLI commands in the [command reference](commands.md) are the primary supported path.
+Pairing, session resume and sign-in requests must be approved in the terminal. Press Ctrl+C to stop the adapter. Running sessions are not cancelled.
 
 ## Related
 

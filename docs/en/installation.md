@@ -6,9 +6,7 @@ section: Guide
 
 # Installation
 
-The managed installer currently provides the pinned CLI 0.3.0 release. The installer downloads a fixed-version CLI archive over HTTPS, checks its SHA-256 against the pinned release value, and sets up a managed Node.js 22 runtime in your user directory. It never replaces your system Node.js and does not need administrator rights.
-
-> Use the exact npm package names in the public release table below. The managed installer continues to provide its existing pinned release.
+The managed installer currently provides the pinned CLI 0.3.0 release. The installer downloads a fixed-version CLI archive over HTTPS, checks its SHA-256 against the pinned release value, and sets up a managed Node.js 22 runtime in your user directory. It does not need administrator rights.
 
 ## Requirements
 
@@ -20,7 +18,7 @@ The managed installer currently provides the pinned CLI 0.3.0 release. The insta
 <!-- BEGIN ZUKU NPM DISTRIBUTIONS -->
 ## npm packages for game development
 
-The table lists exact installation versions. `@zuku/player` is `0.1.2`. The other eight packages are the releases in the public npm registry as of 2026-10-04. Install the packages your project needs.
+The table lists exact installation versions. Install the packages your project needs.
 
 | Package | Version | Purpose |
 | --- | --- | --- |
@@ -44,11 +42,9 @@ Resource exports include JSON such as `@zuku/lang/locales/ko.json` and WebAssemb
 
 ZWF2 is the HTML5 ZIP game package format. ZWF1 is the animation format. Use the package and loader for each format.
 
-Each package retains its original license notice. The existing `UNLICENSED` declaration for `@zuku/core` is preserved. The Next.js server framework and operational servers are excluded from this game-library release.
+Each package retains its original license notice. `@zuku/core` is `UNLICENSED`.
 
 ### Install the CLI from npm
-
-Requires Node.js 22 or later and npm.
 
 ```sh
 npm install -g @zuku/cli@0.3.1
@@ -154,7 +150,7 @@ The installer won't overwrite a `zuku` or `zukujs` command that belongs to anoth
 
 **Linux Studio**
 
-Studio on Linux needs a graphical desktop plus the GTK 3 and WebKitGTK 4.1 system libraries. The installer does not install system packages.
+Studio on Linux needs a graphical desktop plus the GTK 3 and WebKitGTK 4.1 system libraries. Install these libraries yourself.
 
 ## Next steps
 

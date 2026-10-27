@@ -6,7 +6,7 @@ section: Starter
 
 # Getting Started
 
-This guide creates a playable HTML5 game, previews it, validates it, and packages it for ZUKU. Every step runs locally. `create`, `validate`, and `package` make no network requests.
+Create a playable HTML5 game, preview it, validate it, and package it for ZUKU. Every step runs locally.
 
 ## Before you start
 
@@ -16,9 +16,9 @@ Install the CLI:
 curl -fsSL --proto '=https' --tlsv1.2 https://zuzunza.com/install.sh -o install-zuku-cli.sh && bash install-zuku-cli.sh
 ```
 
-Windows, wget, and other options are covered in [Installation](installation.md). The installer manages its own Node.js 22 runtime.
+Windows, wget, and other options are covered in [Installation](installation.md).
 
-`zuku` and `zukujs` are the same CLI. This guide uses `zuku`.
+`zuku` and `zukujs` are the same CLI.
 
 ## 1. Create the project
 
@@ -29,8 +29,6 @@ cd my-game
 ```
 
 Project names use lowercase letters, numbers, `_`, and `-`, up to 64 characters. `create` never overwrites an existing folder; if `my-game` already exists, it stops with `PROJECT_EXISTS`.
-
-`create` takes only a name. There are no template flags.
 
 ## 2. Look at the files
 
@@ -89,11 +87,10 @@ zuku validate dist/my-game-0.1.0.zwf
 
 ## What's next
 
-
 - Upload it as a draft or publish it: [Publishing](cli/publishing.md)
 - Let the local agent build and browser-check a game for you: [Agent](cli/agent.md)
 - Explore other starting points: [Starters](starters/index.md) and [Bring an existing game](starters/existing-game.md)
 - See every command and flag: [Command reference](cli/commands.md)
 - Understand error codes: [Errors](errors.md)
 
-The local agent runs with your own external-provider credentials or a local model. ZUKU AI and uploading or publishing games require a ZUKU account. Hosted web AI and in-app AI are not public, and no opening date is set. An Android app preview is available at [apk.zuzunza.com](https://apk.zuzunza.com/).
+The local agent runs with your own external-provider credentials or a local model. ZUKU AI and uploading or publishing games require a ZUKU account.
